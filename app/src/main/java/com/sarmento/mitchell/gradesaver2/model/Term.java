@@ -1,4 +1,4 @@
-package com.sarmento.mitchell.gradesaver.model;
+package com.sarmento.mitchell.gradesaver2.model;
 
 
 import java.util.ArrayList;

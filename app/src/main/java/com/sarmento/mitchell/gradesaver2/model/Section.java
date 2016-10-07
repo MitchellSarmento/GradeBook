@@ -1,10 +1,10 @@
-package com.sarmento.mitchell.gradesaver.model;
+package com.sarmento.mitchell.gradesaver2.model;
 
 
 import android.content.Context;
 import android.util.SparseArray;
 
-import com.sarmento.mitchell.gradesaver.R;
+import com.sarmento.mitchell.gradesaver2.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
