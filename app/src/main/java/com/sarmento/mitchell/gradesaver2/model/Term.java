@@ -12,4 +12,8 @@ public class Term {
         this.termName = termName;
         sections = new ArrayList<>();
     }
+
+    public String getTermName() {
+        return termName;
+    }
 }
