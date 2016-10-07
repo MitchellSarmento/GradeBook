@@ -16,4 +16,12 @@ public class Term {
     public String getTermName() {
         return termName;
     }
+
+    public List<Section> getSections() {
+        return sections;
+    }
+
+    public void addSection(Section section) {
+        sections.add(section);
+    }
 }

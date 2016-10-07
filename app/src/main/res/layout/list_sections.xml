@@ -3,8 +3,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.sarmento.mitchell.gradesaver2.buttons.TermButton
+    <com.sarmento.mitchell.gradesaver2.buttons.SectionButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/button_term" />
+        android:id="@+id/button_section"/>
 </LinearLayout>

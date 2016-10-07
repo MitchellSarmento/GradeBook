@@ -7,19 +7,19 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import com.sarmento.mitchell.gradesaver2.R;
-import com.sarmento.mitchell.gradesaver2.buttons.TermButton;
-import com.sarmento.mitchell.gradesaver2.model.Term;
+import com.sarmento.mitchell.gradesaver2.buttons.SectionButton;
+import com.sarmento.mitchell.gradesaver2.model.Section;
 
 import java.util.List;
 
-public class TermAdapter extends ArrayAdapter {
+public class SectionAdapter extends ArrayAdapter {
     private final LayoutInflater layoutInflater;
-    private final List<Term> terms;
+    private final List<Section> sections;
 
-    public TermAdapter(Context context, List<Term> terms) {
-        super(context, R.layout.list_terms, terms);
+    public SectionAdapter(Context context, List<Section> sections) {
+        super(context, R.layout.list_sections, sections);
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.terms = terms;
+        this.sections = sections;
     }
 
     @Override
@@ -27,20 +27,20 @@ public class TermAdapter extends ArrayAdapter {
         ViewHolder holder;
 
         if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.list_terms, parent, false);
+            convertView = layoutInflater.inflate(R.layout.list_sections, parent, false);
             holder = new ViewHolder();
-            holder.button = (TermButton) convertView.findViewById(R.id.button_term);
+            holder.button = (SectionButton) convertView.findViewById(R.id.button_section);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.button.init(terms.get(position), position);
+        holder.button.init(sections.get(position), position);
 
         return convertView;
     }
 
     private static class ViewHolder {
-        public TermButton button;
+        public SectionButton button;
     }
 }
