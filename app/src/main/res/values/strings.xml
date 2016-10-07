@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">GradeSaver</string>
+    <string name="homework">Homework</string>
+    <string name="quizzes">Quizzes</string>
+    <string name="midterm">Midterm</string>
+    <string name="string_final">Final</string>
+    <string name="project">Project</string>
 </resources>
