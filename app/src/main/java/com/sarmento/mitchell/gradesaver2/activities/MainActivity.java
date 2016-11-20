@@ -9,6 +9,7 @@ import android.widget.ListView;
 
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.adapters.TermAdapter;
+import com.sarmento.mitchell.gradesaver2.dialogs.TermDialogFragment;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_new_term:
-                //TODO - present user with fragment to create new term
+                new TermDialogFragment().show(getFragmentManager(), getString(R.string.action_new_term));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

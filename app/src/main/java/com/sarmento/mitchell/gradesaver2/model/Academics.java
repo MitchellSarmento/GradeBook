@@ -25,4 +25,8 @@ public class Academics {
     public List<Term> getCurrentTerms() {
         return currentTerms;
     }
+
+    public void addTerm(Term term) {
+        currentTerms.add(term);
+    }
 }

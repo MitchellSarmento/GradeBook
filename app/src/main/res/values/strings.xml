@@ -1,9 +1,18 @@
 <resources>
     <string name="app_name">GradeSaver</string>
+
+    <!-- Assignment Types -->
     <string name="homework">Homework</string>
     <string name="quizzes">Quizzes</string>
     <string name="midterm">Midterm</string>
     <string name="string_final">Final</string>
     <string name="project">Project</string>
+
+    <!-- Menu Actions -->
     <string name="action_new_term">New Term</string>
+
+    <!-- Misc -->
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="term">Term</string>
 </resources>
