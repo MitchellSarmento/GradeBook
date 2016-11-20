@@ -38,8 +38,8 @@ public class TermDialogFragment extends DialogFragment {
                 Term term = new Term(termName);
 
                 // add new term
-                Academics.getInstance().addTerm(term);
-                
+                Academics.getInstance().addTerm(getActivity(), term);
+
                 dialog.dismiss();
             }
         });

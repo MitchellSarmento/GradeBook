@@ -6,10 +6,12 @@ import java.util.List;
 
 public class Term {
     private String termName;
+    private boolean archived;
     private List<Section> sections;
 
     public Term(String termName) {
         this.termName = termName;
+        archived = false;
         sections = new ArrayList<>();
     }
 
@@ -23,5 +25,9 @@ public class Term {
 
     public void addSection(Section section) {
         sections.add(section);
+    }
+
+    public boolean isArchived() {
+        return archived;
     }
 }

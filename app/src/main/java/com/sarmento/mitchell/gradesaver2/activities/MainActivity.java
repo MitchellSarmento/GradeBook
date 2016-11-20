@@ -21,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         academics = Academics.getInstance();
 
+        // load data
+        academics.loadData(this);
+
         ListView currentTerms = (ListView) findViewById(R.id.current_terms);
         currentTerms.setAdapter(new TermAdapter(getApplicationContext(), academics.getCurrentTerms()));
     }
