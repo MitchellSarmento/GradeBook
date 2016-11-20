@@ -5,4 +5,5 @@
     <string name="midterm">Midterm</string>
     <string name="string_final">Final</string>
     <string name="project">Project</string>
+    <string name="action_new_term">New Term</string>
 </resources>

@@ -24,6 +24,7 @@ public class Section {
     public static final int LOW_F  = 9;
 
     String sectionName;
+    double maxScore;
     double totalScore;
     char grade;
     SparseArray<Double> gradeThresholds;
@@ -34,7 +35,8 @@ public class Section {
 
     public Section(Context context, String sectionName) {
         this.sectionName  = sectionName;
-        totalScore        = -1.0;
+        maxScore          = 0.0;
+        totalScore        = 0.0;
         grade             = 'A';
         gradeThresholds   = new SparseArray<>();
         assignmentWeights = new HashMap<>();
@@ -64,5 +66,21 @@ public class Section {
         scores.put(context.getString(R.string.midterm), -1.0);
         scores.put(context.getString(R.string.string_final), -1.0);
         scores.put(context.getString(R.string.project), -1.0);
+    }
+
+    public String getSectionName() {
+        return sectionName;
+    }
+
+    public double getMaxScore() {
+        return maxScore;
+    }
+
+    public double getTotalScore() {
+        return totalScore;
+    }
+
+    public char getGrade() {
+        return grade;
     }
 }
