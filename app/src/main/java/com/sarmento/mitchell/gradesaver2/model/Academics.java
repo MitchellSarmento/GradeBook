@@ -27,7 +27,8 @@ public class Academics {
     // load from the database
     public void loadData(Context context) {
         DBHelper db = new DBHelper(context);
-        currentTerms = db.getTerms();
+        currentTerms = db.getTerms(false);
+        archivedTerms = db.getTerms(true);
     }
 
     public List<Term> getCurrentTerms() {

@@ -23,24 +23,32 @@ public class Section {
     public static final int HIGH_F = 8;
     public static final int LOW_F  = 9;
 
+    public static final int HOMEWORK = 0;
+    public static final int QUIZZES  = 1;
+    public static final int MIDTERM  = 2;
+    public static final int FINAL    = 3;
+    public static final int PROJECT  = 4;
+    public static final int OTHER    = 5;
+
     String sectionName;
     double maxScore;
     double totalScore;
     char grade;
     SparseArray<Double> gradeThresholds;
-    Map<String, Double> assignmentWeights;
-    Map<String, Double> scores;
+    SparseArray<Double> assignmentWeights;
+    SparseArray<Double> scores;
     List<Assignment> assignments;
     List<DueDate> dueDates;
 
+    // constructor for creating a new section
     public Section(Context context, String sectionName) {
         this.sectionName  = sectionName;
         maxScore          = 0.0;
         totalScore        = 0.0;
         grade             = 'A';
         gradeThresholds   = new SparseArray<>();
-        assignmentWeights = new HashMap<>();
-        scores            = new HashMap<>();
+        assignmentWeights = new SparseArray<>();
+        scores            = new SparseArray<>();
         assignments       = new ArrayList<>();
         dueDates          = new ArrayList<>();
 
@@ -55,17 +63,26 @@ public class Section {
         gradeThresholds.put(HIGH_F, 59.0);
         gradeThresholds.put(LOW_F, 0.0);
 
-        assignmentWeights.put(context.getString(R.string.homework), 30.0);
-        assignmentWeights.put(context.getString(R.string.quizzes), 10.0);
-        assignmentWeights.put(context.getString(R.string.midterm), 20.0);
-        assignmentWeights.put(context.getString(R.string.string_final), 30.0);
-        assignmentWeights.put(context.getString(R.string.project), 10.0);
+        assignmentWeights.put(HOMEWORK, 30.0);
+        assignmentWeights.put(QUIZZES, 10.0);
+        assignmentWeights.put(MIDTERM, 20.0);
+        assignmentWeights.put(FINAL, 30.0);
+        assignmentWeights.put(PROJECT, 10.0);
+        assignmentWeights.put(OTHER, 0.0);
 
-        scores.put(context.getString(R.string.homework), -1.0);
-        scores.put(context.getString(R.string.quizzes), -1.0);
-        scores.put(context.getString(R.string.midterm), -1.0);
-        scores.put(context.getString(R.string.string_final), -1.0);
-        scores.put(context.getString(R.string.project), -1.0);
+        scores.put(HOMEWORK, -1.0);
+        scores.put(QUIZZES, -1.0);
+        scores.put(MIDTERM, -1.0);
+        scores.put(FINAL, -1.0);
+        scores.put(PROJECT, -1.0);
+        scores.put(OTHER, -1.0);
+    }
+
+    // constructor for loading an existing section
+    public Section(String sectionName, SparseArray<Double> gradeThresholds, SparseArray<Double> assignmentWeights,
+                   SparseArray<Double> scores, double totalScore, double maxScore, char grade,
+                   List<Assignment> assignments, List<DueDate> dueDates) {
+
     }
 
     public String getSectionName() {
