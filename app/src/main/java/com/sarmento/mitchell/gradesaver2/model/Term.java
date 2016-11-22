@@ -11,10 +11,18 @@ public class Term {
     private boolean archived;
     private List<Section> sections;
 
+    // constructor for create a new term
     public Term(String termName) {
         this.termName = termName;
         archived = false;
         sections = new ArrayList<>();
+    }
+
+    // constructor for loading an existing term
+    public Term(String termName, boolean archived, List<Section> sections) {
+        this.termName = termName;
+        this.archived = archived;
+        this.sections = sections;
     }
 
     public String getTermName() {

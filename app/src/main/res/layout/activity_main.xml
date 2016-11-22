@@ -5,8 +5,9 @@
     android:layout_height="match_parent"
     tools:context="com.sarmento.mitchell.gradesaver2.activities.MainActivity">
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/current_terms"/>
+        android:id="@+id/current_terms"
+        android:scrollbars="vertical"/>
 </FrameLayout>

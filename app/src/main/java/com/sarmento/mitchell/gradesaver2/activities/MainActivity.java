@@ -2,6 +2,8 @@ package com.sarmento.mitchell.gradesaver2.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,8 +24,9 @@ public class MainActivity extends AppCompatActivity {
         // load data
         academics.loadData(this);
 
-        ListView currentTerms = (ListView) findViewById(R.id.current_terms);
-        currentTerms.setAdapter(new TermAdapter(getApplicationContext(), academics.getCurrentTerms()));
+        RecyclerView currentTerms = (RecyclerView) findViewById(R.id.current_terms);
+        currentTerms.setLayoutManager(new LinearLayoutManager(this));
+        currentTerms.setAdapter(new TermAdapter(academics.getCurrentTerms()));
     }
 
     @Override

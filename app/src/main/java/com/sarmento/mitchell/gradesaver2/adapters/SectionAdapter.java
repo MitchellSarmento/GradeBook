@@ -1,6 +1,7 @@
 package com.sarmento.mitchell.gradesaver2.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,35 +13,37 @@ import com.sarmento.mitchell.gradesaver2.model.Section;
 
 import java.util.List;
 
-public class SectionAdapter extends ArrayAdapter {
-    private final LayoutInflater layoutInflater;
-    private final List<Section> sections;
+public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.ViewHolder> {
+    private List<Section> sections;
 
-    public SectionAdapter(Context context, List<Section> sections) {
-        super(context, R.layout.list_sections, sections);
-        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public SectionAdapter(List<Section> sections) {
         this.sections = sections;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-
-        if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.list_sections, parent, false);
-            holder = new ViewHolder();
-            holder.button = (SectionButton) convertView.findViewById(R.id.button_section);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        holder.button.init(sections.get(position), position);
-
-        return convertView;
+    public SectionAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View inflatedView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_sections, parent, false);
+        return new ViewHolder(inflatedView);
     }
 
-    private static class ViewHolder {
-        public SectionButton button;
+    @Override
+    public void onBindViewHolder(SectionAdapter.ViewHolder holder, int position) {
+        SectionButton button = holder.button;
+        button.init(sections.get(position), position);
+    }
+
+    @Override
+    public int getItemCount() {
+        return sections.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private SectionButton button;
+
+        public ViewHolder(View v) {
+            super(v);
+            button = (SectionButton) v.findViewById(R.id.button_section);
+        }
     }
 }

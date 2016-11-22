@@ -30,15 +30,15 @@ public class Section {
     public static final int PROJECT  = 4;
     public static final int OTHER    = 5;
 
-    String sectionName;
-    double maxScore;
-    double totalScore;
-    String grade;
-    SparseArray<Double> gradeThresholds;
-    SparseArray<Double> assignmentWeights;
-    SparseArray<Double> scores;
-    List<Assignment> assignments;
-    List<DueDate> dueDates;
+    private String sectionName;
+    private double maxScore;
+    private double totalScore;
+    private String grade;
+    private SparseArray<Double> gradeThresholds;
+    private SparseArray<Double> assignmentWeights;
+    private SparseArray<Double> scores;
+    private List<Assignment> assignments;
+    private List<DueDate> dueDates;
 
     // constructor for creating a new section
     public Section(String sectionName, SparseArray<Double> assignmentWeights, SparseArray<Double> gradeThresholds) {

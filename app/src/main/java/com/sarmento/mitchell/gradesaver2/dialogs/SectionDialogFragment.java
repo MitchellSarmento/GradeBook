@@ -92,7 +92,7 @@ public class SectionDialogFragment extends DialogFragment {
                 // add new section
                 Academics.getInstance().getCurrentTerms().get(termPosition).addSection(getActivity(),
                         section, termPosition);
-                ((TermActivity) getActivity()).updateData();
+                ((TermActivity) getActivity()).updateList();
 
                 dialog.dismiss();
             }

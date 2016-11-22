@@ -1,6 +1,7 @@
 package com.sarmento.mitchell.gradesaver2.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,35 +13,37 @@ import com.sarmento.mitchell.gradesaver2.model.Term;
 
 import java.util.List;
 
-public class TermAdapter extends ArrayAdapter {
-    private final LayoutInflater layoutInflater;
-    private final List<Term> terms;
+public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
+    private List<Term> terms;
 
-    public TermAdapter(Context context, List<Term> terms) {
-        super(context, R.layout.list_terms, terms);
-        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public TermAdapter(List<Term> terms) {
         this.terms = terms;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-
-        if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.list_terms, parent, false);
-            holder = new ViewHolder();
-            holder.button = (TermButton) convertView.findViewById(R.id.button_term);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        holder.button.init(terms.get(position), position);
-
-        return convertView;
+    public TermAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View inflatedView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_terms, parent, false);
+        return new ViewHolder(inflatedView);
     }
 
-    private static class ViewHolder {
-        public TermButton button;
+    @Override
+    public void onBindViewHolder(TermAdapter.ViewHolder holder, int position) {
+        TermButton button = holder.button;
+        button.init(terms.get(position), position);
+    }
+
+    @Override
+    public int getItemCount() {
+        return terms.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private TermButton button;
+
+        public ViewHolder(View v) {
+            super(v);
+            button = (TermButton) v.findViewById(R.id.button_term);
+        }
     }
 }

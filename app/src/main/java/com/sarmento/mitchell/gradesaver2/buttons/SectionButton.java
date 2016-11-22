@@ -16,10 +16,12 @@ public class SectionButton extends Button implements View.OnClickListener {
     }
 
     public void init(Section section, final int position) {
-        this.setText(section.getSectionName() + "\n" +
+        setText(section.getSectionName() + "\n" +
         Double.toString(section.getTotalScore()) + "/" +
         Double.toString(section.getMaxScore()) + "  " +
         section.getGrade());
+        setAllCaps(false);
+        setOnClickListener(this);
     }
 
     @Override

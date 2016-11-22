@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.util.SparseArray;
 
 import java.text.ParseException;
@@ -86,7 +87,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final int TRUE  = 1;
     private static final int FALSE = 0;
 
-    SQLiteDatabase db;
+    //SQLiteDatabase db;
 
     public DBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -138,7 +139,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void addTerm(Term term) {
-        db = getWritableDatabase();
+        SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(KEY_TERMS_NAME, term.getTermName());
@@ -153,7 +154,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void addSection(Section section, int termId) {
-        db = getWritableDatabase();
+        SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(KEY_SECTIONS_TERM_ID, termId);
@@ -189,10 +190,13 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(KEY_SECTIONS_TOTAL_SCORE, section.getTotalScore());
         values.put(KEY_SECTIONS_MAX_SCORE, section.getMaxScore());
         values.put(KEY_SECTIONS_GRADE, section.getGrade());
+
+        db.insert(TABLE_SECTIONS, null, values);
+        db.close();
     }
 
     public List<Term> getTerms(boolean archived) {
-        db = getReadableDatabase();
+        SQLiteDatabase db = getReadableDatabase();
         List<Term> terms = new ArrayList<>();
 
         int isArchived = FALSE;
@@ -213,7 +217,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 List<Section> sections = getSections(termId);
 
                 // create and add the term
-                Term term = new Term(termName);
+                Term term = new Term(termName, archived, sections);
                 terms.add(term);
             } while (cursor.moveToNext());
         }
@@ -223,6 +227,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private List<Section> getSections(int termId) {
+        SQLiteDatabase db = getReadableDatabase();
         List<Section> sections = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_SECTIONS + " WHERE " + KEY_SECTIONS_TERM_ID + " = " + termId;
@@ -239,15 +244,15 @@ public class DBHelper extends SQLiteOpenHelper {
                 }
                 SparseArray<Double> assignmentWeights = new SparseArray<>();
                 for (int i = 0; i < 6; i++) {
-                    assignmentWeights.put(i, cursor.getDouble(i+14));
+                    assignmentWeights.put(i, cursor.getDouble(i+13));
                 }
                 SparseArray<Double> scores = new SparseArray<>();
                 for (int i = 0; i < 6; i++) {
-                    scores.put(i, cursor.getDouble(i+20));
+                    scores.put(i, cursor.getDouble(i+19));
                 }
-                double totalScore = cursor.getDouble(26);
-                double maxScore = cursor.getDouble(27);
-                String grade = cursor.getString(28);
+                double totalScore = cursor.getDouble(25);
+                double maxScore = cursor.getDouble(26);
+                String grade = cursor.getString(27);
 
                 // get the assignments belonging to this section
                 List<Assignment> assignments = getAssignments(sectionId);
@@ -262,10 +267,12 @@ public class DBHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
+        db.close();
         return sections;
     }
 
     private List<Assignment> getAssignments(int sectionId) {
+        SQLiteDatabase db = getReadableDatabase();
         List<Assignment> assignments = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_ASSIGNMENTS + " WHERE " + KEY_ASSIGNMENTS_SECTION_ID +
@@ -287,10 +294,12 @@ public class DBHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
+        db.close();
         return assignments;
     }
 
     private List<DueDate> getDueDates(int sectionId) {
+        SQLiteDatabase db = getReadableDatabase();
         List<DueDate> dueDates = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_DUE_DATES + " WHERE " + KEY_DUE_DATES_SECTION_ID +
@@ -322,6 +331,7 @@ public class DBHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
+        db.close();
         return dueDates;
     }
 }
