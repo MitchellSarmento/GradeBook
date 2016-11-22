@@ -158,6 +158,7 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_SECTIONS_TERM_ID, termId);
         values.put(KEY_SECTIONS_NAME, section.getSectionName());
+
         SparseArray<Double> gradeThresholds = section.getGradeThresholds();
         values.put(KEY_SECTIONS_HIGH_A, gradeThresholds.get(Section.HIGH_A));
         values.put(KEY_SECTIONS_LOW_A, gradeThresholds.get(Section.LOW_A));
@@ -169,6 +170,7 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(KEY_SECTIONS_LOW_D, gradeThresholds.get(Section.LOW_D));
         values.put(KEY_SECTIONS_HIGH_F, gradeThresholds.get(Section.HIGH_F));
         values.put(KEY_SECTIONS_LOW_F, gradeThresholds.get(Section.LOW_F));
+
         SparseArray<Double> assignmentWeights = section.getAssignmentWeights();
         values.put(KEY_SECTIONS_WEIGHT_HOMEWORK, assignmentWeights.get(Section.HOMEWORK));
         values.put(KEY_SECTIONS_WEIGHT_QUIZ, assignmentWeights.get(Section.QUIZ));
@@ -176,6 +178,7 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(KEY_SECTIONS_WEIGHT_FINAL, assignmentWeights.get(Section.FINAL));
         values.put(KEY_SECTIONS_WEIGHT_PROJECT, assignmentWeights.get(Section.PROJECT));
         values.put(KEY_SECTIONS_WEIGHT_OTHER, assignmentWeights.get(Section.OTHER));
+
         SparseArray<Double> scores = section.getScores();
         values.put(KEY_SECTIONS_SCORE_HOMEWORK, scores.get(Section.HOMEWORK));
         values.put(KEY_SECTIONS_SCORE_QUIZ, scores.get(Section.QUIZ));

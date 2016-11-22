@@ -13,13 +13,11 @@ import com.sarmento.mitchell.gradesaver2.dialogs.TermDialogFragment;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
 
 public class MainActivity extends AppCompatActivity {
-    Academics academics;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        academics = Academics.getInstance();
+        Academics academics = Academics.getInstance();
 
         // load data
         academics.loadData(this);

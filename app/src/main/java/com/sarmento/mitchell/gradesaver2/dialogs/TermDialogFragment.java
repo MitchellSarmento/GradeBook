@@ -21,9 +21,6 @@ public class TermDialogFragment extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         builder.setView(inflater.inflate(R.layout.dialog_term, null));
 
-        // get relevant Views
-        final EditText termNameEntry = (EditText) getDialog().findViewById(R.id.term_entry);
-
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
@@ -34,7 +31,10 @@ public class TermDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                // gather user input
+                // get relevant views
+                EditText termNameEntry = (EditText) getDialog().findViewById(R.id.term_entry);
+
+                // get user input
                 String termName = termNameEntry.getText().toString();
 
                 // create new term

@@ -17,16 +17,23 @@ import com.sarmento.mitchell.gradesaver2.model.Term;
 
 public class TermActivity extends AppCompatActivity {
     int termPosition;
+    SectionAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_term);
+
         termPosition = getIntent().getIntExtra(Academics.TERM_POSITION, -1);
         Term term = Academics.getInstance().getCurrentTerms().get(termPosition);
 
         ListView sections = (ListView) findViewById(R.id.sections);
-        sections.setAdapter(new SectionAdapter(getApplicationContext(), term.getSections()));
+        adapter = new SectionAdapter(getApplicationContext(), term.getSections());
+        sections.setAdapter(adapter);
+    }
+
+    public void updateData() {
+        adapter.notifyDataSetChanged();
     }
 
     @Override
