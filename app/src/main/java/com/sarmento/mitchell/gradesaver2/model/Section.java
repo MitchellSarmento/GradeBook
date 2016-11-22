@@ -41,34 +41,16 @@ public class Section {
     List<DueDate> dueDates;
 
     // constructor for creating a new section
-    public Section(Context context, String sectionName) {
-        this.sectionName  = sectionName;
-        maxScore          = 0.0;
-        totalScore        = 0.0;
-        grade             = 'A';
-        gradeThresholds   = new SparseArray<>();
-        assignmentWeights = new SparseArray<>();
-        scores            = new SparseArray<>();
-        assignments       = new ArrayList<>();
-        dueDates          = new ArrayList<>();
-
-        gradeThresholds.put(HIGH_A, 100.0);
-        gradeThresholds.put(LOW_A, 90.0);
-        gradeThresholds.put(HIGH_B, 89.0);
-        gradeThresholds.put(LOW_B, 80.0);
-        gradeThresholds.put(HIGH_C, 79.0);
-        gradeThresholds.put(LOW_C, 70.0);
-        gradeThresholds.put(HIGH_D, 69.0);
-        gradeThresholds.put(LOW_D, 60.0);
-        gradeThresholds.put(HIGH_F, 59.0);
-        gradeThresholds.put(LOW_F, 0.0);
-
-        assignmentWeights.put(HOMEWORK, 30.0);
-        assignmentWeights.put(QUIZZES, 10.0);
-        assignmentWeights.put(MIDTERM, 20.0);
-        assignmentWeights.put(FINAL, 30.0);
-        assignmentWeights.put(PROJECT, 10.0);
-        assignmentWeights.put(OTHER, 0.0);
+    public Section(String sectionName, SparseArray<Double> assignmentWeights, SparseArray<Double> gradeThresholds) {
+        this.sectionName       = sectionName;
+        maxScore               = 0.0;
+        totalScore             = 0.0;
+        grade                  = 'A';
+        this.assignmentWeights = assignmentWeights;
+        this.gradeThresholds   = gradeThresholds;
+        scores                 = new SparseArray<>();
+        assignments            = new ArrayList<>();
+        dueDates               = new ArrayList<>();
 
         scores.put(HOMEWORK, -1.0);
         scores.put(QUIZZES, -1.0);

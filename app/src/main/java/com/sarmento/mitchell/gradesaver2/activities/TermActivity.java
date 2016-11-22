@@ -15,14 +15,14 @@ import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.Term;
 
 public class TermActivity extends AppCompatActivity {
-    Term term;
+    int termPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_term);
-        int termPosition = getIntent().getIntExtra("termPosition", -1);
-        term = Academics.getInstance().getCurrentTerms().get(termPosition);
+        termPosition = getIntent().getIntExtra("termPosition", -1);
+        Term term = Academics.getInstance().getCurrentTerms().get(termPosition);
 
         ListView sections = (ListView) findViewById(R.id.sections);
         sections.setAdapter(new SectionAdapter(getApplicationContext(), term.getSections()));
@@ -39,6 +39,7 @@ public class TermActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_new_section:
+                // TODO - SectionDialogFragment().setArguments(Bundle ...) with the termPosition.
                 new SectionDialogFragment().show(getFragmentManager(), getString(R.string.action_new_section));
                 return true;
             default:

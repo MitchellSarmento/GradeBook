@@ -43,4 +43,9 @@ public class Academics {
         currentTerms.add(term);
         db.addTerm(term);
     }
+
+    public void addSection(Context context, Section section) {
+        DBHelper db = new DBHelper(context);
+        // TODO
+    }
 }
