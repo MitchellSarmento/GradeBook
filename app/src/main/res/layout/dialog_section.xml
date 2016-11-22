@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin" android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textCapSentences"
+        android:hint="@string/section"
+        android:selectAllOnFocus="true"
+        android:ems="10"
+        android:id="@+id/section_entry" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/homework"
+            android:gravity="center_vertical"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:text="@string/weight_homework_default"
+            android:selectAllOnFocus="true"
+            android:gravity="center_horizontal"
+            android:ems="10"
+            android:maxLength="5"
+            android:id="@+id/weight_homework"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/quizzes"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:gravity="center_vertical"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:text="@string/weight_quizzes_default"
+            android:selectAllOnFocus="true"
+            android:gravity="center_horizontal"
+            android:ems="10"
+            android:maxLength="5"
+            android:id="@+id/weight_quizzes"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/midterm"
+            android:gravity="center_vertical"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:text="@string/weight_midterm_default"
+            android:selectAllOnFocus="true"
+            android:gravity="center_horizontal"
+            android:ems="10"
+            android:maxLength="5"
+            android:id="@+id/weight_midterm"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/string_final"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:gravity="center_vertical"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:text="@string/weight_final_default"
+            android:selectAllOnFocus="true"
+            android:gravity="center_horizontal"
+            android:ems="10"
+            android:maxLength="5"
+            android:id="@+id/weight_final"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/project"
+            android:gravity="center_vertical"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:text="@string/weight_project_default"
+            android:selectAllOnFocus="true"
+            android:gravity="center_horizontal"
+            android:ems="10"
+            android:maxLength="5"
+            android:id="@+id/weight_project"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/other"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:gravity="center_vertical"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:text="@string/weight_other_default"
+            android:selectAllOnFocus="true"
+            android:gravity="center_horizontal"
+            android:ems="10"
+            android:maxLength="5"
+            android:id="@+id/weight_other"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:text="@string/a"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:gravity="center_vertical"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:text="@string/high_a_default"
+            android:selectAllOnFocus="true"
+            android:gravity="center_horizontal"
+            android:ems="10"
+            android:maxLength="5"
+            android:id="@+id/high_a"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:text="@string/low_a_default"
+            android:selectAllOnFocus="true"
+            android:gravity="center_horizontal"
+            android:ems="10"
+            android:maxLength="5"
+            android:id="@+id/low_a"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:text="@string/b"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:gravity="center_vertical"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:text="@string/high_b_default"
+            android:selectAllOnFocus="true"
+            android:gravity="center_horizontal"
+            android:ems="10"
+            android:maxLength="5"
+            android:id="@+id/high_b"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:text="@string/low_b_default"
+            android:selectAllOnFocus="true"
+            android:gravity="center_horizontal"
+            android:ems="10"
+            android:maxLength="5"
+            android:id="@+id/low_b"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:text="@string/c"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:gravity="center_vertical"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:text="@string/high_c_default"
+            android:selectAllOnFocus="true"
+            android:gravity="center_horizontal"
+            android:ems="10"
+            android:maxLength="5"
+            android:id="@+id/high_c"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:text="@string/low_c_default"
+            android:selectAllOnFocus="true"
+            android:gravity="center_horizontal"
+            android:ems="10"
+            android:maxLength="5"
+            android:id="@+id/low_c"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:text="@string/d"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:gravity="center_vertical"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:text="@string/high_d_default"
+            android:selectAllOnFocus="true"
+            android:gravity="center_horizontal"
+            android:ems="10"
+            android:maxLength="5"
+            android:id="@+id/high_d"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:text="@string/low_d_default"
+            android:selectAllOnFocus="true"
+            android:gravity="center_horizontal"
+            android:ems="10"
+            android:maxLength="5"
+            android:id="@+id/low_d"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:text="@string/f"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:gravity="center_vertical"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:text="@string/high_f_default"
+            android:selectAllOnFocus="true"
+            android:gravity="center_horizontal"
+            android:ems="10"
+            android:maxLength="5"
+            android:id="@+id/high_f"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:text="@string/low_f_default"
+            android:selectAllOnFocus="true"
+            android:gravity="center_horizontal"
+            android:ems="10"
+            android:maxLength="5"
+            android:id="@+id/low_f"/>
+    </LinearLayout>
+</LinearLayout>

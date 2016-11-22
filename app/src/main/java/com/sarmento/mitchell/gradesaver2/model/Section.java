@@ -82,7 +82,15 @@ public class Section {
     public Section(String sectionName, SparseArray<Double> gradeThresholds, SparseArray<Double> assignmentWeights,
                    SparseArray<Double> scores, double totalScore, double maxScore, char grade,
                    List<Assignment> assignments, List<DueDate> dueDates) {
-
+        this.sectionName = sectionName;
+        this.maxScore = maxScore;
+        this.totalScore = totalScore;
+        this.grade = grade;
+        this.gradeThresholds = gradeThresholds;
+        this.assignmentWeights = assignmentWeights;
+        this.scores = scores;
+        this.assignments = assignments;
+        this.dueDates = dueDates;
     }
 
     public String getSectionName() {

@@ -7,12 +7,41 @@
     <string name="midterm">Midterm</string>
     <string name="string_final">Final</string>
     <string name="project">Project</string>
+    <string name="other">Other</string>
 
-    <!-- Menu Actions -->
+    <!-- Grades -->
+    <string name="a">A</string>
+    <string name="b">B</string>
+    <string name="c">C</string>
+    <string name="d">D</string>
+    <string name="f">F</string>
+    <string name="high_a_default">100.0</string>
+    <string name="low_a_default">90.0</string>
+    <string name="high_b_default">89.0</string>
+    <string name="low_b_default">80.0</string>
+    <string name="high_c_default">79.0</string>
+    <string name="low_c_default">70.0</string>
+    <string name="high_d_default">69.0</string>
+    <string name="low_d_default">60.0</string>
+    <string name="high_f_default">59.0</string>
+    <string name="low_f_default">0.0</string>
+    <string name="weight_homework_default">30.0</string>
+    <string name="weight_quizzes_default">15.0</string>
+    <string name="weight_midterm_default">20.0</string>
+    <string name="weight_final_default">25.0</string>
+    <string name="weight_project_default">10.0</string>
+    <string name="weight_other_default">0.0</string>
+
+    <!-- MainActivity Menu Actions -->
     <string name="action_new_term">New Term</string>
+    <string name="action_view_archive">View Archive</string>
+
+    <!-- TermActivity Menu Actions -->
+    <string name="action_new_section">New Section</string>
 
     <!-- Misc -->
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
     <string name="term">Term</string>
+    <string name="section">Section</string>
 </resources>

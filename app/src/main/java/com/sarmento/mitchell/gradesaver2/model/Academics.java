@@ -8,6 +8,7 @@ import java.util.List;
 
 public class Academics {
     private static Academics instance = null;
+    private boolean loaded = false;
     private List<Term> currentTerms;
     private List<Term> archivedTerms;
 
@@ -20,15 +21,17 @@ public class Academics {
         if (instance == null) {
             instance = new Academics();
         }
-
         return instance;
     }
 
     // load from the database
     public void loadData(Context context) {
-        DBHelper db = new DBHelper(context);
-        currentTerms = db.getTerms(false);
-        archivedTerms = db.getTerms(true);
+        if (!loaded) {
+            DBHelper db = new DBHelper(context);
+            currentTerms = db.getTerms(false);
+            archivedTerms = db.getTerms(true);
+            loaded = true;
+        }
     }
 
     public List<Term> getCurrentTerms() {

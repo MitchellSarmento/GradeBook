@@ -3,13 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_new_term"
+        android:id="@+id/action_new_section"
         android:icon="@drawable/ic_add_black_24dp"
-        android:title="@string/action_new_term"
+        android:title="@string/action_new_section"
         app:showAsAction="ifRoom"/>
-
-    <item
-        android:id="@+id/action_view_archive"
-        android:title="@string/action_view_archive"
-        app:showAsAction="never"/>
 </menu>
