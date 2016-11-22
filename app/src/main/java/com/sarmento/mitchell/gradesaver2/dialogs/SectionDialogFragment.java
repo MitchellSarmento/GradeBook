@@ -15,8 +15,12 @@ import com.sarmento.mitchell.gradesaver2.model.Section;
 import com.sarmento.mitchell.gradesaver2.model.Term;
 
 public class SectionDialogFragment extends DialogFragment {
+    int termPosition;
+
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
+        termPosition = getArguments().getInt(Academics.TERM_POSITION);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         // set layout
@@ -58,7 +62,7 @@ public class SectionDialogFragment extends DialogFragment {
                 SparseArray<Double> assignmentWeights = new SparseArray<>();
                 assignmentWeights.put(Section.HOMEWORK,
                         Double.parseDouble(weightHomeworkEntry.getText().toString()));
-                assignmentWeights.put(Section.QUIZZES,
+                assignmentWeights.put(Section.QUIZ,
                         Double.parseDouble(weightQuizzesEntry.getText().toString()));
                 assignmentWeights.put(Section.MIDTERM,
                         Double.parseDouble(weightMidtermEntry.getText().toString()));
@@ -85,7 +89,8 @@ public class SectionDialogFragment extends DialogFragment {
                 Section section = new Section(sectionName, assignmentWeights, gradeThresholds);
 
                 // add new section
-                Academics.getInstance().addSection(getActivity(), section);
+                Academics.getInstance().getCurrentTerms().get(termPosition).addSection(getActivity(),
+                        section, termPosition);
 
                 dialog.dismiss();
             }

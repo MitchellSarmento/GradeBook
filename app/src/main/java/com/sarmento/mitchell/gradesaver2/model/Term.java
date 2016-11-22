@@ -1,6 +1,8 @@
 package com.sarmento.mitchell.gradesaver2.model;
 
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +25,10 @@ public class Term {
         return sections;
     }
 
-    public void addSection(Section section) {
+    public void addSection(Context context, Section section, int termPosition) {
+        DBHelper db = new DBHelper(context);
         sections.add(section);
+        db.addSection(section, termPosition+1);
     }
 
     public boolean isArchived() {

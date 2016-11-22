@@ -12,6 +12,7 @@ import com.sarmento.mitchell.gradesaver2.adapters.SectionAdapter;
 import com.sarmento.mitchell.gradesaver2.dialogs.SectionDialogFragment;
 import com.sarmento.mitchell.gradesaver2.dialogs.TermDialogFragment;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
+import com.sarmento.mitchell.gradesaver2.model.DBHelper;
 import com.sarmento.mitchell.gradesaver2.model.Term;
 
 public class TermActivity extends AppCompatActivity {
@@ -21,7 +22,7 @@ public class TermActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_term);
-        termPosition = getIntent().getIntExtra("termPosition", -1);
+        termPosition = getIntent().getIntExtra(Academics.TERM_POSITION, -1);
         Term term = Academics.getInstance().getCurrentTerms().get(termPosition);
 
         ListView sections = (ListView) findViewById(R.id.sections);
@@ -39,8 +40,11 @@ public class TermActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_new_section:
-                // TODO - SectionDialogFragment().setArguments(Bundle ...) with the termPosition.
-                new SectionDialogFragment().show(getFragmentManager(), getString(R.string.action_new_section));
+                SectionDialogFragment dialog = new SectionDialogFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt(Academics.TERM_POSITION, termPosition);
+                dialog.setArguments(bundle);
+                dialog.show(getFragmentManager(), getString(R.string.action_new_section));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

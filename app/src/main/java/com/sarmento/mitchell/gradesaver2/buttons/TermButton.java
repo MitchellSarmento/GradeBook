@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.sarmento.mitchell.gradesaver2.activities.TermActivity;
+import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.Term;
 
 public class TermButton extends Button implements View.OnClickListener {
@@ -27,7 +28,7 @@ public class TermButton extends Button implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(context, TermActivity.class);
-        intent.putExtra("termPosition", position);
+        intent.putExtra(Academics.TERM_POSITION, position);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }

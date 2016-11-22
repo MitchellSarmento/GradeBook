@@ -7,9 +7,9 @@ public class Assignment {
     String assignmentType;
     double score;
     double maxScore;
-    char grade;
+    String grade;
 
-    public Assignment(String assignmentName, String assignmentType, double score, double maxScore, char grade) {
+    public Assignment(String assignmentName, String assignmentType, double score, double maxScore, String grade) {
         this.assignmentName = assignmentName;
         this.assignmentType = assignmentType;
         this.score = score;

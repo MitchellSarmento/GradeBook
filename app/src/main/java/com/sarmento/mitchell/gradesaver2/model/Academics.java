@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Academics {
+    public static final String TERM_POSITION    = "termPosition";
+    public static final String SECTION_POSITION = "sectionPosition";
+
     private static Academics instance = null;
     private boolean loaded = false;
     private List<Term> currentTerms;
@@ -42,10 +45,5 @@ public class Academics {
         DBHelper db = new DBHelper(context);
         currentTerms.add(term);
         db.addTerm(term);
-    }
-
-    public void addSection(Context context, Section section) {
-        DBHelper db = new DBHelper(context);
-        // TODO
     }
 }

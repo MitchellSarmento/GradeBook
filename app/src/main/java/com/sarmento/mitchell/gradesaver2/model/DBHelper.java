@@ -152,6 +152,42 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void addSection(Section section, int termId) {
+        db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_SECTIONS_TERM_ID, termId);
+        values.put(KEY_SECTIONS_NAME, section.getSectionName());
+        SparseArray<Double> gradeThresholds = section.getGradeThresholds();
+        values.put(KEY_SECTIONS_HIGH_A, gradeThresholds.get(Section.HIGH_A));
+        values.put(KEY_SECTIONS_LOW_A, gradeThresholds.get(Section.LOW_A));
+        values.put(KEY_SECTIONS_HIGH_B, gradeThresholds.get(Section.HIGH_B));
+        values.put(KEY_SECTIONS_LOW_B, gradeThresholds.get(Section.LOW_B));
+        values.put(KEY_SECTIONS_HIGH_C, gradeThresholds.get(Section.HIGH_C));
+        values.put(KEY_SECTIONS_LOW_C, gradeThresholds.get(Section.LOW_C));
+        values.put(KEY_SECTIONS_HIGH_D, gradeThresholds.get(Section.HIGH_D));
+        values.put(KEY_SECTIONS_LOW_D, gradeThresholds.get(Section.LOW_D));
+        values.put(KEY_SECTIONS_HIGH_F, gradeThresholds.get(Section.HIGH_F));
+        values.put(KEY_SECTIONS_LOW_F, gradeThresholds.get(Section.LOW_F));
+        SparseArray<Double> assignmentWeights = section.getAssignmentWeights();
+        values.put(KEY_SECTIONS_WEIGHT_HOMEWORK, assignmentWeights.get(Section.HOMEWORK));
+        values.put(KEY_SECTIONS_WEIGHT_QUIZ, assignmentWeights.get(Section.QUIZ));
+        values.put(KEY_SECTIONS_WEIGHT_MIDTERM, assignmentWeights.get(Section.MIDTERM));
+        values.put(KEY_SECTIONS_WEIGHT_FINAL, assignmentWeights.get(Section.FINAL));
+        values.put(KEY_SECTIONS_WEIGHT_PROJECT, assignmentWeights.get(Section.PROJECT));
+        values.put(KEY_SECTIONS_WEIGHT_OTHER, assignmentWeights.get(Section.OTHER));
+        SparseArray<Double> scores = section.getScores();
+        values.put(KEY_SECTIONS_SCORE_HOMEWORK, scores.get(Section.HOMEWORK));
+        values.put(KEY_SECTIONS_SCORE_QUIZ, scores.get(Section.QUIZ));
+        values.put(KEY_SECTIONS_SCORE_MIDTERM, scores.get(Section.MIDTERM));
+        values.put(KEY_SECTIONS_SCORE_FINAL, scores.get(Section.FINAL));
+        values.put(KEY_SECTIONS_SCORE_PROJECT, scores.get(Section.PROJECT));
+        values.put(KEY_SECTIONS_SCORE_OTHER, scores.get(Section.OTHER));
+        values.put(KEY_SECTIONS_TOTAL_SCORE, section.getTotalScore());
+        values.put(KEY_SECTIONS_MAX_SCORE, section.getMaxScore());
+        values.put(KEY_SECTIONS_GRADE, section.getGrade());
+    }
+
     public List<Term> getTerms(boolean archived) {
         db = getReadableDatabase();
         List<Term> terms = new ArrayList<>();
@@ -208,7 +244,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 }
                 double totalScore = cursor.getDouble(26);
                 double maxScore = cursor.getDouble(27);
-                char grade = cursor.getString(28).charAt(0);
+                String grade = cursor.getString(28);
 
                 // get the assignments belonging to this section
                 List<Assignment> assignments = getAssignments(sectionId);
@@ -240,7 +276,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 String assignmentType = cursor.getString(3);
                 double score = cursor.getDouble(4);
                 double maxScore = cursor.getDouble(5);
-                char grade = cursor.getString(6).charAt(0);
+                String grade = cursor.getString(6);
 
                 // create and add the assignment
                 Assignment assignment = new Assignment(assignmentName, assignmentType, score, maxScore, grade);
