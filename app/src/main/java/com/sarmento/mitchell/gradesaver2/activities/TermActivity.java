@@ -19,8 +19,8 @@ import com.sarmento.mitchell.gradesaver2.model.DBHelper;
 import com.sarmento.mitchell.gradesaver2.model.Term;
 
 public class TermActivity extends AppCompatActivity {
-    int termPosition;
-    SectionAdapter adapter;
+    private int termPosition;
+    private SectionAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +38,10 @@ public class TermActivity extends AppCompatActivity {
 
     public void updateList() {
         adapter.notifyDataSetChanged();
+    }
+
+    public int getTermPosition() {
+        return termPosition;
     }
 
     @Override

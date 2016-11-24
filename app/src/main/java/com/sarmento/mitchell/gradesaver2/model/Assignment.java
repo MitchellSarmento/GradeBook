@@ -16,4 +16,24 @@ public class Assignment {
         this.maxScore = maxScore;
         this.grade = grade;
     }
+
+    public String getAssignmentName() {
+        return assignmentName;
+    }
+
+    public String getAssignmentType() {
+        return assignmentType;
+    }
+
+    public double getScore() {
+        return score;
+    }
+
+    public double getMaxScore() {
+        return maxScore;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
 }

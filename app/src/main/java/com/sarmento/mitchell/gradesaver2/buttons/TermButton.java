@@ -12,7 +12,7 @@ import com.sarmento.mitchell.gradesaver2.model.Term;
 
 public class TermButton extends Button implements View.OnClickListener {
     private Context context;
-    private int position;
+    private int termPosition;
 
     public TermButton(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -20,7 +20,7 @@ public class TermButton extends Button implements View.OnClickListener {
     }
 
     public void init(Term term, final int position) {
-        this.position = position;
+        termPosition = position;
         setText(term.getTermName());
         setAllCaps(false);
         setOnClickListener(this);
@@ -29,7 +29,7 @@ public class TermButton extends Button implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(context, TermActivity.class);
-        intent.putExtra(Academics.TERM_POSITION, position);
+        intent.putExtra(Academics.TERM_POSITION, termPosition);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }

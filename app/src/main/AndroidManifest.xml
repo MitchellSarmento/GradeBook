@@ -15,7 +15,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.TermActivity"></activity>
+        <activity android:name=".activities.TermActivity" />
+        <activity android:name=".activities.SectionActivity"></activity>
     </application>
 
 </manifest>
