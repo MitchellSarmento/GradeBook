@@ -195,6 +195,21 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void addAssignment(Assignment assignment, int sectionId) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_ASSIGNMENTS_SECTION_ID, sectionId);
+        values.put(KEY_ASSIGNMENTS_NAME, assignment.getAssignmentName());
+        values.put(KEY_ASSIGNMENTS_TYPE, assignment.getAssignmentType());
+        values.put(KEY_ASSIGNMENTS_SCORE, assignment.getScore());
+        values.put(KEY_ASSIGNMENTS_MAX_SCORE, assignment.getMaxScore());
+        values.put(KEY_ASSIGNMENTS_GRADE, assignment.getGrade());
+
+        db.insert(TABLE_ASSIGNMENTS, null, values);
+        db.close();
+    }
+
     public List<Term> getTerms(boolean archived) {
         SQLiteDatabase db = getReadableDatabase();
         List<Term> terms = new ArrayList<>();

@@ -37,7 +37,7 @@
             android:text="@string/weight_homework_default"
             android:selectAllOnFocus="true"
             android:gravity="center_horizontal"
-            android:ems="10"
+            android:ems="5"
             android:maxLength="5"
             android:id="@+id/weight_homework"/>
 
@@ -45,7 +45,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/quizzes"
+            android:text="@string/quiz"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:gravity="center_vertical"/>
 
@@ -57,7 +57,7 @@
             android:text="@string/weight_quizzes_default"
             android:selectAllOnFocus="true"
             android:gravity="center_horizontal"
-            android:ems="10"
+            android:ems="5"
             android:maxLength="5"
             android:id="@+id/weight_quizzes"/>
     </LinearLayout>
@@ -82,7 +82,7 @@
             android:text="@string/weight_midterm_default"
             android:selectAllOnFocus="true"
             android:gravity="center_horizontal"
-            android:ems="10"
+            android:ems="5"
             android:maxLength="5"
             android:id="@+id/weight_midterm"/>
 
@@ -102,7 +102,7 @@
             android:text="@string/weight_final_default"
             android:selectAllOnFocus="true"
             android:gravity="center_horizontal"
-            android:ems="10"
+            android:ems="5"
             android:maxLength="5"
             android:id="@+id/weight_final"/>
     </LinearLayout>
@@ -127,7 +127,7 @@
             android:text="@string/weight_project_default"
             android:selectAllOnFocus="true"
             android:gravity="center_horizontal"
-            android:ems="10"
+            android:ems="5"
             android:maxLength="5"
             android:id="@+id/weight_project"/>
 
@@ -147,7 +147,7 @@
             android:text="@string/weight_other_default"
             android:selectAllOnFocus="true"
             android:gravity="center_horizontal"
-            android:ems="10"
+            android:ems="5"
             android:maxLength="5"
             android:id="@+id/weight_other"/>
     </LinearLayout>
@@ -173,7 +173,7 @@
             android:text="@string/high_a_default"
             android:selectAllOnFocus="true"
             android:gravity="center_horizontal"
-            android:ems="10"
+            android:ems="5"
             android:maxLength="5"
             android:id="@+id/high_a"/>
 
@@ -185,7 +185,7 @@
             android:text="@string/low_a_default"
             android:selectAllOnFocus="true"
             android:gravity="center_horizontal"
-            android:ems="10"
+            android:ems="5"
             android:maxLength="5"
             android:id="@+id/low_a"/>
     </LinearLayout>
@@ -211,7 +211,7 @@
             android:text="@string/high_b_default"
             android:selectAllOnFocus="true"
             android:gravity="center_horizontal"
-            android:ems="10"
+            android:ems="5"
             android:maxLength="5"
             android:id="@+id/high_b"/>
 
@@ -223,7 +223,7 @@
             android:text="@string/low_b_default"
             android:selectAllOnFocus="true"
             android:gravity="center_horizontal"
-            android:ems="10"
+            android:ems="5"
             android:maxLength="5"
             android:id="@+id/low_b"/>
     </LinearLayout>
@@ -249,7 +249,7 @@
             android:text="@string/high_c_default"
             android:selectAllOnFocus="true"
             android:gravity="center_horizontal"
-            android:ems="10"
+            android:ems="5"
             android:maxLength="5"
             android:id="@+id/high_c"/>
 
@@ -261,7 +261,7 @@
             android:text="@string/low_c_default"
             android:selectAllOnFocus="true"
             android:gravity="center_horizontal"
-            android:ems="10"
+            android:ems="5"
             android:maxLength="5"
             android:id="@+id/low_c"/>
     </LinearLayout>
@@ -287,7 +287,7 @@
             android:text="@string/high_d_default"
             android:selectAllOnFocus="true"
             android:gravity="center_horizontal"
-            android:ems="10"
+            android:ems="5"
             android:maxLength="5"
             android:id="@+id/high_d"/>
 
@@ -299,7 +299,7 @@
             android:text="@string/low_d_default"
             android:selectAllOnFocus="true"
             android:gravity="center_horizontal"
-            android:ems="10"
+            android:ems="5"
             android:maxLength="5"
             android:id="@+id/low_d"/>
     </LinearLayout>
@@ -325,7 +325,7 @@
             android:text="@string/high_f_default"
             android:selectAllOnFocus="true"
             android:gravity="center_horizontal"
-            android:ems="10"
+            android:ems="5"
             android:maxLength="5"
             android:id="@+id/high_f"/>
 
@@ -337,7 +337,7 @@
             android:text="@string/low_f_default"
             android:selectAllOnFocus="true"
             android:gravity="center_horizontal"
-            android:ems="10"
+            android:ems="5"
             android:maxLength="5"
             android:id="@+id/low_f"/>
     </LinearLayout>

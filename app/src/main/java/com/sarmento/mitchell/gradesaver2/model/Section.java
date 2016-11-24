@@ -106,4 +106,49 @@ public class Section {
     public List<Assignment> getAssignments() {
         return assignments;
     }
+
+    public void addAssignment(Context context, Assignment assignment, int sectionPosition) {
+        DBHelper db = new DBHelper(context);
+        assignments.add(assignment);
+        db.addAssignment(assignment, sectionPosition+1);
+    }
+
+    public List<Integer> getRelevantAssignmentTypes() {
+        List<Integer> assignmentTypes = new ArrayList<>();
+        if (assignmentWeights.get(HOMEWORK) != 0) {
+            assignmentTypes.add(HOMEWORK);
+        }
+        if (assignmentWeights.get(QUIZ) != 0) {
+            assignmentTypes.add(QUIZ);
+        }
+        if (assignmentWeights.get(MIDTERM) != 0) {
+            assignmentTypes.add(MIDTERM);
+        }
+        if (assignmentWeights.get(FINAL) != 0) {
+            assignmentTypes.add(FINAL);
+        }
+        if (assignmentWeights.get(PROJECT) != 0) {
+            assignmentTypes.add(PROJECT);
+        }
+        if (assignmentWeights.get(OTHER) != 0) {
+            assignmentTypes.add(OTHER);
+        }
+        return assignmentTypes;
+    }
+
+    public String calculateAssignmentGrade(double score, double maxScore) {
+        double gradePercent = score / maxScore * 100;
+
+        if (gradePercent >= gradeThresholds.get(LOW_A)) {
+            return "A";
+        } else if (gradePercent >= gradeThresholds.get(LOW_B)) {
+            return "B";
+        } else if (gradePercent >= gradeThresholds.get(LOW_C)) {
+            return "C";
+        } else if (gradePercent >= gradeThresholds.get(LOW_D)) {
+            return "D";
+        } else {
+            return "F";
+        }
+    }
 }

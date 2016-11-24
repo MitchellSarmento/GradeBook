@@ -3,11 +3,11 @@ package com.sarmento.mitchell.gradesaver2.model;
 
 
 public class Assignment {
-    String assignmentName;
-    String assignmentType;
-    double score;
-    double maxScore;
-    String grade;
+    private String assignmentName;
+    private String assignmentType;
+    private double score;
+    private double maxScore;
+    private String grade;
 
     public Assignment(String assignmentName, String assignmentType, double score, double maxScore, String grade) {
         this.assignmentName = assignmentName;
