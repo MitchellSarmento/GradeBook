@@ -39,9 +39,16 @@
     <!-- TermActivity Menu Actions -->
     <string name="action_new_section">New Section</string>
 
+    <!-- SectionActivity Menu Actions -->
+    <string name="action_new_assignment">New Assignment</string>
+
     <!-- Misc -->
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
     <string name="term">Term</string>
     <string name="section">Section</string>
+    <string name="assignment">Assignment</string>
+    <string name="my_score">My Score</string>
+    <string name="max_score">Max Score</string>
+    <string name="type">Type</string>
 </resources>

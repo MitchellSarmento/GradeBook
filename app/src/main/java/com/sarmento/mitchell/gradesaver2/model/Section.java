@@ -102,4 +102,8 @@ public class Section {
     public String getGrade() {
         return grade;
     }
+
+    public List<Assignment> getAssignments() {
+        return assignments;
+    }
 }
