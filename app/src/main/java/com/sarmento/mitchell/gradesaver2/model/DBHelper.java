@@ -26,63 +26,69 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String TABLE_DUE_DATES    = "DueDates";
 
     // TABLE_TERMS columns
-    private static final String KEY_TERMS_ID       = "id";
-    private static final String KEY_TERMS_NAME     = "name";
-    private static final String KEY_TERMS_ARCHIVED = "archived";
+    public static final String KEY_TERMS_ID       = "id";
+    public static final String KEY_TERMS_NAME     = "name";
+    public static final String KEY_TERMS_ARCHIVED = "archived";
 
     // TABLE_SECTIONS columns
-    private static final String KEY_SECTIONS_ID              = "id";
-    private static final String KEY_SECTIONS_TERM_ID         = "termId";
-    private static final String KEY_SECTIONS_NAME            = "name";
-    private static final String KEY_SECTIONS_HIGH_A          = "highA";
-    private static final String KEY_SECTIONS_LOW_A           = "lowA";
-    private static final String KEY_SECTIONS_HIGH_B          = "highB";
-    private static final String KEY_SECTIONS_LOW_B           = "lowB";
-    private static final String KEY_SECTIONS_HIGH_C          = "highC";
-    private static final String KEY_SECTIONS_LOW_C           = "lowC";
-    private static final String KEY_SECTIONS_HIGH_D          = "highD";
-    private static final String KEY_SECTIONS_LOW_D           = "lowD";
-    private static final String KEY_SECTIONS_HIGH_F          = "highF";
-    private static final String KEY_SECTIONS_LOW_F           = "lowF";
-    private static final String KEY_SECTIONS_WEIGHT_HOMEWORK = "weightHomework";
-    private static final String KEY_SECTIONS_WEIGHT_QUIZ     = "weightQuiz";
-    private static final String KEY_SECTIONS_WEIGHT_MIDTERM  = "weightMidterm";
-    private static final String KEY_SECTIONS_WEIGHT_FINAL    = "weightFinal";
-    private static final String KEY_SECTIONS_WEIGHT_PROJECT  = "weightProject";
-    private static final String KEY_SECTIONS_WEIGHT_OTHER    = "weightOther";
-    private static final String KEY_SECTIONS_SCORE_HOMEWORK  = "scoreHomework";
-    private static final String KEY_SECTIONS_SCORE_QUIZ      = "scoreQuiz";
-    private static final String KEY_SECTIONS_SCORE_MIDTERM   = "scoreMidterm";
-    private static final String KEY_SECTIONS_SCORE_FINAL     = "scoreFinal";
-    private static final String KEY_SECTIONS_SCORE_PROJECT   = "scoreProject";
-    private static final String KEY_SECTIONS_SCORE_OTHER     = "scoreOther";
-    private static final String KEY_SECTIONS_TOTAL_SCORE     = "totalScore";
-    private static final String KEY_SECTIONS_MAX_SCORE       = "maxScore";
-    private static final String KEY_SECTIONS_GRADE           = "grade";
-    private static final String KEY_SECTIONS_LOCATION        = "location";
-    private static final String KEY_SECTIONS_ON_MONDAY       = "onMo";
-    private static final String KEY_SECTIONS_ON_TUESDAY      = "onTu";
-    private static final String KEY_SECTIONS_ON_WEDNESDAY    = "onWe";
-    private static final String KEY_SECTIONS_ON_THURSDAY     = "onTh";
-    private static final String KEY_SECTIONS_ON_FRIDAY       = "onFr";
-    private static final String KEY_SECTIONS_ON_SATURDAY     = "onSa";
-    private static final String KEY_SECTIONS_ON_SUNDAY       = "onSu";
+    public static final String KEY_SECTIONS_ID                 = "id";
+    public static final String KEY_SECTIONS_TERM_ID            = "termId";
+    public static final String KEY_SECTIONS_NAME               = "name";
+    public static final String KEY_SECTIONS_HIGH_A             = "highA";
+    public static final String KEY_SECTIONS_LOW_A              = "lowA";
+    public static final String KEY_SECTIONS_HIGH_B             = "highB";
+    public static final String KEY_SECTIONS_LOW_B              = "lowB";
+    public static final String KEY_SECTIONS_HIGH_C             = "highC";
+    public static final String KEY_SECTIONS_LOW_C              = "lowC";
+    public static final String KEY_SECTIONS_HIGH_D             = "highD";
+    public static final String KEY_SECTIONS_LOW_D              = "lowD";
+    public static final String KEY_SECTIONS_HIGH_F             = "highF";
+    public static final String KEY_SECTIONS_LOW_F              = "lowF";
+    public static final String KEY_SECTIONS_WEIGHT_HOMEWORK    = "weightHomework";
+    public static final String KEY_SECTIONS_WEIGHT_QUIZ        = "weightQuiz";
+    public static final String KEY_SECTIONS_WEIGHT_MIDTERM     = "weightMidterm";
+    public static final String KEY_SECTIONS_WEIGHT_FINAL       = "weightFinal";
+    public static final String KEY_SECTIONS_WEIGHT_PROJECT     = "weightProject";
+    public static final String KEY_SECTIONS_WEIGHT_OTHER       = "weightOther";
+    public static final String KEY_SECTIONS_SCORE_HOMEWORK     = "scoreHomework";
+    public static final String KEY_SECTIONS_MAX_SCORE_HOMEWORK = "maxScoreHomework";
+    public static final String KEY_SECTIONS_SCORE_QUIZ         = "scoreQuiz";
+    public static final String KEY_SECTIONS_MAX_SCORE_QUIZ     = "maxScoreQuiz";
+    public static final String KEY_SECTIONS_SCORE_MIDTERM      = "scoreMidterm";
+    public static final String KEY_SECTIONS_MAX_SCORE_MIDTERM  = "maxScoreMidterm";
+    public static final String KEY_SECTIONS_SCORE_FINAL        = "scoreFinal";
+    public static final String KEY_SECTIONS_MAX_SCORE_FINAL    = "maxScoreFinal";
+    public static final String KEY_SECTIONS_SCORE_PROJECT      = "scoreProject";
+    public static final String KEY_SECTIONS_MAX_SCORE_PROJECT  = "maxScoreProject";
+    public static final String KEY_SECTIONS_SCORE_OTHER        = "scoreOther";
+    public static final String KEY_SECTIONS_MAX_SCORE_OTHER    = "maxScoreOther";
+    public static final String KEY_SECTIONS_SCORE_TOTAL        = "scoreTotal";
+    public static final String KEY_SECTIONS_MAX_SCORE_TOTAL    = "maxScoreTotal";
+    public static final String KEY_SECTIONS_GRADE              = "grade";
+    public static final String KEY_SECTIONS_LOCATION           = "location";
+    public static final String KEY_SECTIONS_ON_MONDAY          = "onMo";
+    public static final String KEY_SECTIONS_ON_TUESDAY         = "onTu";
+    public static final String KEY_SECTIONS_ON_WEDNESDAY       = "onWe";
+    public static final String KEY_SECTIONS_ON_THURSDAY        = "onTh";
+    public static final String KEY_SECTIONS_ON_FRIDAY          = "onFr";
+    public static final String KEY_SECTIONS_ON_SATURDAY        = "onSa";
+    public static final String KEY_SECTIONS_ON_SUNDAY          = "onSu";
 
     // TABLE_ASSIGNMENTS columns
-    private static final String KEY_ASSIGNMENTS_ID         = "id";
-    private static final String KEY_ASSIGNMENTS_SECTION_ID = "sectionId";
-    private static final String KEY_ASSIGNMENTS_NAME       = "name";
-    private static final String KEY_ASSIGNMENTS_TYPE       = "type";
-    private static final String KEY_ASSIGNMENTS_SCORE      = "score";
-    private static final String KEY_ASSIGNMENTS_MAX_SCORE  = "maxScore";
-    private static final String KEY_ASSIGNMENTS_GRADE      = "grade";
+    public static final String KEY_ASSIGNMENTS_ID         = "id";
+    public static final String KEY_ASSIGNMENTS_SECTION_ID = "sectionId";
+    public static final String KEY_ASSIGNMENTS_NAME       = "name";
+    public static final String KEY_ASSIGNMENTS_TYPE       = "type";
+    public static final String KEY_ASSIGNMENTS_SCORE      = "score";
+    public static final String KEY_ASSIGNMENTS_MAX_SCORE  = "maxScore";
+    public static final String KEY_ASSIGNMENTS_GRADE      = "grade";
 
     // TABLE_DUE_DATES columns
-    private static final String KEY_DUE_DATES_ID         = "id";
-    private static final String KEY_DUE_DATES_SECTION_ID = "sectionId";
-    private static final String KEY_DUE_DATES_NAME       = "name";
-    private static final String KEY_DUE_DATES_COMPLETE   = "complete";
-    private static final String KEY_DUE_DATES_DATE       = "date";
+    public static final String KEY_DUE_DATES_ID         = "id";
+    public static final String KEY_DUE_DATES_SECTION_ID = "sectionId";
+    public static final String KEY_DUE_DATES_NAME       = "name";
+    public static final String KEY_DUE_DATES_COMPLETE   = "complete";
+    public static final String KEY_DUE_DATES_DATE       = "date";
 
     private static final int TRUE  = 1;
     private static final int FALSE = 0;
@@ -100,28 +106,41 @@ public class DBHelper extends SQLiteOpenHelper {
                 KEY_TERMS_ARCHIVED + " TEXT)";
 
         final String CREATE_TABLE_SECTIONS = "CREATE TABLE " + TABLE_SECTIONS + "(" +
-                KEY_SECTIONS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_SECTIONS_TERM_ID + " INTEGER," +
-                KEY_SECTIONS_NAME + " TEXT," + KEY_SECTIONS_HIGH_A + " REAL," + KEY_SECTIONS_LOW_A + " REAL,"
-                + KEY_SECTIONS_HIGH_B + " REAL," + KEY_SECTIONS_LOW_B + " REAL," + KEY_SECTIONS_HIGH_C + " REAL,"
-                + KEY_SECTIONS_LOW_C + " REAL," + KEY_SECTIONS_HIGH_D + " REAL," + KEY_SECTIONS_LOW_D + " REAL,"
-                + KEY_SECTIONS_HIGH_F + " REAL," + KEY_SECTIONS_LOW_F + " REAL," + KEY_SECTIONS_WEIGHT_HOMEWORK +
-                " REAL," + KEY_SECTIONS_WEIGHT_QUIZ + " REAL," + KEY_SECTIONS_WEIGHT_MIDTERM + " REAL," +
-                KEY_SECTIONS_WEIGHT_FINAL + " REAL," + KEY_SECTIONS_WEIGHT_PROJECT + " REAL," +
-                KEY_SECTIONS_WEIGHT_OTHER + " REAL," + KEY_SECTIONS_SCORE_HOMEWORK + " REAL," +
-                KEY_SECTIONS_SCORE_QUIZ + " REAL," + KEY_SECTIONS_SCORE_MIDTERM + " REAL," +
-                KEY_SECTIONS_SCORE_FINAL + " REAL," + KEY_SECTIONS_SCORE_PROJECT + " REAL," +
-                KEY_SECTIONS_SCORE_OTHER + " REAL," + KEY_SECTIONS_TOTAL_SCORE + " REAL," +
-                KEY_SECTIONS_MAX_SCORE + " REAL," + KEY_SECTIONS_GRADE + " TEXT," + KEY_SECTIONS_LOCATION +
-                " TEXT," + KEY_SECTIONS_ON_MONDAY + " INTEGER," + KEY_SECTIONS_ON_TUESDAY + " INTEGER," +
+                KEY_SECTIONS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_SECTIONS_TERM_ID +
+                " INTEGER," + KEY_SECTIONS_NAME + " TEXT," +
+                KEY_SECTIONS_HIGH_A + " REAL," + KEY_SECTIONS_LOW_A + " REAL," +
+                KEY_SECTIONS_HIGH_B + " REAL," + KEY_SECTIONS_LOW_B + " REAL," +
+                KEY_SECTIONS_HIGH_C + " REAL," + KEY_SECTIONS_LOW_C + " REAL," +
+                KEY_SECTIONS_HIGH_D + " REAL," + KEY_SECTIONS_LOW_D + " REAL," +
+                KEY_SECTIONS_HIGH_F + " REAL," + KEY_SECTIONS_LOW_F + " REAL," +
+                KEY_SECTIONS_WEIGHT_HOMEWORK + " REAL," + KEY_SECTIONS_WEIGHT_QUIZ + " REAL," +
+                KEY_SECTIONS_WEIGHT_MIDTERM + " REAL," + KEY_SECTIONS_WEIGHT_FINAL + " REAL," +
+                KEY_SECTIONS_WEIGHT_PROJECT + " REAL," + KEY_SECTIONS_WEIGHT_OTHER + " REAL," +
+                KEY_SECTIONS_SCORE_HOMEWORK + " REAL," +
+                KEY_SECTIONS_MAX_SCORE_HOMEWORK + " REAL," +
+                KEY_SECTIONS_SCORE_QUIZ + " REAL," +
+                KEY_SECTIONS_MAX_SCORE_QUIZ + " REAL," +
+                KEY_SECTIONS_SCORE_MIDTERM + " REAL," +
+                KEY_SECTIONS_MAX_SCORE_MIDTERM + " REAL," +
+                KEY_SECTIONS_SCORE_FINAL + " REAL," +
+                KEY_SECTIONS_MAX_SCORE_FINAL + " REAL," +
+                KEY_SECTIONS_SCORE_PROJECT + " REAL," +
+                KEY_SECTIONS_MAX_SCORE_PROJECT + " REAL," +
+                KEY_SECTIONS_SCORE_OTHER + " REAL," +
+                KEY_SECTIONS_MAX_SCORE_OTHER + " REAL," +
+                KEY_SECTIONS_SCORE_TOTAL + " REAL," +
+                KEY_SECTIONS_MAX_SCORE_TOTAL + " REAL," +
+                KEY_SECTIONS_GRADE + " TEXT," + KEY_SECTIONS_LOCATION + " TEXT," +
+                KEY_SECTIONS_ON_MONDAY + " INTEGER," + KEY_SECTIONS_ON_TUESDAY + " INTEGER," +
                 KEY_SECTIONS_ON_WEDNESDAY + " INTEGER," + KEY_SECTIONS_ON_THURSDAY + " INTEGER," +
                 KEY_SECTIONS_ON_FRIDAY + " INTEGER," + KEY_SECTIONS_ON_SATURDAY + " INTEGER," +
                 KEY_SECTIONS_ON_SUNDAY + " INTEGER)";
 
         final String CREATE_TABLE_ASSIGNMENTS = "CREATE TABLE " + TABLE_ASSIGNMENTS + "(" +
-                KEY_ASSIGNMENTS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_ASSIGNMENTS_SECTION_ID +
-                " INTEGER," + KEY_ASSIGNMENTS_NAME + " TEXT," + KEY_ASSIGNMENTS_TYPE + " TEXT," +
-                KEY_ASSIGNMENTS_SCORE + " REAL," + KEY_ASSIGNMENTS_MAX_SCORE + " REAL," +
-                KEY_ASSIGNMENTS_GRADE + " TEXT)";
+                KEY_ASSIGNMENTS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                KEY_ASSIGNMENTS_SECTION_ID + " INTEGER," + KEY_ASSIGNMENTS_NAME + " TEXT," +
+                KEY_ASSIGNMENTS_TYPE + " TEXT," + KEY_ASSIGNMENTS_SCORE + " REAL," +
+                KEY_ASSIGNMENTS_MAX_SCORE + " REAL," + KEY_ASSIGNMENTS_GRADE + " TEXT)";
 
         final String CREATE_TABLE_DUE_DATES = "CREATE TABLE " + TABLE_DUE_DATES + "(" +
                 KEY_DUE_DATES_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_DUE_DATES_SECTION_ID +
@@ -187,8 +206,17 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(KEY_SECTIONS_SCORE_FINAL, scores.get(Section.FINAL));
         values.put(KEY_SECTIONS_SCORE_PROJECT, scores.get(Section.PROJECT));
         values.put(KEY_SECTIONS_SCORE_OTHER, scores.get(Section.OTHER));
-        values.put(KEY_SECTIONS_TOTAL_SCORE, section.getTotalScore());
-        values.put(KEY_SECTIONS_MAX_SCORE, section.getMaxScore());
+
+        SparseArray<Double> maxScores = section.getMaxScores();
+        values.put(KEY_SECTIONS_MAX_SCORE_HOMEWORK, maxScores.get(Section.HOMEWORK));
+        values.put(KEY_SECTIONS_MAX_SCORE_QUIZ, maxScores.get(Section.QUIZ));
+        values.put(KEY_SECTIONS_MAX_SCORE_MIDTERM, maxScores.get(Section.MIDTERM));
+        values.put(KEY_SECTIONS_MAX_SCORE_FINAL, maxScores.get(Section.FINAL));
+        values.put(KEY_SECTIONS_MAX_SCORE_PROJECT, maxScores.get(Section.PROJECT));
+        values.put(KEY_SECTIONS_MAX_SCORE_OTHER, maxScores.get(Section.OTHER));
+
+        values.put(KEY_SECTIONS_SCORE_TOTAL, section.getTotalScore());
+        values.put(KEY_SECTIONS_MAX_SCORE_TOTAL, section.getMaxScore());
         values.put(KEY_SECTIONS_GRADE, section.getGrade());
 
         db.insert(TABLE_SECTIONS, null, values);
@@ -219,7 +247,8 @@ public class DBHelper extends SQLiteOpenHelper {
             isArchived = TRUE;
         }
 
-        String query = "SELECT * FROM " + TABLE_TERMS + " WHERE " + KEY_TERMS_ARCHIVED + " = " + isArchived;
+        String query = "SELECT * FROM " + TABLE_TERMS + " WHERE " + KEY_TERMS_ARCHIVED +
+                " = " + isArchived;
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
@@ -245,7 +274,8 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         List<Section> sections = new ArrayList<>();
 
-        String query = "SELECT * FROM " + TABLE_SECTIONS + " WHERE " + KEY_SECTIONS_TERM_ID + " = " + termId;
+        String query = "SELECT * FROM " + TABLE_SECTIONS + " WHERE " + KEY_SECTIONS_TERM_ID +
+                " = " + termId;
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
@@ -261,13 +291,19 @@ public class DBHelper extends SQLiteOpenHelper {
                 for (int i = 0; i < 6; i++) {
                     assignmentWeights.put(i, cursor.getDouble(i+13));
                 }
-                SparseArray<Double> scores = new SparseArray<>();
-                for (int i = 0; i < 6; i++) {
-                    scores.put(i, cursor.getDouble(i+19));
+                SparseArray<Double> scores    = new SparseArray<>();
+                SparseArray<Double> maxScores = new SparseArray<>();
+                for (int i = 0; i < 12; i++) {
+                    if (i % 2 == 0) {
+                        scores.put(i, cursor.getDouble(i+19));
+                    } else {
+                        maxScores.put(i, cursor.getDouble(i+19));
+                    }
+
                 }
-                double totalScore = cursor.getDouble(25);
-                double maxScore = cursor.getDouble(26);
-                String grade = cursor.getString(27);
+                double totalScore = cursor.getDouble(31);
+                double maxScore = cursor.getDouble(32);
+                String grade = cursor.getString(33);
 
                 // get the assignments belonging to this section
                 List<Assignment> assignments = getAssignments(sectionId);
@@ -276,8 +312,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 List<DueDate> dueDates = getDueDates(sectionId);
 
                 // create and add the section
-                Section section = new Section(sectionName, gradeThresholds, assignmentWeights, scores, totalScore,
-                        maxScore, grade, assignments, dueDates);
+                Section section = new Section(sectionName, gradeThresholds, assignmentWeights,
+                        scores, maxScores, totalScore, maxScore, grade, assignments, dueDates);
                 sections.add(section);
             } while (cursor.moveToNext());
         }

@@ -51,4 +51,5 @@
     <string name="my_score">My Score</string>
     <string name="max_score">Max Score</string>
     <string name="type">Type</string>
+    <string name="total">Total</string>
 </resources>
