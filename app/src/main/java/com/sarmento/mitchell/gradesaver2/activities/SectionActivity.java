@@ -107,9 +107,13 @@ public class SectionActivity extends AppCompatActivity {
 
         double scorePercent = section.getTotalScore() / section.getMaxScore() * 100;
 
-        grade.setText(getText(R.string.total) + " " +
-                String.format(Locale.getDefault(), "%.2f", scorePercent) + "% " +
-                section.getGrade());
+        if (Double.isNaN(scorePercent)) {
+            scoreString = "";
+        } else {
+            scoreString = String.format(Locale.getDefault(), "%.2f", scorePercent) + "% " +
+                    section.getGrade();
+        }
+        grade.setText(getText(R.string.total) + " " + scoreString);
     }
 
     @Override
