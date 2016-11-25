@@ -22,6 +22,7 @@ public class SectionActivity extends AppCompatActivity {
     private int termPosition;
     private int sectionPosition;
     private AssignmentAdapter adapter;
+    private Section section;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,7 @@ public class SectionActivity extends AppCompatActivity {
         termPosition = getIntent().getIntExtra(Academics.TERM_POSITION, -1);
         sectionPosition = getIntent().getIntExtra(Academics.SECTION_POSITION, -1);
 
-        Section section = Academics.getInstance().getCurrentTerms().get(termPosition)
+        section = Academics.getInstance().getCurrentTerms().get(termPosition)
                 .getSections().get(sectionPosition);
 
         setHeader(section);
@@ -44,6 +45,7 @@ public class SectionActivity extends AppCompatActivity {
 
     public void updateList() {
         adapter.notifyDataSetChanged();
+        setHeader(section);
     }
 
     private void setHeader(Section section) {
