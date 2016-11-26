@@ -1,6 +1,7 @@
 package com.sarmento.mitchell.gradesaver2.model;
 
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 import android.util.SparseArray;
@@ -111,10 +112,14 @@ public class Section {
         return assignments;
     }
 
-    public void addAssignment(Context context, Assignment assignment, int type, int sectionPosition) {
+    public void addAssignment(Context context, Assignment assignment, int type,
+                              int termPosition, int sectionPosition) {
+        int termId    = termPosition+1;
+        int sectionId = sectionPosition+1;
+
         DBHelper db = new DBHelper(context);
         assignments.add(assignment);
-        db.addAssignment(assignment, sectionPosition+1);
+        db.addAssignment(assignment, sectionId);
 
         double assignmentScore    = assignment.getScore();
         double assignmentMaxScore = assignment.getMaxScore();
@@ -139,10 +144,10 @@ public class Section {
         int[] assignmentTypes = {HOMEWORK, QUIZ, MIDTERM, FINAL, PROJECT, OTHER};
         for (int assignmentType : assignmentTypes) {
             // skip this type if there are no scores for it
-            Double typeScore = scores.get(assignmentType);
-            if (typeScore != null) {
-                Double maxTypeScore = maxScores.get(assignmentType);
-                totalScore += typeScore / maxTypeScore * assignmentWeights.get(assignmentType);
+            Double typeScore    = scores.get(assignmentType);
+            Double typeMaxScore = maxScores.get(assignmentType);
+            if (typeMaxScore != null && typeMaxScore != 0) {
+                totalScore += typeScore / typeMaxScore * assignmentWeights.get(assignmentType);
                 maxScore += assignmentWeights.get(assignmentType);
             }
         }
@@ -150,9 +155,46 @@ public class Section {
         // calculate the overall grade for this section
         grade = calculateGrade(totalScore, maxScore);
 
-        //HashMap<String, Object> updateValues = new HashMap<>();
-        //updateValues.put(DBHelper.KEY_SECTIONS_SCORE_)
-        //db.updateSection()
+        // find which column to update
+        String keyScore = "";
+        String keyMaxScore = "";
+        switch (type) {
+            case HOMEWORK:
+                keyScore    = DBHelper.KEY_SECTIONS_SCORE_HOMEWORK;
+                keyMaxScore = DBHelper.KEY_SECTIONS_MAX_SCORE_HOMEWORK;
+                break;
+            case QUIZ:
+                keyScore    = DBHelper.KEY_SECTIONS_SCORE_QUIZ;
+                keyMaxScore = DBHelper.KEY_SECTIONS_MAX_SCORE_QUIZ;
+                break;
+            case MIDTERM:
+                keyScore    = DBHelper.KEY_SECTIONS_SCORE_MIDTERM;
+                keyMaxScore = DBHelper.KEY_SECTIONS_MAX_SCORE_MIDTERM;
+                break;
+            case FINAL:
+                keyScore    = DBHelper.KEY_SECTIONS_SCORE_FINAL;
+                keyMaxScore = DBHelper.KEY_SECTIONS_MAX_SCORE_FINAL;
+                break;
+            case PROJECT:
+                keyScore    = DBHelper.KEY_SECTIONS_SCORE_PROJECT;
+                keyMaxScore = DBHelper.KEY_SECTIONS_MAX_SCORE_PROJECT;
+                break;
+            case OTHER:
+                keyScore    = DBHelper.KEY_SECTIONS_SCORE_OTHER;
+                keyMaxScore = DBHelper.KEY_SECTIONS_MAX_SCORE_OTHER;
+                break;
+            default:
+                break;
+        }
+
+        // update the Section in the database
+        ContentValues updateValues = new ContentValues();
+        updateValues.put(keyScore, scores.get(type));
+        updateValues.put(keyMaxScore, maxScores.get(type));
+        updateValues.put(DBHelper.KEY_SECTIONS_SCORE_TOTAL, totalScore);
+        updateValues.put(DBHelper.KEY_SECTIONS_MAX_SCORE_TOTAL, maxScore);
+        updateValues.put(DBHelper.KEY_SECTIONS_GRADE, grade);
+        db.updateSection(updateValues, termId, sectionId);
     }
 
     public List<Integer> getRelevantAssignmentTypes() {
@@ -179,7 +221,7 @@ public class Section {
     }
 
     public String scoreToString(Double score, Double maxScore, int assignmentType) {
-        if (score == null || maxScore == null) {
+        if (score == null || maxScore == null || maxScore == 0) {
             return "-";
         }
         return String.format(Locale.getDefault(), "%.2f",

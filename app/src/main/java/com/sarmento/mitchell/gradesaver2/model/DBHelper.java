@@ -238,6 +238,15 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void updateSection(ContentValues values, int termId, int sectionId) {
+        String where = KEY_SECTIONS_ID + " = " + termId + " AND " +
+                KEY_SECTIONS_TERM_ID + " = " + sectionId;
+        SQLiteDatabase db = getWritableDatabase();
+
+        db.update(TABLE_SECTIONS, values, where, null);
+        db.close();
+    }
+
     public List<Term> getTerms(boolean archived) {
         SQLiteDatabase db = getReadableDatabase();
         List<Term> terms = new ArrayList<>();
@@ -293,11 +302,15 @@ public class DBHelper extends SQLiteOpenHelper {
                 }
                 SparseArray<Double> scores    = new SparseArray<>();
                 SparseArray<Double> maxScores = new SparseArray<>();
+                int scoreIndex    = 0;
+                int maxScoreIndex = 0;
                 for (int i = 0; i < 12; i++) {
                     if (i % 2 == 0) {
-                        scores.put(i, cursor.getDouble(i+19));
+                        scores.put(scoreIndex, cursor.getDouble(i+19));
+                        scoreIndex++;
                     } else {
-                        maxScores.put(i, cursor.getDouble(i+19));
+                        maxScores.put(maxScoreIndex, cursor.getDouble(i+19));
+                        maxScoreIndex++;
                     }
 
                 }

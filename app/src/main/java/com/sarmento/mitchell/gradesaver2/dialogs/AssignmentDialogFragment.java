@@ -114,7 +114,7 @@ public class AssignmentDialogFragment extends DialogFragment {
                 }
 
                 // add new assignment
-                section.addAssignment(getActivity(), assignment, type, sectionPosition);
+                section.addAssignment(getActivity(), assignment, type, termPosition, sectionPosition);
                 ((SectionActivity) getActivity()).updateList();
 
                 dialog.dismiss();

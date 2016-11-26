@@ -34,9 +34,11 @@ public class Term {
     }
 
     public void addSection(Context context, Section section, int termPosition) {
+        int termId = termPosition+1;
+
         DBHelper db = new DBHelper(context);
         sections.add(section);
-        db.addSection(section, termPosition+1);
+        db.addSection(section, termId);
     }
 
     public boolean isArchived() {
