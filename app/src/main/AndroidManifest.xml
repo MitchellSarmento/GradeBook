@@ -16,7 +16,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.TermActivity" />
-        <activity android:name=".activities.SectionActivity"></activity>
+        <activity android:name=".activities.SectionActivity" />
+        <activity android:name=".activities.DueDatesActivity"></activity>
     </application>
 
 </manifest>

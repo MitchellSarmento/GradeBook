@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_due_dates"
+        android:icon="@drawable/ic_dates_black_24dp"
+        android:title="@string/action_due_dates"
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/action_new_assignment"
         android:icon="@drawable/ic_add_black_24dp"
         android:title="@string/action_new_assignment"

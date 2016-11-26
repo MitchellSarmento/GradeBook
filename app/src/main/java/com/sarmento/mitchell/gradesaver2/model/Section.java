@@ -112,6 +112,10 @@ public class Section {
         return assignments;
     }
 
+    public List<DueDate> getDueDates() {
+        return dueDates;
+    }
+
     public void addAssignment(Context context, Assignment assignment, int type,
                               int termPosition, int sectionPosition, int assignmentPosition) {
 

@@ -15,7 +15,7 @@ import java.util.Locale;
 
 public class SectionButton extends Button implements View.OnClickListener {
     private Context context;
-    int sectionPosition;
+    private int sectionPosition;
 
     public SectionButton(Context context, AttributeSet attrs) {
         super(context, attrs);

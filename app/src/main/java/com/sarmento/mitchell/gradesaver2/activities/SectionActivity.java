@@ -1,5 +1,6 @@
 package com.sarmento.mitchell.gradesaver2.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -75,6 +76,12 @@ public class SectionActivity extends AppCompatActivity {
                 dialog.setArguments(bundle);
                 dialog.show(getFragmentManager(), getString(R.string.action_new_assignment));
                 return true;
+            case R.id.action_due_dates:
+                Intent intent = new Intent(this, DueDatesActivity.class);
+                intent.putExtra(Academics.TERM_POSITION, termPosition);
+                intent.putExtra(Academics.SECTION_POSITION, sectionPosition);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             default:
                 return super.onOptionsItemSelected(item);
         }
