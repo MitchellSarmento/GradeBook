@@ -76,6 +76,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     // TABLE_ASSIGNMENTS columns
     public static final String KEY_ASSIGNMENTS_ID         = "id";
+    public static final String KEY_ASSIGNMENTS_TERM_ID    = "termId";
     public static final String KEY_ASSIGNMENTS_SECTION_ID = "sectionId";
     public static final String KEY_ASSIGNMENTS_NAME       = "name";
     public static final String KEY_ASSIGNMENTS_TYPE       = "type";
@@ -85,6 +86,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     // TABLE_DUE_DATES columns
     public static final String KEY_DUE_DATES_ID         = "id";
+    public static final String KEY_DUE_DATES_TERM_ID    = "termId";
     public static final String KEY_DUE_DATES_SECTION_ID = "sectionId";
     public static final String KEY_DUE_DATES_NAME       = "name";
     public static final String KEY_DUE_DATES_COMPLETE   = "complete";
@@ -102,11 +104,11 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         final String CREATE_TABLE_TERMS = "CREATE TABLE " + TABLE_TERMS + "(" +
-                KEY_TERMS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_TERMS_NAME + " TEXT," +
+                KEY_TERMS_ID + " INTEGER," + KEY_TERMS_NAME + " TEXT," +
                 KEY_TERMS_ARCHIVED + " TEXT)";
 
         final String CREATE_TABLE_SECTIONS = "CREATE TABLE " + TABLE_SECTIONS + "(" +
-                KEY_SECTIONS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_SECTIONS_TERM_ID +
+                KEY_SECTIONS_ID + " INTEGER," + KEY_SECTIONS_TERM_ID +
                 " INTEGER," + KEY_SECTIONS_NAME + " TEXT," +
                 KEY_SECTIONS_HIGH_A + " REAL," + KEY_SECTIONS_LOW_A + " REAL," +
                 KEY_SECTIONS_HIGH_B + " REAL," + KEY_SECTIONS_LOW_B + " REAL," +
@@ -137,14 +139,16 @@ public class DBHelper extends SQLiteOpenHelper {
                 KEY_SECTIONS_ON_SUNDAY + " INTEGER)";
 
         final String CREATE_TABLE_ASSIGNMENTS = "CREATE TABLE " + TABLE_ASSIGNMENTS + "(" +
-                KEY_ASSIGNMENTS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                KEY_ASSIGNMENTS_SECTION_ID + " INTEGER," + KEY_ASSIGNMENTS_NAME + " TEXT," +
-                KEY_ASSIGNMENTS_TYPE + " TEXT," + KEY_ASSIGNMENTS_SCORE + " REAL," +
-                KEY_ASSIGNMENTS_MAX_SCORE + " REAL," + KEY_ASSIGNMENTS_GRADE + " TEXT)";
+                KEY_ASSIGNMENTS_ID + " INTEGER," +
+                KEY_ASSIGNMENTS_TERM_ID + " INTEGER," + KEY_ASSIGNMENTS_SECTION_ID + " INTEGER," +
+                KEY_ASSIGNMENTS_NAME + " TEXT," + KEY_ASSIGNMENTS_TYPE + " TEXT," +
+                KEY_ASSIGNMENTS_SCORE + " REAL," + KEY_ASSIGNMENTS_MAX_SCORE + " REAL," +
+                KEY_ASSIGNMENTS_GRADE + " TEXT)";
 
         final String CREATE_TABLE_DUE_DATES = "CREATE TABLE " + TABLE_DUE_DATES + "(" +
-                KEY_DUE_DATES_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_DUE_DATES_SECTION_ID +
-                " INTEGER," + KEY_DUE_DATES_NAME + " TEXT," + KEY_DUE_DATES_COMPLETE + " INTEGER," +
+                KEY_DUE_DATES_ID + " INTEGER," +
+                KEY_DUE_DATES_TERM_ID + " INTEGER," + KEY_DUE_DATES_SECTION_ID + " INTEGER," +
+                KEY_DUE_DATES_NAME + " TEXT," + KEY_DUE_DATES_COMPLETE + " INTEGER," +
                 KEY_DUE_DATES_DATE + " TEXT)";
 
         db.execSQL(CREATE_TABLE_TERMS);
@@ -157,10 +161,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
 
-    public void addTerm(Term term) {
+    public void addTerm(Term term, int termId) {
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        values.put(KEY_TERMS_ID, termId);
         values.put(KEY_TERMS_NAME, term.getTermName());
         if (term.isArchived()) {
             values.put(KEY_TERMS_ARCHIVED, TRUE);
@@ -172,11 +177,12 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addSection(Section section, int termId) {
+    public void addSection(Section section, int termId, int sectionId) {
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(KEY_SECTIONS_TERM_ID, termId);
+        values.put(KEY_SECTIONS_ID, sectionId);
         values.put(KEY_SECTIONS_NAME, section.getSectionName());
 
         SparseArray<Double> gradeThresholds = section.getGradeThresholds();
@@ -223,11 +229,13 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addAssignment(Assignment assignment, int sectionId) {
+    public void addAssignment(Assignment assignment, int termId, int sectionId, int assignmentId) {
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        values.put(KEY_ASSIGNMENTS_TERM_ID, termId);
         values.put(KEY_ASSIGNMENTS_SECTION_ID, sectionId);
+        values.put(KEY_ASSIGNMENTS_ID, assignmentId);
         values.put(KEY_ASSIGNMENTS_NAME, assignment.getAssignmentName());
         values.put(KEY_ASSIGNMENTS_TYPE, assignment.getAssignmentType());
         values.put(KEY_ASSIGNMENTS_SCORE, assignment.getScore());
@@ -239,8 +247,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void updateSection(ContentValues values, int termId, int sectionId) {
-        String where = KEY_SECTIONS_ID + " = " + termId + " AND " +
-                KEY_SECTIONS_TERM_ID + " = " + sectionId;
+        String where = KEY_SECTIONS_ID + " = " + sectionId + " AND " +
+                KEY_SECTIONS_TERM_ID + " = " + termId;
         SQLiteDatabase db = getWritableDatabase();
 
         db.update(TABLE_SECTIONS, values, where, null);
@@ -275,7 +283,7 @@ public class DBHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
+        //db.close();
         return terms;
     }
 
@@ -319,10 +327,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 String grade = cursor.getString(33);
 
                 // get the assignments belonging to this section
-                List<Assignment> assignments = getAssignments(sectionId);
+                List<Assignment> assignments = getAssignments(termId, sectionId);
 
                 // get the due dates belonging to this section
-                List<DueDate> dueDates = getDueDates(sectionId);
+                List<DueDate> dueDates = getDueDates(termId, sectionId);
 
                 // create and add the section
                 Section section = new Section(sectionName, gradeThresholds, assignmentWeights,
@@ -331,26 +339,26 @@ public class DBHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
+        //db.close();
         return sections;
     }
 
-    private List<Assignment> getAssignments(int sectionId) {
+    private List<Assignment> getAssignments(int termId, int sectionId) {
         SQLiteDatabase db = getReadableDatabase();
         List<Assignment> assignments = new ArrayList<>();
 
-        String query = "SELECT * FROM " + TABLE_ASSIGNMENTS + " WHERE " + KEY_ASSIGNMENTS_SECTION_ID +
-                " = " + sectionId;
+        String query = "SELECT * FROM " + TABLE_ASSIGNMENTS + " WHERE " + KEY_ASSIGNMENTS_TERM_ID +
+                " = " + termId + " AND " + KEY_ASSIGNMENTS_SECTION_ID + " = " + sectionId;
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             do {
                 // gather information from the database
-                String assignmentName = cursor.getString(2);
-                String assignmentType = cursor.getString(3);
-                double score = cursor.getDouble(4);
-                double maxScore = cursor.getDouble(5);
-                String grade = cursor.getString(6);
+                String assignmentName = cursor.getString(3);
+                String assignmentType = cursor.getString(4);
+                double score = cursor.getDouble(5);
+                double maxScore = cursor.getDouble(6);
+                String grade = cursor.getString(7);
 
                 // create and add the assignment
                 Assignment assignment = new Assignment(assignmentName, assignmentType, score, maxScore, grade);
@@ -358,27 +366,27 @@ public class DBHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
+        //db.close();
         return assignments;
     }
 
-    private List<DueDate> getDueDates(int sectionId) {
+    private List<DueDate> getDueDates(int termId, int sectionId) {
         SQLiteDatabase db = getReadableDatabase();
         List<DueDate> dueDates = new ArrayList<>();
 
-        String query = "SELECT * FROM " + TABLE_DUE_DATES + " WHERE " + KEY_DUE_DATES_SECTION_ID +
-                " = " + sectionId;
+        String query = "SELECT * FROM " + TABLE_DUE_DATES + " WHERE " + KEY_DUE_DATES_TERM_ID +
+                " = " + termId + " AND " + KEY_DUE_DATES_SECTION_ID + " = " + sectionId;
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             do {
                 // gather information form the database
-                String dueDateName = cursor.getString(2);
+                String dueDateName = cursor.getString(3);
                 boolean complete = false;
-                if (cursor.getInt(3) == TRUE) {
+                if (cursor.getInt(4) == TRUE) {
                     complete = true;
                 }
-                String dateString = cursor.getString(4);
+                String dateString = cursor.getString(5);
 
                 // convert dateString to Date
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");

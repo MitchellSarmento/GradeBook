@@ -41,7 +41,9 @@ public class TermDialogFragment extends DialogFragment {
                 Term term = new Term(termName);
 
                 // add new term
-                Academics.getInstance().addTerm(getActivity(), term);
+                Academics academics = Academics.getInstance();
+                int termPosition = academics.getCurrentTerms().size();
+                academics.addTerm(getActivity(), term, termPosition);
 
                 dialog.dismiss();
             }

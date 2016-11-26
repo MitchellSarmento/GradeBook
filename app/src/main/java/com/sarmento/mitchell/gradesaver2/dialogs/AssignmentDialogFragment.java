@@ -16,6 +16,7 @@ import com.sarmento.mitchell.gradesaver2.activities.SectionActivity;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.Assignment;
 import com.sarmento.mitchell.gradesaver2.model.Section;
+import com.sarmento.mitchell.gradesaver2.model.Term;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,7 +115,9 @@ public class AssignmentDialogFragment extends DialogFragment {
                 }
 
                 // add new assignment
-                section.addAssignment(getActivity(), assignment, type, termPosition, sectionPosition);
+                int assignmentPosition = section.getAssignments().size();
+                section.addAssignment(getActivity(), assignment, type, termPosition,
+                        sectionPosition, assignmentPosition);
                 ((SectionActivity) getActivity()).updateList();
 
                 dialog.dismiss();

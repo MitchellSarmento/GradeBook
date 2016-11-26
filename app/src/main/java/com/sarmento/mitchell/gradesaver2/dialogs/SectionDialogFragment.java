@@ -90,8 +90,9 @@ public class SectionDialogFragment extends DialogFragment {
                 Section section = new Section(sectionName, assignmentWeights, gradeThresholds);
 
                 // add new section
-                Academics.getInstance().getCurrentTerms().get(termPosition).addSection(getActivity(),
-                        section, termPosition);
+                Term term = Academics.getInstance().getCurrentTerms().get(termPosition);
+                int sectionPosition = term.getSections().size();
+                term.addSection(getActivity(), section, termPosition, sectionPosition);
                 ((TermActivity) getActivity()).updateList();
 
                 dialog.dismiss();

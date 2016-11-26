@@ -113,13 +113,11 @@ public class Section {
     }
 
     public void addAssignment(Context context, Assignment assignment, int type,
-                              int termPosition, int sectionPosition) {
-        int termId    = termPosition+1;
-        int sectionId = sectionPosition+1;
+                              int termPosition, int sectionPosition, int assignmentPosition) {
 
         DBHelper db = new DBHelper(context);
         assignments.add(assignment);
-        db.addAssignment(assignment, sectionId);
+        db.addAssignment(assignment, termPosition, sectionPosition, assignmentPosition);
 
         double assignmentScore    = assignment.getScore();
         double assignmentMaxScore = assignment.getMaxScore();
@@ -194,7 +192,7 @@ public class Section {
         updateValues.put(DBHelper.KEY_SECTIONS_SCORE_TOTAL, totalScore);
         updateValues.put(DBHelper.KEY_SECTIONS_MAX_SCORE_TOTAL, maxScore);
         updateValues.put(DBHelper.KEY_SECTIONS_GRADE, grade);
-        db.updateSection(updateValues, termId, sectionId);
+        db.updateSection(updateValues, termPosition, sectionPosition);
     }
 
     public List<Integer> getRelevantAssignmentTypes() {

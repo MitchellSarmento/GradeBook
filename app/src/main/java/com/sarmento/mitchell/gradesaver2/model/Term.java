@@ -33,12 +33,10 @@ public class Term {
         return sections;
     }
 
-    public void addSection(Context context, Section section, int termPosition) {
-        int termId = termPosition+1;
-
+    public void addSection(Context context, Section section, int termPosition, int sectionPosition) {
         DBHelper db = new DBHelper(context);
         sections.add(section);
-        db.addSection(section, termId);
+        db.addSection(section, termPosition, sectionPosition);
     }
 
     public boolean isArchived() {

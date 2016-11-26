@@ -22,7 +22,7 @@ public class SectionButton extends Button implements View.OnClickListener {
         this.context = context;
     }
 
-    public void init(Section section, final int position) {
+    public void init(Section section, int position) {
         sectionPosition = position;
 
         String sectionName  = section.getSectionName();

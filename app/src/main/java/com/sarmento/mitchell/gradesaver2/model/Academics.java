@@ -41,9 +41,9 @@ public class Academics {
         return currentTerms;
     }
 
-    public void addTerm(Context context, Term term) {
+    public void addTerm(Context context, Term term, int termPosition) {
         DBHelper db = new DBHelper(context);
         currentTerms.add(term);
-        db.addTerm(term);
+        db.addTerm(term, termPosition);
     }
 }
