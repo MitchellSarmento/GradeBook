@@ -43,6 +43,12 @@ public class SectionActivity extends AppCompatActivity {
         assignments.setAdapter(adapter);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateList();
+    }
+
     public void updateList() {
         adapter.notifyDataSetChanged();
         setHeader(section);

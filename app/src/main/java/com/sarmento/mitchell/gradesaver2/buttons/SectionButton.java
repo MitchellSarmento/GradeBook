@@ -11,6 +11,8 @@ import com.sarmento.mitchell.gradesaver2.activities.TermActivity;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.Section;
 
+import java.util.Locale;
+
 public class SectionButton extends Button implements View.OnClickListener {
     private Context context;
     int sectionPosition;
@@ -22,10 +24,16 @@ public class SectionButton extends Button implements View.OnClickListener {
 
     public void init(Section section, final int position) {
         sectionPosition = position;
-        setText(section.getSectionName() + "\n" +
-            Double.toString(section.getTotalScore()) + "/" +
-            Double.toString(section.getMaxScore()) + "  " +
-            section.getGrade());
+
+        String sectionName  = section.getSectionName();
+        double scorePercent = section.getTotalScore() / section.getMaxScore() * 100;
+        if (Double.isNaN(scorePercent)) {
+            scorePercent = 100.0;
+        }
+        String grade        = section.getGrade();
+
+        setText(sectionName + "\n" + String.format(Locale.getDefault(), "%.2f", scorePercent) +
+                "% " + grade);
         setAllCaps(false);
         setOnClickListener(this);
     }

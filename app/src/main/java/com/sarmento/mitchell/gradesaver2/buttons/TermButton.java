@@ -21,7 +21,10 @@ public class TermButton extends Button implements View.OnClickListener {
 
     public void init(Term term, final int position) {
         termPosition = position;
-        setText(term.getTermName());
+
+        String termName = term.getTermName();
+
+        setText(termName);
         setAllCaps(false);
         setOnClickListener(this);
     }

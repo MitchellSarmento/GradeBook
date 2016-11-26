@@ -2,6 +2,7 @@ package com.sarmento.mitchell.gradesaver2.model;
 
 
 import android.content.Context;
+import android.util.Log;
 import android.util.SparseArray;
 
 import com.sarmento.mitchell.gradesaver2.R;
@@ -115,67 +116,39 @@ public class Section {
         assignments.add(assignment);
         db.addAssignment(assignment, sectionPosition+1);
 
-        double score    = assignment.getScore();
-        double maxScore = assignment.getMaxScore();
+        double assignmentScore    = assignment.getScore();
+        double assignmentMaxScore = assignment.getMaxScore();
 
-        totalScore += score;
-        this.maxScore += maxScore;
-        grade = calculateGrade(totalScore, this.maxScore);
+        // get the current total score for this assignment type
+        Double currentScore    = scores.get(type);
+        Double currentMaxScore = maxScores.get(type);
 
-        Double currentScore;
-        Double currentMaxScore;
-        switch (type) {
-            case HOMEWORK:
-                currentScore = scores.get(HOMEWORK);
-                if (currentScore == null) { currentScore = 0.0; }
-                scores.put(HOMEWORK, currentScore + score);
-                currentMaxScore = maxScores.get(HOMEWORK);
-                if (currentMaxScore == null) { currentMaxScore = 0.0; }
-                maxScores.put(HOMEWORK, currentMaxScore + maxScore);
-                break;
-            case QUIZ:
-                currentScore = scores.get(QUIZ);
-                if (currentScore == null) { currentScore = 0.0; }
-                scores.put(QUIZ, currentScore + score);
-                currentMaxScore = maxScores.get(QUIZ);
-                if (currentMaxScore == null) { currentMaxScore = 0.0; }
-                maxScores.put(QUIZ, currentMaxScore + maxScore);
-                break;
-            case MIDTERM:
-                currentScore = scores.get(MIDTERM);
-                if (currentScore == null) { currentScore = 0.0; }
-                scores.put(MIDTERM, currentScore + score);
-                currentMaxScore = maxScores.get(MIDTERM);
-                if (currentMaxScore == null) { currentMaxScore = 0.0; }
-                maxScores.put(MIDTERM, currentMaxScore + maxScore);
-                break;
-            case FINAL:
-                currentScore = scores.get(FINAL);
-                if (currentScore == null) { currentScore = 0.0; }
-                scores.put(FINAL, currentScore + score);
-                currentMaxScore = maxScores.get(FINAL);
-                if (currentMaxScore == null) { currentMaxScore = 0.0; }
-                maxScores.put(FINAL, currentMaxScore + maxScore);
-                break;
-            case PROJECT:
-                currentScore = scores.get(PROJECT);
-                if (currentScore == null) { currentScore = 0.0; }
-                scores.put(PROJECT, currentScore + score);
-                currentMaxScore = maxScores.get(PROJECT);
-                if (currentMaxScore == null) { currentMaxScore = 0.0; }
-                maxScores.put(PROJECT, currentMaxScore + maxScore);
-                break;
-            case OTHER:
-                currentScore = scores.get(OTHER);
-                if (currentScore == null) { currentScore = 0.0; }
-                scores.put(OTHER, currentScore + score);
-                currentMaxScore = maxScores.get(OTHER);
-                if (currentMaxScore == null) { currentMaxScore = 0.0; }
-                maxScores.put(OTHER, currentMaxScore + maxScore);
-                break;
-            default:
-                break;
+        // if there is not current score then initialize the score and max score to 0
+        if (currentScore == null) {
+            currentScore = 0.0;
+            currentMaxScore = 0.0;
         }
+
+        // add the assignment scores to the total
+        scores.put(type, currentScore + assignmentScore);
+        maxScores.put(type, currentMaxScore + assignmentMaxScore);
+
+        // get the weighted scores for each assignment type
+        totalScore = 0;
+        maxScore = 0;
+        int[] assignmentTypes = {HOMEWORK, QUIZ, MIDTERM, FINAL, PROJECT, OTHER};
+        for (int assignmentType : assignmentTypes) {
+            // skip this type if there are no scores for it
+            Double typeScore = scores.get(assignmentType);
+            if (typeScore != null) {
+                Double maxTypeScore = maxScores.get(assignmentType);
+                totalScore += typeScore / maxTypeScore * assignmentWeights.get(assignmentType);
+                maxScore += assignmentWeights.get(assignmentType);
+            }
+        }
+
+        // calculate the overall grade for this section
+        grade = calculateGrade(totalScore, maxScore);
 
         //HashMap<String, Object> updateValues = new HashMap<>();
         //updateValues.put(DBHelper.KEY_SECTIONS_SCORE_)

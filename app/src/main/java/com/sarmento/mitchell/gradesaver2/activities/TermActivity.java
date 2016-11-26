@@ -36,6 +36,12 @@ public class TermActivity extends AppCompatActivity {
         sections.setAdapter(adapter);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateList();
+    }
+
     public void updateList() {
         adapter.notifyDataSetChanged();
     }
