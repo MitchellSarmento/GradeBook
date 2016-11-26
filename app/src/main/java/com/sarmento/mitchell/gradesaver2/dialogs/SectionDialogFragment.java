@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.widget.EditText;
 
 import com.sarmento.mitchell.gradesaver2.R;
-import com.sarmento.mitchell.gradesaver2.activities.TermActivity;
+import com.sarmento.mitchell.gradesaver2.activities.SectionsActivity;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.Section;
 import com.sarmento.mitchell.gradesaver2.model.Term;
@@ -93,7 +93,7 @@ public class SectionDialogFragment extends DialogFragment {
                 Term term = Academics.getInstance().getCurrentTerms().get(termPosition);
                 int sectionPosition = term.getSections().size();
                 term.addSection(getActivity(), section, termPosition, sectionPosition);
-                ((TermActivity) getActivity()).updateList();
+                ((SectionsActivity) getActivity()).updateList();
 
                 dialog.dismiss();
             }

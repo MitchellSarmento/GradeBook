@@ -7,18 +7,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ListView;
 
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.adapters.TermAdapter;
 import com.sarmento.mitchell.gradesaver2.dialogs.TermDialogFragment;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
 
-public class MainActivity extends AppCompatActivity {
+public class TermsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_terms);
         Academics academics = Academics.getInstance();
 
         // load data
@@ -32,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
+        inflater.inflate(R.menu.menu_terms, menu);
         return true;
     }
 

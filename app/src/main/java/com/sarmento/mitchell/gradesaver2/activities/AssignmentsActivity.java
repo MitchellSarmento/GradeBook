@@ -5,11 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.adapters.AssignmentAdapter;
@@ -18,9 +16,7 @@ import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.Section;
 import com.sarmento.mitchell.gradesaver2.views.SectionHeader;
 
-import java.util.Locale;
-
-public class SectionActivity extends AppCompatActivity {
+public class AssignmentsActivity extends AppCompatActivity {
     private int termPosition;
     private int sectionPosition;
     private AssignmentAdapter adapter;
@@ -30,7 +26,7 @@ public class SectionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_section);
+        setContentView(R.layout.activity_assignments);
 
         termPosition = getIntent().getIntExtra(Academics.TERM_POSITION, -1);
         sectionPosition = getIntent().getIntExtra(Academics.SECTION_POSITION, -1);
@@ -61,7 +57,7 @@ public class SectionActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_section, menu);
+        inflater.inflate(R.menu.menu_assignments, menu);
         return true;
     }
 

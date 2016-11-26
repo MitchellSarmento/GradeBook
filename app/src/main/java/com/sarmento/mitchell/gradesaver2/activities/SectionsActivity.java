@@ -7,25 +7,21 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ListView;
 
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.adapters.SectionAdapter;
-import com.sarmento.mitchell.gradesaver2.adapters.TermAdapter;
 import com.sarmento.mitchell.gradesaver2.dialogs.SectionDialogFragment;
-import com.sarmento.mitchell.gradesaver2.dialogs.TermDialogFragment;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
-import com.sarmento.mitchell.gradesaver2.model.DBHelper;
 import com.sarmento.mitchell.gradesaver2.model.Term;
 
-public class TermActivity extends AppCompatActivity {
+public class SectionsActivity extends AppCompatActivity {
     private int termPosition;
     private SectionAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_term);
+        setContentView(R.layout.activity_sections);
 
         termPosition = getIntent().getIntExtra(Academics.TERM_POSITION, -1);
         Term term = Academics.getInstance().getCurrentTerms().get(termPosition);
@@ -53,7 +49,7 @@ public class TermActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_term, menu);
+        inflater.inflate(R.menu.menu_sections, menu);
         return true;
     }
 

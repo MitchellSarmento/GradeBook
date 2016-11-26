@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sarmento.mitchell.gradesaver2.activities.TermActivity">
+    tools:context="com.sarmento.mitchell.gradesaver2.activities.TermsActivity">
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/sections"
+        android:id="@+id/current_terms"
         android:scrollbars="vertical"/>
 </FrameLayout>

@@ -6,8 +6,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 
-import com.sarmento.mitchell.gradesaver2.activities.SectionActivity;
-import com.sarmento.mitchell.gradesaver2.activities.TermActivity;
+import com.sarmento.mitchell.gradesaver2.activities.AssignmentsActivity;
+import com.sarmento.mitchell.gradesaver2.activities.SectionsActivity;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.Section;
 
@@ -40,8 +40,8 @@ public class SectionButton extends Button implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(context, SectionActivity.class);
-        intent.putExtra(Academics.TERM_POSITION, ((TermActivity) context).getTermPosition());
+        Intent intent = new Intent(context, AssignmentsActivity.class);
+        intent.putExtra(Academics.TERM_POSITION, ((SectionsActivity) context).getTermPosition());
         intent.putExtra(Academics.SECTION_POSITION, sectionPosition);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
