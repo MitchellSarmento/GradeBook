@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AssignmentDialogFragment extends DialogFragment {
-    int termPosition;
-    int sectionPosition;
+    private int termPosition;
+    private int sectionPosition;
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {

@@ -11,6 +11,7 @@ import android.util.SparseArray;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -90,7 +91,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String KEY_DUE_DATES_SECTION_ID = "sectionId";
     public static final String KEY_DUE_DATES_NAME       = "name";
     public static final String KEY_DUE_DATES_COMPLETE   = "complete";
-    public static final String KEY_DUE_DATES_DATE       = "date";
+    public static final String KEY_DUE_DATES_YEAR       = "year";
+    public static final String KEY_DUE_DATES_MONTH      = "month";
+    public static final String KEY_DUE_DATES_DAY        = "day";
 
     private static final int TRUE  = 1;
     private static final int FALSE = 0;
@@ -149,7 +152,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 KEY_DUE_DATES_ID + " INTEGER," +
                 KEY_DUE_DATES_TERM_ID + " INTEGER," + KEY_DUE_DATES_SECTION_ID + " INTEGER," +
                 KEY_DUE_DATES_NAME + " TEXT," + KEY_DUE_DATES_COMPLETE + " INTEGER," +
-                KEY_DUE_DATES_DATE + " TEXT)";
+                KEY_DUE_DATES_YEAR + " INTEGER," + KEY_DUE_DATES_MONTH + " INTEGER," +
+                KEY_DUE_DATES_DAY + " INTEGER)";
 
         db.execSQL(CREATE_TABLE_TERMS);
         db.execSQL(CREATE_TABLE_SECTIONS);
@@ -243,6 +247,24 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(KEY_ASSIGNMENTS_GRADE, assignment.getGrade());
 
         db.insert(TABLE_ASSIGNMENTS, null, values);
+        db.close();
+    }
+
+    public void addDueDate(DueDate dueDate, int termId, int sectionId, int dueDateId) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_DUE_DATES_TERM_ID, termId);
+        values.put(KEY_DUE_DATES_SECTION_ID, sectionId);
+        values.put(KEY_DUE_DATES_ID, dueDateId);
+        values.put(KEY_DUE_DATES_NAME, dueDate.getDueDateName());
+        values.put(KEY_DUE_DATES_COMPLETE, dueDate.isComplete());
+        Calendar date = dueDate.getDate();
+        values.put(KEY_DUE_DATES_YEAR, date.get(Calendar.YEAR));
+        values.put(KEY_DUE_DATES_MONTH, date.get(Calendar.MONTH));
+        values.put(KEY_DUE_DATES_DAY, date.get(Calendar.DAY_OF_MONTH));
+
+        db.insert(TABLE_DUE_DATES, null, values);
         db.close();
     }
 
@@ -386,16 +408,11 @@ public class DBHelper extends SQLiteOpenHelper {
                 if (cursor.getInt(4) == TRUE) {
                     complete = true;
                 }
-                String dateString = cursor.getString(5);
-
-                // convert dateString to Date
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                Date date = null;
-                try {
-                    date = format.parse(dateString);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                Calendar date = Calendar.getInstance();
+                int year      = cursor.getInt(5);
+                int month     = cursor.getInt(6);
+                int day       = cursor.getInt(7);
+                date.set(year, month, day);
 
                 // create and add the due date
                 DueDate dueDate = new DueDate(dueDateName, complete, date);

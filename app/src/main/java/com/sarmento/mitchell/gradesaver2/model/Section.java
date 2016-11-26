@@ -9,6 +9,7 @@ import android.util.SparseArray;
 import com.sarmento.mitchell.gradesaver2.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -118,7 +119,6 @@ public class Section {
 
     public void addAssignment(Context context, Assignment assignment, int type,
                               int termPosition, int sectionPosition, int assignmentPosition) {
-
         DBHelper db = new DBHelper(context);
         assignments.add(assignment);
         db.addAssignment(assignment, termPosition, sectionPosition, assignmentPosition);
@@ -197,6 +197,13 @@ public class Section {
         updateValues.put(DBHelper.KEY_SECTIONS_MAX_SCORE_TOTAL, maxScore);
         updateValues.put(DBHelper.KEY_SECTIONS_GRADE, grade);
         db.updateSection(updateValues, termPosition, sectionPosition);
+    }
+
+    public void addDueDate(Context context, DueDate dueDate, int termPosition,
+                           int sectionPosition, int dueDatePosition) {
+        DBHelper db = new DBHelper(context);
+        dueDates.add(dueDate);
+        db.addDueDate(dueDate, termPosition, sectionPosition, dueDatePosition);
     }
 
     public List<Integer> getRelevantAssignmentTypes() {

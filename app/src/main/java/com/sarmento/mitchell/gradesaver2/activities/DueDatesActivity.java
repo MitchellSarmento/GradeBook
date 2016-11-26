@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.adapters.DueDateAdapter;
+import com.sarmento.mitchell.gradesaver2.dialogs.DueDateDialogFragment;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.Section;
 
@@ -56,6 +57,12 @@ public class DueDatesActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_new_due_date:
+                DueDateDialogFragment dialog = new DueDateDialogFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt(Academics.TERM_POSITION, termPosition);
+                bundle.putInt(Academics.SECTION_POSITION, sectionPosition);
+                dialog.setArguments(bundle);
+                dialog.show(getFragmentManager(), getString(R.string.action_new_due_date));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
