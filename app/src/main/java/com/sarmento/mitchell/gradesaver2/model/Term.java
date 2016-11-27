@@ -39,6 +39,12 @@ public class Term {
         db.addSection(section, termPosition, sectionPosition);
     }
 
+    public void removeSection(Context context, int termPosition, int sectionPosition) {
+        DBHelper db = new DBHelper(context);
+        sections.remove(sectionPosition);
+        db.removeSection(termPosition, sectionPosition);
+    }
+
     public boolean isArchived() {
         return archived;
     }

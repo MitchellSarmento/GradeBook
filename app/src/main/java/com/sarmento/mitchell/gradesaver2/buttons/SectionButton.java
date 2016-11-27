@@ -46,6 +46,10 @@ public class SectionButton extends Button implements View.OnClickListener, View.
     }
 
     private void setButtonText(double scorePercent) {
+        if (Double.isNaN(scorePercent)) {
+            scorePercent = 100.0;
+        }
+
         String grade = section.getGrade();
 
         // first line
