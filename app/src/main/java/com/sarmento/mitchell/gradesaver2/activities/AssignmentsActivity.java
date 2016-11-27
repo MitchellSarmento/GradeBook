@@ -39,7 +39,7 @@ public class AssignmentsActivity extends AppCompatActivity {
 
         RecyclerView assignments = (RecyclerView) findViewById(R.id.assignments);
         assignments.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new AssignmentAdapter(section.getAssignments());
+        adapter = new AssignmentAdapter(section.getAssignments(), section);
         assignments.setAdapter(adapter);
     }
 

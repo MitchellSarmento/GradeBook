@@ -19,7 +19,7 @@ public class TermButton extends Button implements View.OnClickListener {
         this.context = context;
     }
 
-    public void init(Term term, final int position) {
+    public void init(Term term, int position) {
         termPosition = position;
 
         String termName = term.getTermName();

@@ -32,7 +32,7 @@ public class DueDatesActivity extends AppCompatActivity {
 
         RecyclerView dueDates = (RecyclerView) findViewById(R.id.due_dates);
         dueDates.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new DueDateAdapter(section.getDueDates());
+        adapter = new DueDateAdapter(section.getDueDates(), termPosition, sectionPosition);
         dueDates.setAdapter(adapter);
     }
 

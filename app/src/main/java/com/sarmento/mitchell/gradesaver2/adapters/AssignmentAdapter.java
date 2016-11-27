@@ -8,14 +8,17 @@ import android.view.ViewGroup;
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.buttons.AssignmentButton;
 import com.sarmento.mitchell.gradesaver2.model.Assignment;
+import com.sarmento.mitchell.gradesaver2.model.Section;
 
 import java.util.List;
 
 public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.ViewHolder> {
     private List<Assignment> assignments;
+    private Section section;
 
-    public AssignmentAdapter(List<Assignment> assignments) {
+    public AssignmentAdapter(List<Assignment> assignments, Section section) {
         this.assignments = assignments;
+        this.section = section;
     }
 
     @Override
@@ -28,7 +31,7 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.Vi
     @Override
     public void onBindViewHolder(AssignmentAdapter.ViewHolder holder, int position) {
         AssignmentButton button = holder.button;
-        button.init(assignments.get(position), position);
+        button.init(assignments.get(position), section, position);
     }
 
     @Override

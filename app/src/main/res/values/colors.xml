@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="color_primary">#3F51B5</color>
+    <color name="color_primary_dark">#303F9F</color>
+    <color name="color_accent">#FF4081</color>
+
+    <!-- Grade Colors -->
+    <color name="color_a">#57E03C</color>
+    <color name="color_b">#3CA1E0</color>
+    <color name="color_c">#E0E03C</color>
+    <color name="color_d">#E0A93C</color>
+    <color name="color_f">#E0603C</color>
 </resources>

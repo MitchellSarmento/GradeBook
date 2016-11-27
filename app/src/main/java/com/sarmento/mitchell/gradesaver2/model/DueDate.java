@@ -1,6 +1,9 @@
 package com.sarmento.mitchell.gradesaver2.model;
 
 
+import android.content.ContentValues;
+import android.content.Context;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -21,6 +24,17 @@ public class DueDate {
 
     public boolean isComplete() {
         return complete;
+    }
+
+    public void setComplete(Context context, boolean complete, int termPosition,
+                            int sectionPosition, int dueDatePosition) {
+        DBHelper db = new DBHelper(context);
+        this.complete = complete;
+
+        // update the DueDate in the database
+        ContentValues updateValues = new ContentValues();
+        updateValues.put(DBHelper.KEY_DUE_DATES_COMPLETE, complete);
+        db.updateDueDate(updateValues, termPosition, sectionPosition, dueDatePosition);
     }
 
     public Calendar getDate() {

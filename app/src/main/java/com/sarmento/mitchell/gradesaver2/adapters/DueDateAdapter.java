@@ -13,9 +13,13 @@ import java.util.List;
 
 public class DueDateAdapter extends RecyclerView.Adapter<DueDateAdapter.ViewHolder> {
     private List<DueDate> dueDates;
+    private int termPosition;
+    private int sectionPosition;
 
-    public DueDateAdapter(List<DueDate> dueDates) {
-        this.dueDates = dueDates;
+    public DueDateAdapter(List<DueDate> dueDates, int termPosition, int sectionPosition) {
+        this.dueDates        = dueDates;
+        this.termPosition    = termPosition;
+        this.sectionPosition = sectionPosition;
     }
 
     @Override
@@ -28,7 +32,7 @@ public class DueDateAdapter extends RecyclerView.Adapter<DueDateAdapter.ViewHold
     @Override
     public void onBindViewHolder(DueDateAdapter.ViewHolder holder, int position) {
         DueDateButton button = holder.button;
-        button.init(dueDates.get(position), position);
+        button.init(dueDates.get(position), termPosition, sectionPosition, position);
     }
 
     @Override

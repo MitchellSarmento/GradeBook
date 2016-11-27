@@ -277,6 +277,16 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void updateDueDate(ContentValues values, int termId, int sectionId, int dueDateId) {
+        String where = KEY_DUE_DATES_ID + " = " + dueDateId + " AND " +
+                KEY_DUE_DATES_SECTION_ID + " = " + sectionId + " AND " +
+                KEY_DUE_DATES_TERM_ID + " = " + termId;
+        SQLiteDatabase db = getWritableDatabase();
+
+        db.update(TABLE_DUE_DATES, values, where, null);
+        db.close();
+    }
+
     public List<Term> getTerms(boolean archived) {
         SQLiteDatabase db = getReadableDatabase();
         List<Term> terms = new ArrayList<>();

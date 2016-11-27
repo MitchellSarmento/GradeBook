@@ -238,15 +238,15 @@ public class Section {
     }
 
     public String calculateGrade(double score, double maxScore) {
-        double gradePercent = score / maxScore * 100;
+        double scorePercent = score / maxScore * 100;
 
-        if (gradePercent >= gradeThresholds.get(LOW_A)) {
+        if (scorePercent >= gradeThresholds.get(LOW_A)) {
             return "A";
-        } else if (gradePercent >= gradeThresholds.get(LOW_B)) {
+        } else if (scorePercent >= gradeThresholds.get(LOW_B)) {
             return "B";
-        } else if (gradePercent >= gradeThresholds.get(LOW_C)) {
+        } else if (scorePercent >= gradeThresholds.get(LOW_C)) {
             return "C";
-        } else if (gradePercent >= gradeThresholds.get(LOW_D)) {
+        } else if (scorePercent >= gradeThresholds.get(LOW_D)) {
             return "D";
         } else {
             return "F";
