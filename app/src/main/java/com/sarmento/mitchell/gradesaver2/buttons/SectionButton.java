@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
+import android.text.Spannable;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.View;
@@ -35,20 +36,26 @@ public class SectionButton extends Button implements View.OnClickListener, View.
         this.termPosition    = termPosition;
         this.sectionPosition = sectionPosition;
 
-        String sectionName  = section.getSectionName();
         double scorePercent = section.getTotalScore() / section.getMaxScore() * 100;
-        if (Double.isNaN(scorePercent)) {
-            scorePercent = 100.0;
-        }
-        String grade        = section.getGrade();
 
-        setText(sectionName + "\n" + String.format(Locale.getDefault(), "%.2f", scorePercent) +
-                "% " + grade);
-        setAllCaps(false);
+        setButtonText(scorePercent);
         setOnClickListener(this);
         setOnLongClickListener(this);
         setBackgroundColor(ResourcesCompat.getColor(getResources(),
                 getButtonColor(scorePercent), null));
+    }
+
+    private void setButtonText(double scorePercent) {
+        String grade = section.getGrade();
+
+        // first line
+        String sectionName = section.getSectionName();
+
+        // second line
+        String scoreString = String.format(Locale.getDefault(), "%.2f", scorePercent) + "% " +
+                grade;
+
+        setText(sectionName + "\n" + scoreString);
     }
 
     private int getButtonColor(double scorePercent) {

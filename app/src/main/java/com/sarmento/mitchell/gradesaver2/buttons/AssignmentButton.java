@@ -2,8 +2,13 @@ package com.sarmento.mitchell.gradesaver2.buttons;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.View;
@@ -35,20 +40,36 @@ public class AssignmentButton extends Button implements View.OnLongClickListener
         this.sectionPosition    = sectionPosition;
         this.assignmentPosition = assignmentPosition;
 
-        String assignmentType = assignment.getAssignmentType();
-        String assignmentName = assignment.getAssignmentName();
-        double score          = assignment.getScore();
-        double maxScore       = assignment.getMaxScore();
-        double scorePercent   = score / maxScore * 100;
-        String grade          = assignment.getGrade();
+        double score        = assignment.getScore();
+        double maxScore     = assignment.getMaxScore();
+        double scorePercent = score / maxScore * 100;
 
-        setText(assignmentType + "\n" + assignmentName + "\n" +
-                String.valueOf(score) + "/" + String.valueOf(maxScore) + "  " +
-                String.format(Locale.getDefault(), "%.2f", scorePercent) + "%  " + grade);
-        setAllCaps(false);
+        setButtonText(score, maxScore, scorePercent);
         setOnLongClickListener(this);
         setBackgroundColor(ResourcesCompat.getColor(getResources(),
                 getButtonColor(scorePercent), null));
+    }
+
+    private void setButtonText(double score, double maxScore, double scorePercent) {
+        String assignmentType = assignment.getAssignmentType();
+        String grade          = assignment.getGrade();
+
+        // first line
+        Spannable assignmentTypeSpan = new SpannableString(assignmentType);
+        assignmentTypeSpan.setSpan(new RelativeSizeSpan(0.8f), 0, assignmentType.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        assignmentTypeSpan.setSpan(new ForegroundColorSpan(Color.GRAY), 0, assignmentType.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // second line
+        String assignmentName = assignment.getAssignmentName();
+
+        // third line
+        String scoreString = String.valueOf(score) + "/" + String.valueOf(maxScore) + "  " +
+                String.format(Locale.getDefault(), "%.2f", scorePercent) + "% " + grade;
+
+        setText(assignmentTypeSpan);
+        append("\n" + assignmentName + "\n" + scoreString);
     }
 
     private int getButtonColor(double scorePercent) {

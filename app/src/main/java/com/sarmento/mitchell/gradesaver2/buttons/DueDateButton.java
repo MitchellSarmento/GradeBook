@@ -15,6 +15,7 @@ import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.DueDate;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 public class DueDateButton extends Button implements View.OnClickListener, View.OnLongClickListener {
     private Context context;
@@ -23,7 +24,6 @@ public class DueDateButton extends Button implements View.OnClickListener, View.
     private int sectionPosition;
     private int dueDatePosition;
 
-    private String dueDateName;
     private boolean complete;
     private int daysRemaining;
 
@@ -38,26 +38,44 @@ public class DueDateButton extends Button implements View.OnClickListener, View.
         this.sectionPosition = sectionPosition;
         this.dueDatePosition = dueDatePosition;
 
-        complete             = dueDate.isComplete();
-        daysRemaining        = getDaysRemaining();
+        complete      = dueDate.isComplete();
+        daysRemaining = getDaysRemaining(dueDate.getDate());
 
-        dueDateName = dueDate.getDueDateName();
-
-        setText(dueDateName + "\n" + daysRemainingToString());
-        setAllCaps(false);
+        setButtonText();
         setOnClickListener(this);
         setOnLongClickListener(this);
+        setButtonColor();
+    }
+
+    private void setButtonText() {
+        Calendar due = dueDate.getDate();
+
+        // first line
+        String dueDateName = dueDate.getDueDateName();
+
+        // second line
+        Locale locale = Locale.getDefault();
+        String dateString = due.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, locale) +
+                ", " + due.getDisplayName(Calendar.MONTH, Calendar.SHORT, locale) +
+                " " + due.get(Calendar.DAY_OF_MONTH) + ", " + due.get(Calendar.YEAR);
+
+        // third line
+        String daysRemainingString = daysRemainingToString();
+
+        setText(dueDateName + "\n" + dateString + "\n" + daysRemainingString);
+    }
+
+    private void setButtonColor() {
         if (complete) {
-            setBackgroundColor(Color.GRAY);
+            setBackgroundColor(Color.LTGRAY);
         } else {
             setBackgroundColor(ResourcesCompat.getColor(getResources(),
                     getButtonColor(), null));
         }
     }
 
-    private int getDaysRemaining() {
+    private int getDaysRemaining(Calendar due) {
         Calendar today = Calendar.getInstance();
-        Calendar due   = dueDate.getDate();
 
         return (int) Math.ceil((float) (due.getTimeInMillis() - today.getTimeInMillis())
                 / (24 * 60 * 60 * 1000));
@@ -93,15 +111,9 @@ public class DueDateButton extends Button implements View.OnClickListener, View.
 
     @Override
     public void onClick(View v) {
-        if (complete) {
-            setBackgroundColor(ResourcesCompat.getColor(getResources(),
-                    getButtonColor(), null));
-            complete = !complete;
-        } else {
-            setBackgroundColor(Color.GRAY);
-            complete = !complete;
-        }
-        setText(dueDateName + "\n" + daysRemainingToString());
+        complete = !complete;
+        setButtonText();
+        setButtonColor();
         dueDate.setComplete(context, complete, termPosition, sectionPosition, dueDatePosition);
     }
 

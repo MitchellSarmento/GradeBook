@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -29,9 +30,9 @@ public class TermButton extends Button implements View.OnClickListener, View.OnL
         String termName = term.getTermName();
 
         setText(termName);
-        setAllCaps(false);
         setOnClickListener(this);
         setOnLongClickListener(this);
+        setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.color_a, null));
     }
 
     @Override

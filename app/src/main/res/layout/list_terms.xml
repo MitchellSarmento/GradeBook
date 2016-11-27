@@ -6,5 +6,6 @@
     <com.sarmento.mitchell.gradesaver2.buttons.TermButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/button_term" />
+        android:textAllCaps="false"
+        android:id="@+id/button_term"/>
 </LinearLayout>
