@@ -199,6 +199,13 @@ public class Section {
         db.updateSection(updateValues, termPosition, sectionPosition);
     }
 
+    public void removeAssignment(Context context, int termPosition, int sectionPosition,
+                                 int assignmentPosition) {
+        DBHelper db = new DBHelper(context);
+        assignments.remove(assignmentPosition);
+        db.removeAssignment(termPosition, sectionPosition, assignmentPosition);
+    }
+
     public void addDueDate(Context context, DueDate dueDate, int termPosition,
                            int sectionPosition, int dueDatePosition) {
         DBHelper db = new DBHelper(context);

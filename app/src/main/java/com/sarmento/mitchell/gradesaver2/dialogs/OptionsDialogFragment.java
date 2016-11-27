@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.sarmento.mitchell.gradesaver2.R;
+import com.sarmento.mitchell.gradesaver2.activities.AssignmentsActivity;
 import com.sarmento.mitchell.gradesaver2.activities.SectionsActivity;
 import com.sarmento.mitchell.gradesaver2.activities.TermsActivity;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
@@ -111,6 +112,21 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                     case AssignmentOptions.EDIT:
                         break;
                     case AssignmentOptions.DELETE:
+                        showConfirmationDialog = true;
+                        confirmAction = new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                int termPosition       = getArguments().getInt(Academics.TERM_POSITION);
+                                int sectionPosition    = getArguments().getInt(Academics.SECTION_POSITION);
+                                int assignmentPosition = getArguments().getInt(Academics.ASSIGNMENT_POSITION);
+                                Academics.getInstance().getCurrentTerms().get(termPosition)
+                                        .getSections().get(sectionPosition)
+                                        .removeAssignment(context, termPosition,
+                                                sectionPosition, assignmentPosition);
+                                ((AssignmentsActivity) context).updateList();
+                                dialog.dismiss();
+                            }
+                        };
                         break;
                 }
                 break;

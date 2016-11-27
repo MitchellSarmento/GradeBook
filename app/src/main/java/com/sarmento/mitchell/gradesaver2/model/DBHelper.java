@@ -287,6 +287,17 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void removeAssignment(int termId, int sectionId, int assignmentId) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        String where = KEY_ASSIGNMENTS_TERM_ID + " = " + termId + " AND " +
+                KEY_ASSIGNMENTS_SECTION_ID + " = " + sectionId + " AND " +
+                KEY_ASSIGNMENTS_ID + " = " + assignmentId;
+
+        db.delete(TABLE_ASSIGNMENTS, where, null);
+        db.close();
+    }
+
     public void updateSection(ContentValues values, int termId, int sectionId) {
         String where = KEY_SECTIONS_ID + " = " + sectionId + " AND " +
                 KEY_SECTIONS_TERM_ID + " = " + termId;
