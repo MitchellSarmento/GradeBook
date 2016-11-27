@@ -11,6 +11,7 @@ import android.widget.Button;
 
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.dialogs.OptionsDialogFragment;
+import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.DueDate;
 
 import java.util.Calendar;
@@ -21,6 +22,7 @@ public class DueDateButton extends Button implements View.OnClickListener, View.
     private int termPosition;
     private int sectionPosition;
     private int dueDatePosition;
+
     private String dueDateName;
     private boolean complete;
     private int daysRemaining;
@@ -35,6 +37,7 @@ public class DueDateButton extends Button implements View.OnClickListener, View.
         this.termPosition    = termPosition;
         this.sectionPosition = sectionPosition;
         this.dueDatePosition = dueDatePosition;
+
         complete             = dueDate.isComplete();
         daysRemaining        = getDaysRemaining();
 
@@ -106,6 +109,9 @@ public class DueDateButton extends Button implements View.OnClickListener, View.
     public boolean onLongClick(View v) {
         OptionsDialogFragment dialog = new OptionsDialogFragment();
         Bundle bundle = new Bundle();
+        bundle.putInt(Academics.TERM_POSITION, termPosition);
+        bundle.putInt(Academics.SECTION_POSITION, sectionPosition);
+        bundle.putInt(Academics.DUE_DATE_POSITION, dueDatePosition);
         bundle.putInt(OptionsDialogFragment.ITEM_TYPE, OptionsDialogFragment.DUE_DATE);
         dialog.setArguments(bundle);
         dialog.show(((Activity) context).getFragmentManager(), context.getString(R.string.options));

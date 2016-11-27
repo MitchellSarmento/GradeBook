@@ -30,9 +30,9 @@ public class DueDateAdapter extends RecyclerView.Adapter<DueDateAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(DueDateAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(DueDateAdapter.ViewHolder holder, int dueDatePosition) {
         DueDateButton button = holder.button;
-        button.init(dueDates.get(position), termPosition, sectionPosition, position);
+        button.init(dueDates.get(dueDatePosition), termPosition, sectionPosition, dueDatePosition);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class DueDateAdapter extends RecyclerView.Adapter<DueDateAdapter.ViewHold
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private DueDateButton button;
 
-        public ViewHolder(View v) {
+        private ViewHolder(View v) {
             super(v);
             button = (DueDateButton) v.findViewById(R.id.button_due_date);
         }

@@ -22,6 +22,7 @@ import java.util.Locale;
 public class SectionButton extends Button implements View.OnClickListener, View.OnLongClickListener {
     private Context context;
     private Section section;
+    private int termPosition;
     private int sectionPosition;
 
     public SectionButton(Context context, AttributeSet attrs) {
@@ -29,9 +30,10 @@ public class SectionButton extends Button implements View.OnClickListener, View.
         this.context = context;
     }
 
-    public void init(Section section, int position) {
-        this.section    = section;
-        sectionPosition = position;
+    public void init(Section section, int termPosition, int sectionPosition) {
+        this.section         = section;
+        this.termPosition    = termPosition;
+        this.sectionPosition = sectionPosition;
 
         String sectionName  = section.getSectionName();
         double scorePercent = section.getTotalScore() / section.getMaxScore() * 100;
@@ -68,7 +70,7 @@ public class SectionButton extends Button implements View.OnClickListener, View.
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(context, AssignmentsActivity.class);
-        intent.putExtra(Academics.TERM_POSITION, ((SectionsActivity) context).getTermPosition());
+        intent.putExtra(Academics.TERM_POSITION, termPosition);
         intent.putExtra(Academics.SECTION_POSITION, sectionPosition);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
@@ -78,6 +80,8 @@ public class SectionButton extends Button implements View.OnClickListener, View.
     public boolean onLongClick(View v) {
         OptionsDialogFragment dialog = new OptionsDialogFragment();
         Bundle bundle = new Bundle();
+        bundle.putInt(Academics.TERM_POSITION, termPosition);
+        bundle.putInt(Academics.SECTION_POSITION, sectionPosition);
         bundle.putInt(OptionsDialogFragment.ITEM_TYPE, OptionsDialogFragment.SECTION);
         dialog.setArguments(bundle);
         dialog.show(((Activity) context).getFragmentManager(), context.getString(R.string.options));

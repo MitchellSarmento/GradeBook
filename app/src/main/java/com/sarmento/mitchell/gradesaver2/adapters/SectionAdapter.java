@@ -15,9 +15,11 @@ import java.util.List;
 
 public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.ViewHolder> {
     private List<Section> sections;
+    private int termPosition;
 
-    public SectionAdapter(List<Section> sections) {
-        this.sections = sections;
+    public SectionAdapter(List<Section> sections, int termPosition) {
+        this.sections     = sections;
+        this.termPosition = termPosition;
     }
 
     @Override
@@ -28,9 +30,9 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(SectionAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(SectionAdapter.ViewHolder holder, int sectionPosition) {
         SectionButton button = holder.button;
-        button.init(sections.get(position), position);
+        button.init(sections.get(sectionPosition), termPosition, sectionPosition);
     }
 
     @Override
@@ -41,7 +43,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.ViewHold
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private SectionButton button;
 
-        public ViewHolder(View v) {
+        private ViewHolder(View v) {
             super(v);
             button = (SectionButton) v.findViewById(R.id.button_section);
         }

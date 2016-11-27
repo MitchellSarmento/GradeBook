@@ -14,6 +14,7 @@ import com.sarmento.mitchell.gradesaver2.dialogs.TermDialogFragment;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
 
 public class TermsActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

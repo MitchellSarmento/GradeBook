@@ -20,8 +20,8 @@ public class AssignmentsActivity extends AppCompatActivity {
     private int termPosition;
     private int sectionPosition;
     private AssignmentAdapter adapter;
-    private Section section;
     private SectionHeader header;
+    private Section section;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class AssignmentsActivity extends AppCompatActivity {
 
         RecyclerView assignments = (RecyclerView) findViewById(R.id.assignments);
         assignments.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new AssignmentAdapter(section.getAssignments(), section);
+        adapter = new AssignmentAdapter(section.getAssignments(), termPosition, sectionPosition);
         assignments.setAdapter(adapter);
     }
 

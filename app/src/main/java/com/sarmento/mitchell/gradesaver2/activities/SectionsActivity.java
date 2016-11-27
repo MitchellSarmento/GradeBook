@@ -24,11 +24,12 @@ public class SectionsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sections);
 
         termPosition = getIntent().getIntExtra(Academics.TERM_POSITION, -1);
+
         Term term = Academics.getInstance().getCurrentTerms().get(termPosition);
 
         RecyclerView sections = (RecyclerView) findViewById(R.id.sections);
         sections.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new SectionAdapter(term.getSections());
+        adapter = new SectionAdapter(term.getSections(), termPosition);
         sections.setAdapter(adapter);
     }
 

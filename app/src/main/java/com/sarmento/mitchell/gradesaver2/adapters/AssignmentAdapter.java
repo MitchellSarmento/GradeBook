@@ -14,11 +14,13 @@ import java.util.List;
 
 public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.ViewHolder> {
     private List<Assignment> assignments;
-    private Section section;
+    private int termPosition;
+    private int sectionPosition;
 
-    public AssignmentAdapter(List<Assignment> assignments, Section section) {
-        this.assignments = assignments;
-        this.section = section;
+    public AssignmentAdapter(List<Assignment> assignments, int termPosition, int sectionPosition) {
+        this.assignments     = assignments;
+        this.termPosition    = termPosition;
+        this.sectionPosition = sectionPosition;
     }
 
     @Override
@@ -29,9 +31,10 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(AssignmentAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(AssignmentAdapter.ViewHolder holder, int assignmentPosition) {
         AssignmentButton button = holder.button;
-        button.init(assignments.get(position), section, position);
+        button.init(assignments.get(assignmentPosition), termPosition, sectionPosition,
+                assignmentPosition);
     }
 
     @Override
@@ -42,7 +45,7 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.Vi
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private AssignmentButton button;
 
-        public ViewHolder(View v) {
+        private ViewHolder(View v) {
             super(v);
             button = (AssignmentButton) v.findViewById(R.id.button_assignment);
         }

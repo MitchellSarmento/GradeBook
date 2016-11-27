@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Academics {
-    public static final String TERM_POSITION    = "termPosition";
-    public static final String SECTION_POSITION = "sectionPosition";
+    public static final String TERM_POSITION       = "termPosition";
+    public static final String SECTION_POSITION    = "sectionPosition";
+    public static final String ASSIGNMENT_POSITION = "assignmentPosition";
+    public static final String DUE_DATE_POSITION   = "dueDatePosition";
 
     private static Academics instance = null;
     private boolean loaded = false;

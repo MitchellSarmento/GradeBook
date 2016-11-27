@@ -23,8 +23,8 @@ public class TermButton extends Button implements View.OnClickListener, View.OnL
         this.context = context;
     }
 
-    public void init(Term term, int position) {
-        termPosition = position;
+    public void init(Term term, int termPosition) {
+        this.termPosition = termPosition;
 
         String termName = term.getTermName();
 
@@ -46,6 +46,7 @@ public class TermButton extends Button implements View.OnClickListener, View.OnL
     public boolean onLongClick(View v) {
         OptionsDialogFragment dialog = new OptionsDialogFragment();
         Bundle bundle = new Bundle();
+        bundle.putInt(Academics.TERM_POSITION, termPosition);
         bundle.putInt(OptionsDialogFragment.ITEM_TYPE, OptionsDialogFragment.TERM);
         dialog.setArguments(bundle);
         dialog.show(((Activity) context).getFragmentManager(), context.getString(R.string.options));

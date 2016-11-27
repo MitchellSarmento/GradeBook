@@ -28,9 +28,9 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(TermAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(TermAdapter.ViewHolder holder, int termPosition) {
         TermButton button = holder.button;
-        button.init(terms.get(position), position);
+        button.init(terms.get(termPosition), termPosition);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private TermButton button;
 
-        public ViewHolder(View v) {
+        private ViewHolder(View v) {
             super(v);
             button = (TermButton) v.findViewById(R.id.button_term);
         }
