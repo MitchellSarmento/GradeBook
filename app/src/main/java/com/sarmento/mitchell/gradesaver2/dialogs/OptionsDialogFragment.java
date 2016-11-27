@@ -1,5 +1,6 @@
 package com.sarmento.mitchell.gradesaver2.dialogs;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -8,6 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.sarmento.mitchell.gradesaver2.R;
+import com.sarmento.mitchell.gradesaver2.activities.TermsActivity;
+import com.sarmento.mitchell.gradesaver2.model.Academics;
 
 public class OptionsDialogFragment extends DialogFragment implements Dialog.OnClickListener {
     public static final String ITEM_TYPE  = "itemType";
@@ -39,14 +42,16 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
         private static final int DELETE = 1;
     }
 
-    int itemType;
+    private int itemType;
+    private Activity context;
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
+        context = getActivity();
         itemType = getArguments().getInt(ITEM_TYPE);
         String[] options = getOptions();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setItems(options, this);
 
         return builder.create();
@@ -54,12 +59,25 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
 
     @Override
     public void onClick(DialogInterface dialog, int option) {
+        DialogInterface.OnClickListener confirmAction = null;
+        boolean showConfirmationDialog = false;
+
         switch (itemType) {
             case TERM:
                 switch (option) {
                     case TermOptions.EDIT:
                         break;
                     case TermOptions.DELETE:
+                        showConfirmationDialog = true;
+                        confirmAction = new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                int termPosition = getArguments().getInt(Academics.TERM_POSITION);
+                                Academics.getInstance().removeTerm(context, termPosition);
+                                ((TermsActivity) context).updateList();
+                                dialog.dismiss();
+                            }
+                        };
                         break;
                     case TermOptions.ARCHIVE:
                         break;
@@ -91,6 +109,20 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                         break;
                 }
                 break;
+        }
+
+        if (showConfirmationDialog) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.prompt_delete);
+            builder.setNegativeButton(getString(R.string.cancel), new Dialog.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            builder.setPositiveButton(getString(R.string.confirm), confirmAction);
+            builder.create();
+            builder.show();
         }
     }
 

@@ -48,4 +48,10 @@ public class Academics {
         currentTerms.add(term);
         db.addTerm(term, termPosition);
     }
+
+    public void removeTerm(Context context, int termPosition) {
+        DBHelper db = new DBHelper(context);
+        currentTerms.remove(termPosition);
+        db.removeTerm(termPosition);
+    }
 }

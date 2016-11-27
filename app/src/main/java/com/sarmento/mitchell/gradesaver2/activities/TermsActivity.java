@@ -14,6 +14,7 @@ import com.sarmento.mitchell.gradesaver2.dialogs.TermDialogFragment;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
 
 public class TermsActivity extends AppCompatActivity {
+    private TermAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +27,18 @@ public class TermsActivity extends AppCompatActivity {
 
         RecyclerView currentTerms = (RecyclerView) findViewById(R.id.current_terms);
         currentTerms.setLayoutManager(new LinearLayoutManager(this));
-        currentTerms.setAdapter(new TermAdapter(academics.getCurrentTerms()));
+        adapter = new TermAdapter(academics.getCurrentTerms());
+        currentTerms.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateList();
+    }
+
+    public void updateList() {
+        adapter.notifyDataSetChanged();
     }
 
     @Override
