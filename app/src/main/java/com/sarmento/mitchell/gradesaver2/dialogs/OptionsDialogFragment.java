@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.activities.AssignmentsActivity;
+import com.sarmento.mitchell.gradesaver2.activities.DueDatesActivity;
 import com.sarmento.mitchell.gradesaver2.activities.SectionsActivity;
 import com.sarmento.mitchell.gradesaver2.activities.TermsActivity;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
@@ -135,6 +136,21 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                     case DueDateOptions.EDIT:
                         break;
                     case DueDateOptions.DELETE:
+                        showConfirmationDialog = true;
+                        confirmAction = new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                int termPosition    = getArguments().getInt(Academics.TERM_POSITION);
+                                int sectionPosition = getArguments().getInt(Academics.SECTION_POSITION);
+                                int dueDatePosition = getArguments().getInt(Academics.DUE_DATE_POSITION);
+                                Academics.getInstance().getCurrentTerms().get(termPosition)
+                                        .getSections().get(sectionPosition)
+                                        .removeDueDate(context, termPosition,
+                                                sectionPosition, dueDatePosition);
+                                ((DueDatesActivity) context).updateList();
+                                dialog.dismiss();
+                            }
+                        };
                         break;
                 }
                 break;

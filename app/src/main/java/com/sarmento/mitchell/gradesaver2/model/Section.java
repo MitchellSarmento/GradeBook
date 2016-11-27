@@ -213,6 +213,13 @@ public class Section {
         db.addDueDate(dueDate, termPosition, sectionPosition, dueDatePosition);
     }
 
+    public void removeDueDate(Context context, int termPosition, int sectionPosition,
+                              int dueDatePosition) {
+        DBHelper db = new DBHelper(context);
+        dueDates.remove(dueDatePosition);
+        db.removeDueDate(termPosition, sectionPosition, dueDatePosition);
+    }
+
     public List<Integer> getRelevantAssignmentTypes() {
         List<Integer> assignmentTypes = new ArrayList<>();
         if (assignmentWeights.get(HOMEWORK) != 0) {

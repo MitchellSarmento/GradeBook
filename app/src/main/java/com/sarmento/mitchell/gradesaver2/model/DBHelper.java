@@ -298,6 +298,17 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void removeDueDate(int termId, int sectionId, int dueDateId) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        String where = KEY_DUE_DATES_TERM_ID + " = " + termId + " AND " +
+                KEY_DUE_DATES_SECTION_ID + " = " + sectionId + " AND " +
+                KEY_DUE_DATES_ID + " = " + dueDateId;
+
+        db.delete(TABLE_DUE_DATES, where, null);
+        db.close();
+    }
+
     public void updateSection(ContentValues values, int termId, int sectionId) {
         String where = KEY_SECTIONS_ID + " = " + sectionId + " AND " +
                 KEY_SECTIONS_TERM_ID + " = " + termId;
