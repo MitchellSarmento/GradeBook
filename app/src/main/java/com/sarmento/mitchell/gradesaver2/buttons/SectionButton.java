@@ -1,7 +1,9 @@
 package com.sarmento.mitchell.gradesaver2.buttons;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.util.SparseArray;
@@ -11,12 +13,13 @@ import android.widget.Button;
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.activities.AssignmentsActivity;
 import com.sarmento.mitchell.gradesaver2.activities.SectionsActivity;
+import com.sarmento.mitchell.gradesaver2.dialogs.OptionsDialogFragment;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.Section;
 
 import java.util.Locale;
 
-public class SectionButton extends Button implements View.OnClickListener {
+public class SectionButton extends Button implements View.OnClickListener, View.OnLongClickListener {
     private Context context;
     private Section section;
     private int sectionPosition;
@@ -41,6 +44,7 @@ public class SectionButton extends Button implements View.OnClickListener {
                 "% " + grade);
         setAllCaps(false);
         setOnClickListener(this);
+        setOnLongClickListener(this);
         setBackgroundColor(ResourcesCompat.getColor(getResources(),
                 getButtonColor(scorePercent), null));
     }
@@ -68,5 +72,15 @@ public class SectionButton extends Button implements View.OnClickListener {
         intent.putExtra(Academics.SECTION_POSITION, sectionPosition);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        OptionsDialogFragment dialog = new OptionsDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(OptionsDialogFragment.ITEM_TYPE, OptionsDialogFragment.SECTION);
+        dialog.setArguments(bundle);
+        dialog.show(((Activity) context).getFragmentManager(), context.getString(R.string.options));
+        return true;
     }
 }

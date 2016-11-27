@@ -46,6 +46,26 @@
     <!-- DueDatesActivity Menu Actions -->
     <string name="action_new_due_date">New Due Date</string>
 
+    <!-- Options Arrays -->
+    <string-array name="options_term">
+        <item>Edit</item>
+        <item>Delete</item>
+        <item>Archive</item>
+    </string-array>
+    <string-array name="options_section">
+        <item>Edit</item>
+        <item>Delete</item>
+        <item>Set Final Grade</item>
+    </string-array>
+    <string-array name="options_assignment">
+        <item>Edit</item>
+        <item>Delete</item>
+    </string-array>
+    <string-array name="options_due_date">
+        <item>Edit</item>
+        <item>Delete</item>
+    </string-array>
+
     <!-- Misc -->
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
@@ -56,4 +76,5 @@
     <string name="max_score">Max Score</string>
     <string name="type">Type</string>
     <string name="total">Total</string>
+    <string name="options">Options</string>
 </resources>
