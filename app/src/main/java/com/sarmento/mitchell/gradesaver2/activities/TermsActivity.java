@@ -20,10 +20,9 @@ public class TermsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_terms);
-        Academics academics = Academics.getInstance();
 
         // load data
-        academics.loadData(this);
+        Academics academics = Academics.getInstance(this);
 
         RecyclerView currentTerms = (RecyclerView) findViewById(R.id.current_terms);
         currentTerms.setLayoutManager(new LinearLayoutManager(this));

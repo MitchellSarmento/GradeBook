@@ -22,6 +22,21 @@ public class Academics {
         archivedTerms = new ArrayList<>();
     }
 
+    /*
+     * Get an instance of Academics and load from the database if data has not already been
+     * loaded during this session.
+     * This method should be called once when the application starts, after which getInstance()
+     * should be used.
+     */
+    public static Academics getInstance(Context context) {
+        if (instance == null) {
+            instance = new Academics();
+        }
+        instance.loadData(context);
+        return instance;
+    }
+
+    // get an instance of Academics without loading from the database
     public static Academics getInstance() {
         if (instance == null) {
             instance = new Academics();
@@ -30,7 +45,7 @@ public class Academics {
     }
 
     // load from the database
-    public void loadData(Context context) {
+    private void loadData(Context context) {
         if (!loaded) {
             DBHelper db = new DBHelper(context);
             currentTerms = db.getTerms(false);

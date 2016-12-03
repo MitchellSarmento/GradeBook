@@ -1,6 +1,7 @@
 package com.sarmento.mitchell.gradesaver2.model;
 
 
+import android.content.ContentValues;
 import android.content.Context;
 
 import java.util.ArrayList;
@@ -27,6 +28,16 @@ public class Term {
 
     public String getTermName() {
         return termName;
+    }
+
+    public void setTermName(Context context, String termName, int termPosition) {
+        DBHelper db = new DBHelper(context);
+        this.termName = termName;
+
+        // update the Term in the database
+        ContentValues updateValues = new ContentValues();
+        updateValues.put(DBHelper.KEY_TERMS_NAME, termName);
+        db.updateTerm(updateValues, termPosition);
     }
 
     public List<Section> getSections() {

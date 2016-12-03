@@ -328,6 +328,14 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void updateTerm(ContentValues values, int termId) {
+        String where = KEY_TERMS_ID + " = " + termId;
+        SQLiteDatabase db = getWritableDatabase();
+
+        db.update(TABLE_TERMS, values, where, null);
+        db.close();
+    }
+
     public List<Term> getTerms(boolean archived) {
         SQLiteDatabase db = getReadableDatabase();
         List<Term> terms = new ArrayList<>();
