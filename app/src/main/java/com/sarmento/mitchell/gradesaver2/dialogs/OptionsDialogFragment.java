@@ -123,6 +123,10 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
             case SECTION:
                 switch (option) {
                     case SectionOptions.EDIT:
+                        editing = true;
+                        editDialog = new SectionDialogFragment();
+                        bundle.putInt(Academics.TERM_POSITION, termPosition);
+                        bundle.putInt(Academics.SECTION_POSITION, sectionPosition);
                         break;
                     case SectionOptions.DELETE:
                         showConfirmationDialog = true;

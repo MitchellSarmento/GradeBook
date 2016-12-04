@@ -1,5 +1,6 @@
 package com.sarmento.mitchell.gradesaver2.dialogs;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -7,6 +8,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.EditText;
 
 import com.sarmento.mitchell.gradesaver2.R;
@@ -16,17 +18,72 @@ import com.sarmento.mitchell.gradesaver2.model.Section;
 import com.sarmento.mitchell.gradesaver2.model.Term;
 
 public class SectionDialogFragment extends DialogFragment {
-    int termPosition;
+    private int termPosition;
+    private int sectionPosition;
+
+    private Section section;
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        termPosition = getArguments().getInt(Academics.TERM_POSITION);
+        final Academics academics = Academics.getInstance();
+        final Activity activity   = getActivity();
+        final Bundle arguments    = getArguments();
+        final boolean editing     = arguments.containsKey(OptionsDialogFragment.EDITING);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        termPosition = arguments.getInt(Academics.TERM_POSITION);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
         // set layout
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        builder.setView(inflater.inflate(R.layout.dialog_section, null));
+        LayoutInflater inflater = activity.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_section, null);
+        builder.setView(dialogView);
+
+        // get relevant views
+        final EditText sectionNameEntry    = (EditText) dialogView.findViewById(R.id.section_entry);
+        final EditText weightHomeworkEntry = (EditText) dialogView.findViewById(R.id.weight_homework);
+        final EditText weightQuizzesEntry  = (EditText) dialogView.findViewById(R.id.weight_quizzes);
+        final EditText weightMidtermEntry  = (EditText) dialogView.findViewById(R.id.weight_midterm);
+        final EditText weightFinalEntry    = (EditText) dialogView.findViewById(R.id.weight_final);
+        final EditText weightProjectEntry  = (EditText) dialogView.findViewById(R.id.weight_project);
+        final EditText weightOtherEntry    = (EditText) dialogView.findViewById(R.id.weight_other);
+        final EditText highAEntry          = (EditText) dialogView.findViewById(R.id.high_a);
+        final EditText lowAEntry           = (EditText) dialogView.findViewById(R.id.low_a);
+        final EditText highBEntry          = (EditText) dialogView.findViewById(R.id.high_b);
+        final EditText lowBEntry           = (EditText) dialogView.findViewById(R.id.low_b);
+        final EditText highCEntry          = (EditText) dialogView.findViewById(R.id.high_c);
+        final EditText lowCEntry           = (EditText) dialogView.findViewById(R.id.low_c);
+        final EditText highDEntry          = (EditText) dialogView.findViewById(R.id.high_d);
+        final EditText lowDEntry           = (EditText) dialogView.findViewById(R.id.low_d);
+        final EditText highFEntry          = (EditText) dialogView.findViewById(R.id.high_f);
+        final EditText lowFEntry           = (EditText) dialogView.findViewById(R.id.low_f);
+
+        // set fields if editing
+        if (editing) {
+            sectionPosition = arguments.getInt(Academics.SECTION_POSITION);
+            section = academics.getCurrentTerms().get(termPosition)
+                    .getSections().get(sectionPosition);
+            SparseArray<Double> assignmentWeights = section.getAssignmentWeights();
+            SparseArray<Double> gradeThresholds   = section.getGradeThresholds();
+
+            sectionNameEntry.setText(section.getSectionName());
+            weightHomeworkEntry.setText(String.valueOf(assignmentWeights.get(Section.HOMEWORK)));
+            weightQuizzesEntry.setText(String.valueOf(assignmentWeights.get(Section.QUIZ)));
+            weightMidtermEntry.setText(String.valueOf(assignmentWeights.get(Section.MIDTERM)));
+            weightFinalEntry.setText(String.valueOf(assignmentWeights.get(Section.FINAL)));
+            weightProjectEntry.setText(String.valueOf(assignmentWeights.get(Section.PROJECT)));
+            weightOtherEntry.setText(String.valueOf(assignmentWeights.get(Section.OTHER)));
+            highAEntry.setText(String.valueOf(gradeThresholds.get(Section.HIGH_A)));
+            lowAEntry.setText(String.valueOf(gradeThresholds.get(Section.LOW_A)));
+            highBEntry.setText(String.valueOf(gradeThresholds.get(Section.HIGH_B)));
+            lowBEntry.setText(String.valueOf(gradeThresholds.get(Section.LOW_B)));
+            highCEntry.setText(String.valueOf(gradeThresholds.get(Section.HIGH_C)));
+            lowCEntry.setText(String.valueOf(gradeThresholds.get(Section.LOW_C)));
+            highDEntry.setText(String.valueOf(gradeThresholds.get(Section.HIGH_D)));
+            lowDEntry.setText(String.valueOf(gradeThresholds.get(Section.LOW_D)));
+            highFEntry.setText(String.valueOf(gradeThresholds.get(Section.HIGH_F)));
+            lowFEntry.setText(String.valueOf(gradeThresholds.get(Section.LOW_F)));
+        }
 
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
@@ -38,25 +95,6 @@ public class SectionDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                // get relevant Views
-                EditText sectionNameEntry    = (EditText) getDialog().findViewById(R.id.section_entry);
-                EditText weightHomeworkEntry = (EditText) getDialog().findViewById(R.id.weight_homework);
-                EditText weightQuizzesEntry  = (EditText) getDialog().findViewById(R.id.weight_quizzes);
-                EditText weightMidtermEntry  = (EditText) getDialog().findViewById(R.id.weight_midterm);
-                EditText weightFinalEntry    = (EditText) getDialog().findViewById(R.id.weight_final);
-                EditText weightProjectEntry  = (EditText) getDialog().findViewById(R.id.weight_project);
-                EditText weightOtherEntry    = (EditText) getDialog().findViewById(R.id.weight_other);
-                EditText highAEntry          = (EditText) getDialog().findViewById(R.id.high_a);
-                EditText lowAEntry           = (EditText) getDialog().findViewById(R.id.low_a);
-                EditText highBEntry          = (EditText) getDialog().findViewById(R.id.high_b);
-                EditText lowBEntry           = (EditText) getDialog().findViewById(R.id.low_b);
-                EditText highCEntry          = (EditText) getDialog().findViewById(R.id.high_c);
-                EditText lowCEntry           = (EditText) getDialog().findViewById(R.id.low_c);
-                EditText highDEntry          = (EditText) getDialog().findViewById(R.id.high_d);
-                EditText lowDEntry           = (EditText) getDialog().findViewById(R.id.low_d);
-                EditText highFEntry          = (EditText) getDialog().findViewById(R.id.high_f);
-                EditText lowFEntry           = (EditText) getDialog().findViewById(R.id.low_f);
-
                 // get user input
                 String sectionName = sectionNameEntry.getText().toString();
 
@@ -86,14 +124,22 @@ public class SectionDialogFragment extends DialogFragment {
                 gradeThresholds.put(Section.HIGH_F, Double.valueOf(highFEntry.getText().toString()));
                 gradeThresholds.put(Section.LOW_F, Double.valueOf(lowFEntry.getText().toString()));
 
-                // create new section
-                Section section = new Section(sectionName, assignmentWeights, gradeThresholds);
+                // check if editing
+                if (editing) {
+                    // edit existing Section
+                    section.updateSection(activity, sectionName, assignmentWeights, gradeThresholds,
+                            termPosition, sectionPosition);
+                    ((SectionsActivity) activity).updateList();
+                } else {
+                    // create new Section
+                    section = new Section(sectionName, assignmentWeights, gradeThresholds);
 
-                // add new section
-                Term term = Academics.getInstance().getCurrentTerms().get(termPosition);
-                int sectionPosition = term.getSections().size();
-                term.addSection(getActivity(), section, termPosition, sectionPosition);
-                ((SectionsActivity) getActivity()).updateList();
+                    // add new Section
+                    Term term = academics.getCurrentTerms().get(termPosition);
+                    sectionPosition = term.getSections().size();
+                    term.addSection(activity, section, termPosition, sectionPosition);
+                    ((SectionsActivity) activity).updateList();
+                }
 
                 dialog.dismiss();
             }

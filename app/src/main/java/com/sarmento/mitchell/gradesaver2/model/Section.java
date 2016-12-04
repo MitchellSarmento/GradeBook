@@ -77,6 +77,53 @@ public class Section {
         this.dueDates = dueDates;
     }
 
+    public void updateSection(Context context, String sectionName,
+                              SparseArray<Double> assignmentWeights,
+                              SparseArray<Double> gradeThresholds,
+                              int termPosition, int sectionPosition) {
+        DBHelper db = new DBHelper(context);
+        this.sectionName = sectionName;
+        this.assignmentWeights = assignmentWeights;
+        this.gradeThresholds = gradeThresholds;
+
+        // update the Section in the database
+        ContentValues updateValues = new ContentValues();
+        updateValues.put(DBHelper.KEY_SECTIONS_NAME, sectionName);
+        updateValues.put(DBHelper.KEY_SECTIONS_WEIGHT_HOMEWORK,
+                assignmentWeights.get(HOMEWORK));
+        updateValues.put(DBHelper.KEY_SECTIONS_WEIGHT_QUIZ,
+                assignmentWeights.get(QUIZ));
+        updateValues.put(DBHelper.KEY_SECTIONS_WEIGHT_MIDTERM,
+                assignmentWeights.get(MIDTERM));
+        updateValues.put(DBHelper.KEY_SECTIONS_WEIGHT_FINAL,
+                assignmentWeights.get(FINAL));
+        updateValues.put(DBHelper.KEY_SECTIONS_WEIGHT_PROJECT,
+                assignmentWeights.get(PROJECT));
+        updateValues.put(DBHelper.KEY_SECTIONS_WEIGHT_OTHER,
+                assignmentWeights.get(OTHER));
+        updateValues.put(DBHelper.KEY_SECTIONS_HIGH_A,
+                gradeThresholds.get(HIGH_A));
+        updateValues.put(DBHelper.KEY_SECTIONS_LOW_A,
+                gradeThresholds.get(LOW_A));
+        updateValues.put(DBHelper.KEY_SECTIONS_HIGH_B,
+                gradeThresholds.get(HIGH_B));
+        updateValues.put(DBHelper.KEY_SECTIONS_LOW_B,
+                gradeThresholds.get(LOW_B));
+        updateValues.put(DBHelper.KEY_SECTIONS_HIGH_C,
+                gradeThresholds.get(HIGH_C));
+        updateValues.put(DBHelper.KEY_SECTIONS_LOW_C,
+                gradeThresholds.get(LOW_C));
+        updateValues.put(DBHelper.KEY_SECTIONS_HIGH_D,
+                gradeThresholds.get(HIGH_D));
+        updateValues.put(DBHelper.KEY_SECTIONS_LOW_D,
+                gradeThresholds.get(LOW_D));
+        updateValues.put(DBHelper.KEY_SECTIONS_HIGH_F,
+                gradeThresholds.get(HIGH_F));
+        updateValues.put(DBHelper.KEY_SECTIONS_LOW_F,
+                gradeThresholds.get(LOW_F));
+        db.updateSection(updateValues, termPosition, sectionPosition);
+    }
+
     public String getSectionName() {
         return sectionName;
     }

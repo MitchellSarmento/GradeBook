@@ -16,12 +16,16 @@ import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.Term;
 
 public class TermDialogFragment extends DialogFragment {
+    private int termPosition;
+
+    private Term term;
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        final Activity activity = getActivity();
-        final Bundle arguments = getArguments();
-        final boolean editing = arguments != null && arguments.containsKey(OptionsDialogFragment.EDITING);
+        final Academics academics = Academics.getInstance();
+        final Activity activity   = getActivity();
+        final Bundle arguments    = getArguments();
+        final boolean editing     = arguments != null && arguments.containsKey(OptionsDialogFragment.EDITING);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
@@ -35,10 +39,10 @@ public class TermDialogFragment extends DialogFragment {
 
         // set fields if editing
         if (editing) {
-            int termPosition = arguments.getInt(Academics.TERM_POSITION);
+            termPosition = arguments.getInt(Academics.TERM_POSITION);
+            term = academics.getCurrentTerms().get(termPosition);
 
-            termNameEntry.setText(Academics.getInstance().getCurrentTerms().get(termPosition)
-                    .getTermName());
+            termNameEntry.setText(term.getTermName());
         }
 
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -51,27 +55,20 @@ public class TermDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                Academics academics = Academics.getInstance();
-
                 // get user input
                 String termName = termNameEntry.getText().toString();
 
+                // check if editing
                 if (editing) {
-                    // get positions
-                    int termPosition = arguments.getInt(Academics.TERM_POSITION);
-
-                    // get Term to edit
-                    Term term = academics.getCurrentTerms().get(termPosition);
-
-                    // edit Term
+                    // edit existing Term
                     term.setTermName(activity, termName, termPosition);
                     ((TermsActivity) activity).updateList();
                 } else {
                     // create new Term
-                    Term term = new Term(termName);
+                    term = new Term(termName);
 
                     // add new Term
-                    int termPosition = academics.getCurrentTerms().size();
+                    termPosition = academics.getCurrentTerms().size();
                     academics.addTerm(activity, term, termPosition);
                 }
 
