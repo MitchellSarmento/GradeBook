@@ -24,7 +24,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String TABLE_TERMS       = "Terms";
     private static final String TABLE_SECTIONS    = "Sections";
     private static final String TABLE_ASSIGNMENTS = "Assignments";
-    private static final String TABLE_DUE_DATES    = "DueDates";
+    private static final String TABLE_DUE_DATES   = "DueDates";
 
     // TABLE_TERMS columns
     public static final String KEY_TERMS_ID       = "id";
@@ -107,20 +107,30 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         final String CREATE_TABLE_TERMS = "CREATE TABLE " + TABLE_TERMS + "(" +
-                KEY_TERMS_ID + " INTEGER," + KEY_TERMS_NAME + " TEXT," +
+                KEY_TERMS_ID + " INTEGER," +
+                KEY_TERMS_NAME + " TEXT," +
                 KEY_TERMS_ARCHIVED + " TEXT)";
 
         final String CREATE_TABLE_SECTIONS = "CREATE TABLE " + TABLE_SECTIONS + "(" +
-                KEY_SECTIONS_ID + " INTEGER," + KEY_SECTIONS_TERM_ID +
-                " INTEGER," + KEY_SECTIONS_NAME + " TEXT," +
-                KEY_SECTIONS_HIGH_A + " REAL," + KEY_SECTIONS_LOW_A + " REAL," +
-                KEY_SECTIONS_HIGH_B + " REAL," + KEY_SECTIONS_LOW_B + " REAL," +
-                KEY_SECTIONS_HIGH_C + " REAL," + KEY_SECTIONS_LOW_C + " REAL," +
-                KEY_SECTIONS_HIGH_D + " REAL," + KEY_SECTIONS_LOW_D + " REAL," +
-                KEY_SECTIONS_HIGH_F + " REAL," + KEY_SECTIONS_LOW_F + " REAL," +
-                KEY_SECTIONS_WEIGHT_HOMEWORK + " REAL," + KEY_SECTIONS_WEIGHT_QUIZ + " REAL," +
-                KEY_SECTIONS_WEIGHT_MIDTERM + " REAL," + KEY_SECTIONS_WEIGHT_FINAL + " REAL," +
-                KEY_SECTIONS_WEIGHT_PROJECT + " REAL," + KEY_SECTIONS_WEIGHT_OTHER + " REAL," +
+                KEY_SECTIONS_ID + " INTEGER," +
+                KEY_SECTIONS_TERM_ID + " INTEGER," +
+                KEY_SECTIONS_NAME + " TEXT," +
+                KEY_SECTIONS_HIGH_A + " REAL," +
+                KEY_SECTIONS_LOW_A + " REAL," +
+                KEY_SECTIONS_HIGH_B + " REAL," +
+                KEY_SECTIONS_LOW_B + " REAL," +
+                KEY_SECTIONS_HIGH_C + " REAL," +
+                KEY_SECTIONS_LOW_C + " REAL," +
+                KEY_SECTIONS_HIGH_D + " REAL," +
+                KEY_SECTIONS_LOW_D + " REAL," +
+                KEY_SECTIONS_HIGH_F + " REAL," +
+                KEY_SECTIONS_LOW_F + " REAL," +
+                KEY_SECTIONS_WEIGHT_HOMEWORK + " REAL," +
+                KEY_SECTIONS_WEIGHT_QUIZ + " REAL," +
+                KEY_SECTIONS_WEIGHT_MIDTERM + " REAL," +
+                KEY_SECTIONS_WEIGHT_FINAL + " REAL," +
+                KEY_SECTIONS_WEIGHT_PROJECT + " REAL," +
+                KEY_SECTIONS_WEIGHT_OTHER + " REAL," +
                 KEY_SECTIONS_SCORE_HOMEWORK + " REAL," +
                 KEY_SECTIONS_MAX_SCORE_HOMEWORK + " REAL," +
                 KEY_SECTIONS_SCORE_QUIZ + " REAL," +
@@ -135,24 +145,34 @@ public class DBHelper extends SQLiteOpenHelper {
                 KEY_SECTIONS_MAX_SCORE_OTHER + " REAL," +
                 KEY_SECTIONS_SCORE_TOTAL + " REAL," +
                 KEY_SECTIONS_MAX_SCORE_TOTAL + " REAL," +
-                KEY_SECTIONS_GRADE + " TEXT," + KEY_SECTIONS_LOCATION + " TEXT," +
-                KEY_SECTIONS_ON_MONDAY + " INTEGER," + KEY_SECTIONS_ON_TUESDAY + " INTEGER," +
-                KEY_SECTIONS_ON_WEDNESDAY + " INTEGER," + KEY_SECTIONS_ON_THURSDAY + " INTEGER," +
-                KEY_SECTIONS_ON_FRIDAY + " INTEGER," + KEY_SECTIONS_ON_SATURDAY + " INTEGER," +
+                KEY_SECTIONS_GRADE + " TEXT," +
+                KEY_SECTIONS_LOCATION + " TEXT," +
+                KEY_SECTIONS_ON_MONDAY + " INTEGER," +
+                KEY_SECTIONS_ON_TUESDAY + " INTEGER," +
+                KEY_SECTIONS_ON_WEDNESDAY + " INTEGER," +
+                KEY_SECTIONS_ON_THURSDAY + " INTEGER," +
+                KEY_SECTIONS_ON_FRIDAY + " INTEGER," +
+                KEY_SECTIONS_ON_SATURDAY + " INTEGER," +
                 KEY_SECTIONS_ON_SUNDAY + " INTEGER)";
 
         final String CREATE_TABLE_ASSIGNMENTS = "CREATE TABLE " + TABLE_ASSIGNMENTS + "(" +
                 KEY_ASSIGNMENTS_ID + " INTEGER," +
-                KEY_ASSIGNMENTS_TERM_ID + " INTEGER," + KEY_ASSIGNMENTS_SECTION_ID + " INTEGER," +
-                KEY_ASSIGNMENTS_NAME + " TEXT," + KEY_ASSIGNMENTS_TYPE + " TEXT," +
-                KEY_ASSIGNMENTS_SCORE + " REAL," + KEY_ASSIGNMENTS_MAX_SCORE + " REAL," +
+                KEY_ASSIGNMENTS_TERM_ID + " INTEGER," +
+                KEY_ASSIGNMENTS_SECTION_ID + " INTEGER," +
+                KEY_ASSIGNMENTS_NAME + " TEXT," +
+                KEY_ASSIGNMENTS_TYPE + " TEXT," +
+                KEY_ASSIGNMENTS_SCORE + " REAL," +
+                KEY_ASSIGNMENTS_MAX_SCORE + " REAL," +
                 KEY_ASSIGNMENTS_GRADE + " TEXT)";
 
         final String CREATE_TABLE_DUE_DATES = "CREATE TABLE " + TABLE_DUE_DATES + "(" +
                 KEY_DUE_DATES_ID + " INTEGER," +
-                KEY_DUE_DATES_TERM_ID + " INTEGER," + KEY_DUE_DATES_SECTION_ID + " INTEGER," +
-                KEY_DUE_DATES_NAME + " TEXT," + KEY_DUE_DATES_COMPLETE + " INTEGER," +
-                KEY_DUE_DATES_YEAR + " INTEGER," + KEY_DUE_DATES_MONTH + " INTEGER," +
+                KEY_DUE_DATES_TERM_ID + " INTEGER," +
+                KEY_DUE_DATES_SECTION_ID + " INTEGER," +
+                KEY_DUE_DATES_NAME + " TEXT," +
+                KEY_DUE_DATES_COMPLETE + " INTEGER," +
+                KEY_DUE_DATES_YEAR + " INTEGER," +
+                KEY_DUE_DATES_MONTH + " INTEGER," +
                 KEY_DUE_DATES_DAY + " INTEGER)";
 
         db.execSQL(CREATE_TABLE_TERMS);
@@ -271,41 +291,112 @@ public class DBHelper extends SQLiteOpenHelper {
     public void removeTerm(int termId) {
         SQLiteDatabase db = getWritableDatabase();
 
+        // delete the Term
         String where = KEY_TERMS_ID + " = " + termId;
-
         db.delete(TABLE_TERMS, where, null);
+
+        // delete related Sections
+        removeSection(termId, -1);
+
+        // delete related Assignments
+        removeAssignment(termId, -1, -1);
+
+        // delete related DueDates
+        removeDueDate(termId, -1, -1);
+
+        // decrement all larger Term ids
+        db = getWritableDatabase();
+        db.execSQL("UPDATE " + TABLE_TERMS + " SET " + KEY_TERMS_ID + " = " +
+                KEY_TERMS_ID + " - 1 WHERE " + KEY_TERMS_ID + " > " + termId);
+        db.execSQL("UPDATE " + TABLE_SECTIONS + " SET " + KEY_SECTIONS_TERM_ID + " = " +
+                KEY_SECTIONS_TERM_ID + " - 1 WHERE " + KEY_SECTIONS_TERM_ID + " > " + termId);
+        db.execSQL("UPDATE " + TABLE_ASSIGNMENTS + " SET " + KEY_ASSIGNMENTS_TERM_ID + " = " +
+                KEY_ASSIGNMENTS_TERM_ID + " - 1 WHERE " + KEY_ASSIGNMENTS_TERM_ID + " > " + termId);
+        db.execSQL("UPDATE " + TABLE_DUE_DATES + " SET " + KEY_DUE_DATES_TERM_ID + " = " +
+                KEY_DUE_DATES_TERM_ID + " - 1 WHERE " + KEY_DUE_DATES_TERM_ID + " > " + termId);
         db.close();
     }
 
     public void removeSection(int termId, int sectionId) {
         SQLiteDatabase db = getWritableDatabase();
 
-        String where = KEY_SECTIONS_TERM_ID + " = " + termId + " AND " +
-                KEY_SECTIONS_ID + " = " + sectionId;
-
+        // delete the Section
+        String where = KEY_SECTIONS_TERM_ID + " = " + termId;
+        if (sectionId != -1) {
+            where += " AND " + KEY_SECTIONS_ID + " = " + sectionId;
+        }
         db.delete(TABLE_SECTIONS, where, null);
+
+        // delete related Assignments
+        removeAssignment(termId, sectionId, -1);
+
+        // delete related DueDates
+        removeDueDate(termId, sectionId, -1);
+
+        // decrement all larger Section ids
+        if (sectionId != -1) {
+            db = getWritableDatabase();
+            db.execSQL("UPDATE " + TABLE_SECTIONS + " SET " + KEY_SECTIONS_ID + " = " +
+                    KEY_SECTIONS_ID + " - 1 WHERE " + KEY_SECTIONS_ID + " > " + sectionId);
+            db.execSQL("UPDATE " + TABLE_ASSIGNMENTS + " SET " + KEY_ASSIGNMENTS_SECTION_ID + " = " +
+                    KEY_ASSIGNMENTS_SECTION_ID + " - 1 WHERE " + KEY_ASSIGNMENTS_SECTION_ID +
+                    " > " + sectionId);
+            db.execSQL("UPDATE " + TABLE_DUE_DATES + " SET " + KEY_DUE_DATES_SECTION_ID + " = " +
+                    KEY_DUE_DATES_SECTION_ID + " - 1 WHERE " + KEY_DUE_DATES_SECTION_ID +
+                    " > " + sectionId);
+        }
         db.close();
     }
 
     public void removeAssignment(int termId, int sectionId, int assignmentId) {
         SQLiteDatabase db = getWritableDatabase();
 
-        String where = KEY_ASSIGNMENTS_TERM_ID + " = " + termId + " AND " +
-                KEY_ASSIGNMENTS_SECTION_ID + " = " + sectionId + " AND " +
-                KEY_ASSIGNMENTS_ID + " = " + assignmentId;
-
+        // delete the Assignment
+        String where = KEY_ASSIGNMENTS_TERM_ID + " = " + termId;
+        if (sectionId != -1) {
+            where += " AND " + KEY_ASSIGNMENTS_SECTION_ID + " = " + sectionId;
+        }
+        if (assignmentId != -1) {
+            where += " AND " + KEY_ASSIGNMENTS_ID + " = " + assignmentId;
+        }
         db.delete(TABLE_ASSIGNMENTS, where, null);
+
+        // decrement all larger Assignment ids
+        if (assignmentId != -1) {
+            db = getWritableDatabase();
+            db.execSQL("UPDATE " + TABLE_ASSIGNMENTS + " SET " + KEY_ASSIGNMENTS_ID + " = " +
+                    KEY_ASSIGNMENTS_ID + " - 1 WHERE " + KEY_ASSIGNMENTS_ID + " > " + assignmentId);
+        }
         db.close();
     }
 
     public void removeDueDate(int termId, int sectionId, int dueDateId) {
         SQLiteDatabase db = getWritableDatabase();
 
-        String where = KEY_DUE_DATES_TERM_ID + " = " + termId + " AND " +
-                KEY_DUE_DATES_SECTION_ID + " = " + sectionId + " AND " +
-                KEY_DUE_DATES_ID + " = " + dueDateId;
-
+        // delete the DueDate
+        String where = KEY_DUE_DATES_TERM_ID + " = " + termId;
+        if (sectionId != -1) {
+            where += " AND " + KEY_DUE_DATES_SECTION_ID + " = " + sectionId;
+        }
+        if (dueDateId != -1) {
+            where += " AND " + KEY_DUE_DATES_ID + " = " + dueDateId;
+        }
         db.delete(TABLE_DUE_DATES, where, null);
+
+        // decrement all larger DueDate ids
+        if (dueDateId != -1) {
+            db = getWritableDatabase();
+            db.execSQL("UPDATE " + TABLE_DUE_DATES + " SET " + KEY_DUE_DATES_ID + " = " +
+                    KEY_DUE_DATES_ID + " - 1 WHERE " + KEY_DUE_DATES_ID + " > " + dueDateId);
+        }
+        db.close();
+    }
+
+    public void updateTerm(ContentValues values, int termId) {
+        String where = KEY_TERMS_ID + " = " + termId;
+        SQLiteDatabase db = getWritableDatabase();
+
+        db.update(TABLE_TERMS, values, where, null);
         db.close();
     }
 
@@ -325,14 +416,6 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
 
         db.update(TABLE_DUE_DATES, values, where, null);
-        db.close();
-    }
-
-    public void updateTerm(ContentValues values, int termId) {
-        String where = KEY_TERMS_ID + " = " + termId;
-        SQLiteDatabase db = getWritableDatabase();
-
-        db.update(TABLE_TERMS, values, where, null);
         db.close();
     }
 
