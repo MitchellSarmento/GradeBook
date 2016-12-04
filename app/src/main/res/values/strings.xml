@@ -38,6 +38,7 @@
 
     <!-- SectionsActivity Menu Actions -->
     <string name="action_new_section">New Section</string>
+    <string name="action_schedule">Schedule</string>
 
     <!-- AssignmentsActivity Menu Actions -->
     <string name="action_due_dates">Due Dates</string>
@@ -45,6 +46,9 @@
 
     <!-- DueDatesActivity Menu Actions -->
     <string name="action_new_due_date">New Due Date</string>
+
+    <!-- ScheduleActivity Menu Actions -->
+    <string name="action_edit_schedule">Edit Schedule</string>
 
     <!-- Options Arrays -->
     <string-array name="options_term">

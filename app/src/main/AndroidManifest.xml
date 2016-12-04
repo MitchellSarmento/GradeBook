@@ -17,7 +17,8 @@
         </activity>
         <activity android:name=".activities.SectionsActivity" />
         <activity android:name=".activities.AssignmentsActivity" />
-        <activity android:name=".activities.DueDatesActivity"></activity>
+        <activity android:name=".activities.DueDatesActivity" />
+        <activity android:name=".activities.ScheduleActivity"></activity>
     </application>
 
 </manifest>
