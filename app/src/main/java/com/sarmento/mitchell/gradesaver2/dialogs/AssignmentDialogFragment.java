@@ -95,27 +95,11 @@ public class AssignmentDialogFragment extends DialogFragment {
 
                 // create new assignment
                 Assignment assignment = new Assignment(assignmentName, assignmentType,
-                        myScore, maxScore, section.calculateGrade(myScore, maxScore));
-
-                // convert the assignment type
-                int type;
-                if (assignmentType.equals(getString(R.string.homework))) {
-                    type = Section.HOMEWORK;
-                } else if (assignmentType.equals(getString(R.string.quiz))) {
-                    type = Section.QUIZ;
-                } else if (assignmentType.equals(getString(R.string.midterm))) {
-                    type = Section.MIDTERM;
-                } else if (assignmentType.equals(getString(R.string.string_final))) {
-                    type = Section.FINAL;
-                } else if (assignmentType.equals(getString(R.string.project))) {
-                    type = Section.PROJECT;
-                } else {
-                    type = Section.OTHER;
-                }
+                        myScore, maxScore, section.calculateAssignmentGrade(myScore, maxScore));
 
                 // add new assignment
                 int assignmentPosition = section.getAssignments().size();
-                section.addAssignment(getActivity(), assignment, type, termPosition,
+                section.addAssignment(getActivity(), assignment, termPosition,
                         sectionPosition, assignmentPosition);
                 ((AssignmentsActivity) getActivity()).updateList();
 

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.util.SparseArray;
 
 import com.sarmento.mitchell.gradesaver2.R;
+import com.sarmento.mitchell.gradesaver2.activities.AssignmentsActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -164,47 +165,27 @@ public class Section {
         return dueDates;
     }
 
-    public void addAssignment(Context context, Assignment assignment, int type,
-                              int termPosition, int sectionPosition, int assignmentPosition) {
-        DBHelper db = new DBHelper(context);
-        assignments.add(assignment);
-        db.addAssignment(assignment, termPosition, sectionPosition, assignmentPosition);
-
-        double assignmentScore    = assignment.getScore();
-        double assignmentMaxScore = assignment.getMaxScore();
-
-        // get the current total score for this assignment type
-        Double currentScore    = scores.get(type);
-        Double currentMaxScore = maxScores.get(type);
-
-        // if there is not current score then initialize the score and max score to 0
-        if (currentScore == null) {
-            currentScore = 0.0;
-            currentMaxScore = 0.0;
+    // convert the Assignment type from String to int
+    private int convertAssignmentType(Context context, String assignmentType) {
+        int type;
+        if (assignmentType.equals(context.getString(R.string.homework))) {
+            type = Section.HOMEWORK;
+        } else if (assignmentType.equals(context.getString(R.string.quiz))) {
+            type = Section.QUIZ;
+        } else if (assignmentType.equals(context.getString(R.string.midterm))) {
+            type = Section.MIDTERM;
+        } else if (assignmentType.equals(context.getString(R.string.string_final))) {
+            type = Section.FINAL;
+        } else if (assignmentType.equals(context.getString(R.string.project))) {
+            type = Section.PROJECT;
+        } else {
+            type = Section.OTHER;
         }
+        return type;
+    }
 
-        // add the assignment scores to the total
-        scores.put(type, currentScore + assignmentScore);
-        maxScores.put(type, currentMaxScore + assignmentMaxScore);
-
-        // get the weighted scores for each assignment type
-        totalScore = 0;
-        maxScore = 0;
-        int[] assignmentTypes = {HOMEWORK, QUIZ, MIDTERM, FINAL, PROJECT, OTHER};
-        for (int assignmentType : assignmentTypes) {
-            // skip this type if there are no scores for it
-            Double typeScore    = scores.get(assignmentType);
-            Double typeMaxScore = maxScores.get(assignmentType);
-            if (typeMaxScore != null && typeMaxScore != 0) {
-                totalScore += typeScore / typeMaxScore * assignmentWeights.get(assignmentType);
-                maxScore += assignmentWeights.get(assignmentType);
-            }
-        }
-
-        // calculate the overall grade for this section
-        grade = calculateGrade(totalScore, maxScore);
-
-        // find which column to update
+    // get the database keys associated with this Assignment type
+    private String[] getColumnKeys(int type) {
         String keyScore = "";
         String keyMaxScore = "";
         switch (type) {
@@ -235,11 +216,45 @@ public class Section {
             default:
                 break;
         }
+        return new String[]{keyScore, keyMaxScore};
+    }
+
+    public void addAssignment(Context context, Assignment assignment, int termPosition,
+                              int sectionPosition, int assignmentPosition) {
+        DBHelper db = new DBHelper(context);
+        assignments.add(assignment);
+        db.addAssignment(assignment, termPosition, sectionPosition, assignmentPosition);
+
+        // convert the assignment type from String to int
+        int type = convertAssignmentType(context, assignment.getAssignmentType());
+
+        double assignmentScore    = assignment.getScore();
+        double assignmentMaxScore = assignment.getMaxScore();
+
+        // get the current total score for this assignment type
+        Double currentScore    = scores.get(type);
+        Double currentMaxScore = maxScores.get(type);
+
+        // if there is not current score then initialize the score and max score to 0
+        if (currentScore == null) {
+            currentScore = 0.0;
+            currentMaxScore = 0.0;
+        }
+
+        // add the assignment scores to the total
+        scores.put(type, currentScore + assignmentScore);
+        maxScores.put(type, currentMaxScore + assignmentMaxScore);
+
+        // calculate the overall grade for this section
+        grade = calculateGrade();
+
+        // get the columns to update
+        String[] columns = getColumnKeys(type);
 
         // update the Section in the database
         ContentValues updateValues = new ContentValues();
-        updateValues.put(keyScore, scores.get(type));
-        updateValues.put(keyMaxScore, maxScores.get(type));
+        updateValues.put(columns[0], scores.get(type));
+        updateValues.put(columns[1], maxScores.get(type));
         updateValues.put(DBHelper.KEY_SECTIONS_SCORE_TOTAL, totalScore);
         updateValues.put(DBHelper.KEY_SECTIONS_MAX_SCORE_TOTAL, maxScore);
         updateValues.put(DBHelper.KEY_SECTIONS_GRADE, grade);
@@ -248,9 +263,45 @@ public class Section {
 
     public void removeAssignment(Context context, int termPosition, int sectionPosition,
                                  int assignmentPosition) {
-        DBHelper db = new DBHelper(context);
+        Assignment assignment = assignments.get(assignmentPosition);
+
+        // convert the assignment type from String to int
+        int type = convertAssignmentType(context, assignment.getAssignmentType());
+
+        Double currentScore    = scores.get(type);
+        Double currentMaxScore = maxScores.get(type);
+        double assignmentScore    = assignment.getScore();
+        double assignmentMaxScore = assignment.getMaxScore();
+        double newScore = currentScore - assignmentScore;
+        double newMaxScore = currentMaxScore - assignmentMaxScore;
+
+        if (newMaxScore == 0) {
+            scores.delete(type);
+            maxScores.delete(type);
+        } else {
+            scores.put(type, newScore);
+            maxScores.put(type, newMaxScore);
+        }
+
+        // calculate the overall grade for this section
+        grade = calculateGrade();
+
         assignments.remove(assignmentPosition);
+
+        DBHelper db = new DBHelper(context);
         db.removeAssignment(termPosition, sectionPosition, assignmentPosition);
+
+        // get the columns to update
+        String[] columns = getColumnKeys(type);
+
+        // update the Section in the database
+        ContentValues updateValues = new ContentValues();
+        updateValues.put(columns[0], scores.get(type));
+        updateValues.put(columns[1], maxScores.get(type));
+        updateValues.put(DBHelper.KEY_SECTIONS_SCORE_TOTAL, totalScore);
+        updateValues.put(DBHelper.KEY_SECTIONS_MAX_SCORE_TOTAL, maxScore);
+        updateValues.put(DBHelper.KEY_SECTIONS_GRADE, grade);
+        db.updateSection(updateValues, termPosition, sectionPosition);
     }
 
     public void addDueDate(Context context, DueDate dueDate, int termPosition,
@@ -298,10 +349,42 @@ public class Section {
                 score / maxScore * assignmentWeights.get(assignmentType));
     }
 
-    public String calculateGrade(double score, double maxScore) {
-        double scorePercent = score / maxScore * 100;
+    private String calculateGrade() {
+        // get the weighted scores for each assignment type
+        totalScore = 0;
+        maxScore = 0;
+        int[] assignmentTypes = {HOMEWORK, QUIZ, MIDTERM, FINAL, PROJECT, OTHER};
+        for (int assignmentType : assignmentTypes) {
+            // skip this type if there are no scores for it
+            Double typeScore    = scores.get(assignmentType);
+            Double typeMaxScore = maxScores.get(assignmentType);
+            if (typeMaxScore != null && typeMaxScore != 0) {
+                totalScore += typeScore / typeMaxScore * assignmentWeights.get(assignmentType);
+                maxScore += assignmentWeights.get(assignmentType);
+            }
+        }
 
-        if (scorePercent >= gradeThresholds.get(LOW_A)) {
+        double scorePercent = totalScore / maxScore * 100;
+
+        if (scorePercent >= gradeThresholds.get(LOW_A) ||
+                Double.isNaN(scorePercent)) {
+            return "A";
+        } else if (scorePercent >= gradeThresholds.get(LOW_B)) {
+            return "B";
+        } else if (scorePercent >= gradeThresholds.get(LOW_C)) {
+            return "C";
+        } else if (scorePercent >= gradeThresholds.get(LOW_D)) {
+            return "D";
+        } else {
+            return "F";
+        }
+    }
+
+    public String calculateAssignmentGrade(double myScore, double maxScore) {
+        double scorePercent = myScore / maxScore * 100;
+
+        if (scorePercent >= gradeThresholds.get(LOW_A) ||
+                Double.isNaN(scorePercent)) {
             return "A";
         } else if (scorePercent >= gradeThresholds.get(LOW_B)) {
             return "B";
