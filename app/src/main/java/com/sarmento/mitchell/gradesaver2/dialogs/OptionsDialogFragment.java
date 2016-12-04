@@ -147,6 +147,11 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
             case ASSIGNMENT:
                 switch (option) {
                     case AssignmentOptions.EDIT:
+                        editing = true;
+                        editDialog = new AssignmentDialogFragment();
+                        bundle.putInt(Academics.TERM_POSITION, termPosition);
+                        bundle.putInt(Academics.SECTION_POSITION, sectionPosition);
+                        bundle.putInt(Academics.ASSIGNMENT_POSITION, assignmentPosition);
                         break;
                     case AssignmentOptions.DELETE:
                         showConfirmationDialog = true;
@@ -167,6 +172,11 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
             case DUE_DATE:
                 switch (option) {
                     case DueDateOptions.EDIT:
+                        editing = true;
+                        editDialog = new DueDateDialogFragment();
+                        bundle.putInt(Academics.TERM_POSITION, termPosition);
+                        bundle.putInt(Academics.SECTION_POSITION, sectionPosition);
+                        bundle.putInt(Academics.DUE_DATE_POSITION, dueDatePosition);
                         break;
                     case DueDateOptions.DELETE:
                         showConfirmationDialog = true;

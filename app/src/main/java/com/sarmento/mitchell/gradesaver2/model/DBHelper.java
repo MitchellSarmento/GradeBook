@@ -393,27 +393,37 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void updateTerm(ContentValues values, int termId) {
-        String where = KEY_TERMS_ID + " = " + termId;
         SQLiteDatabase db = getWritableDatabase();
+        String where = KEY_TERMS_ID + " = " + termId;
 
         db.update(TABLE_TERMS, values, where, null);
         db.close();
     }
 
     public void updateSection(ContentValues values, int termId, int sectionId) {
-        String where = KEY_SECTIONS_ID + " = " + sectionId + " AND " +
-                KEY_SECTIONS_TERM_ID + " = " + termId;
         SQLiteDatabase db = getWritableDatabase();
+        String where = KEY_SECTIONS_TERM_ID + " = " + termId + " AND " +
+                KEY_SECTIONS_ID + " = " + sectionId;
 
         db.update(TABLE_SECTIONS, values, where, null);
         db.close();
     }
 
-    public void updateDueDate(ContentValues values, int termId, int sectionId, int dueDateId) {
-        String where = KEY_DUE_DATES_ID + " = " + dueDateId + " AND " +
-                KEY_DUE_DATES_SECTION_ID + " = " + sectionId + " AND " +
-                KEY_DUE_DATES_TERM_ID + " = " + termId;
+    public void updateAssignment(ContentValues values, int termId, int sectionId, int assignmentId) {
         SQLiteDatabase db = getWritableDatabase();
+        String where = KEY_ASSIGNMENTS_TERM_ID + " = " + termId + " AND " +
+                KEY_ASSIGNMENTS_SECTION_ID + " = " + sectionId + " AND " +
+                KEY_ASSIGNMENTS_ID + " = " + assignmentId;
+
+        db.update(TABLE_ASSIGNMENTS, values, where, null);
+        db.close();
+    }
+
+    public void updateDueDate(ContentValues values, int termId, int sectionId, int dueDateId) {
+        SQLiteDatabase db = getWritableDatabase();
+        String where = KEY_DUE_DATES_TERM_ID + " = " + termId + " AND " +
+                KEY_DUE_DATES_SECTION_ID + " = " + sectionId + " AND " +
+                KEY_DUE_DATES_ID + " = " + dueDateId;
 
         db.update(TABLE_DUE_DATES, values, where, null);
         db.close();

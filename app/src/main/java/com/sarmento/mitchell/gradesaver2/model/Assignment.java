@@ -1,6 +1,8 @@
 package com.sarmento.mitchell.gradesaver2.model;
 
 
+import android.content.ContentValues;
+import android.content.Context;
 
 public class Assignment {
     private String assignmentName;
@@ -15,6 +17,24 @@ public class Assignment {
         this.score = score;
         this.maxScore = maxScore;
         this.grade = grade;
+    }
+
+    public void updateAssignment(Context context, String assignmentName,
+                                 double score, double maxScore, String assignmentType,
+                                 int termPosition, int sectionPosition, int assignmentPosition) {
+        DBHelper db = new DBHelper(context);
+        this.assignmentName = assignmentName;
+        this.score = score;
+        this.maxScore = maxScore;
+        this.assignmentType = assignmentType;
+
+        // update the Assignment in the database
+        ContentValues updateValues = new ContentValues();
+        updateValues.put(DBHelper.KEY_ASSIGNMENTS_NAME, assignmentName);
+        updateValues.put(DBHelper.KEY_ASSIGNMENTS_SCORE, score);
+        updateValues.put(DBHelper.KEY_ASSIGNMENTS_MAX_SCORE, maxScore);
+        updateValues.put(DBHelper.KEY_ASSIGNMENTS_TYPE, assignmentType);
+        db.updateAssignment(updateValues, termPosition, sectionPosition, assignmentPosition);
     }
 
     public String getAssignmentName() {

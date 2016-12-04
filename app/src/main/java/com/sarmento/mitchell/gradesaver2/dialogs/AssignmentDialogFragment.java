@@ -1,5 +1,6 @@
 package com.sarmento.mitchell.gradesaver2.dialogs;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -23,22 +24,35 @@ import java.util.List;
 public class AssignmentDialogFragment extends DialogFragment {
     private int termPosition;
     private int sectionPosition;
+    private int assignmentPosition;
+
+    private Assignment assignment;
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
+        final Academics academics = Academics.getInstance();
+        final Activity activity   = getActivity();
+        final Bundle arguments    = getArguments();
+        final boolean editing     = arguments.containsKey(OptionsDialogFragment.EDITING);
+
         termPosition = getArguments().getInt(Academics.TERM_POSITION);
         sectionPosition = getArguments().getInt(Academics.SECTION_POSITION);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
         // set layout
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+        LayoutInflater inflater = activity.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_assignment, null);
         builder.setView(dialogView);
 
+        // get relevant Views
+        final EditText assignmentNameEntry = (EditText) dialogView.findViewById(R.id.assignment_entry);
+        final EditText myScoreEntry        = (EditText) dialogView.findViewById(R.id.my_score);
+        final EditText maxScoreEntry       = (EditText) dialogView.findViewById(R.id.max_score);
+        final Spinner assignmentTypeEntry  = (Spinner) dialogView.findViewById(R.id.assignment_type);
+
         // set the spinner data to relevant assignment types
-        Spinner assignmentTypes = (Spinner) dialogView.findViewById(R.id.assignment_type);
-        final Section section = Academics.getInstance().getCurrentTerms().get(termPosition)
+        final Section section = academics.getCurrentTerms().get(termPosition)
                 .getSections().get(sectionPosition);
         List<Integer> relevantTypes = section.getRelevantAssignmentTypes();
         List<String> types = new ArrayList<>();
@@ -66,10 +80,21 @@ public class AssignmentDialogFragment extends DialogFragment {
                     break;
             }
         }
-        ArrayAdapter<String> typesAdapter = new ArrayAdapter<>(getActivity(),
+        ArrayAdapter<String> typesAdapter = new ArrayAdapter<>(activity,
                 android.R.layout.simple_spinner_item, types);
         typesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        assignmentTypes.setAdapter(typesAdapter);
+        assignmentTypeEntry.setAdapter(typesAdapter);
+
+        // set fields if editing
+        if (editing) {
+            assignmentPosition = arguments.getInt(Academics.ASSIGNMENT_POSITION);
+            assignment = section.getAssignments().get(assignmentPosition);
+
+            assignmentNameEntry.setText(assignment.getAssignmentName());
+            myScoreEntry.setText(String.valueOf(assignment.getScore()));
+            maxScoreEntry.setText(String.valueOf(assignment.getMaxScore()));
+            assignmentTypeEntry.setSelection(typesAdapter.getPosition(assignment.getAssignmentType()));
+        }
 
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
@@ -81,27 +106,29 @@ public class AssignmentDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                // get relevant Views
-                EditText assignmentNameEntry = (EditText) getDialog().findViewById(R.id.assignment_entry);
-                EditText myScoreEntry        = (EditText) getDialog().findViewById(R.id.my_score);
-                EditText maxScoreEntry       = (EditText) getDialog().findViewById(R.id.max_score);
-                Spinner assignmentTypeEntry  = (Spinner) getDialog().findViewById(R.id.assignment_type);
-
                 // get user input
                 String assignmentName = assignmentNameEntry.getText().toString();
                 double myScore        = Double.valueOf(myScoreEntry.getText().toString());
                 double maxScore       = Double.valueOf(maxScoreEntry.getText().toString());
                 String assignmentType = String.valueOf(assignmentTypeEntry.getSelectedItem());
 
-                // create new assignment
-                Assignment assignment = new Assignment(assignmentName, assignmentType,
-                        myScore, maxScore, section.calculateAssignmentGrade(myScore, maxScore));
+                // check if editing
+                if (editing) {
+                    // editing existing Assignment
+                    assignment.updateAssignment(activity, assignmentName, myScore, maxScore,
+                            assignmentType, termPosition, sectionPosition, assignmentPosition);
+                    ((AssignmentsActivity) activity).updateList();
+                } else {
+                    // create new assignment
+                    assignment = new Assignment(assignmentName, assignmentType,
+                            myScore, maxScore, section.calculateAssignmentGrade(myScore, maxScore));
 
-                // add new assignment
-                int assignmentPosition = section.getAssignments().size();
-                section.addAssignment(getActivity(), assignment, termPosition,
-                        sectionPosition, assignmentPosition);
-                ((AssignmentsActivity) getActivity()).updateList();
+                    // add new assignment
+                    assignmentPosition = section.getAssignments().size();
+                    section.addAssignment(getActivity(), assignment, termPosition,
+                            sectionPosition, assignmentPosition);
+                    ((AssignmentsActivity) getActivity()).updateList();
+                }
 
                 dialog.dismiss();
             }
