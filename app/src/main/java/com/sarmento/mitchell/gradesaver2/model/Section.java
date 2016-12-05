@@ -67,7 +67,7 @@ public class Section {
                    SparseArray<Double> assignmentWeights,
                    SparseArray<Double> scores, SparseArray<Double> maxScores,
                    double totalScore, double maxScore, String grade,
-                   List<Assignment> assignments, List<DueDate> dueDates) {
+                   List<Assignment> assignments, List<DueDate> dueDates, Schedule schedule) {
         this.sectionName = sectionName;
         this.maxScore = maxScore;
         this.totalScore = totalScore;
@@ -78,8 +78,7 @@ public class Section {
         this.maxScores = maxScores;
         this.assignments = assignments;
         this.dueDates = dueDates;
-        //TODO
-        schedule = new Schedule();
+        this.schedule = schedule;
     }
 
     public void updateSection(Context context, String sectionName,

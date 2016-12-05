@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.util.SparseArray;
+import android.util.SparseBooleanArray;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,6 +26,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String TABLE_SECTIONS    = "Sections";
     private static final String TABLE_ASSIGNMENTS = "Assignments";
     private static final String TABLE_DUE_DATES   = "DueDates";
+    private static final String TABLE_SCHEDULES   = "Schedules";
 
     // TABLE_TERMS columns
     public static final String KEY_TERMS_ID       = "id";
@@ -66,14 +68,6 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String KEY_SECTIONS_SCORE_TOTAL        = "scoreTotal";
     public static final String KEY_SECTIONS_MAX_SCORE_TOTAL    = "maxScoreTotal";
     public static final String KEY_SECTIONS_GRADE              = "grade";
-    public static final String KEY_SECTIONS_LOCATION           = "location";
-    public static final String KEY_SECTIONS_ON_MONDAY          = "onMo";
-    public static final String KEY_SECTIONS_ON_TUESDAY         = "onTu";
-    public static final String KEY_SECTIONS_ON_WEDNESDAY       = "onWe";
-    public static final String KEY_SECTIONS_ON_THURSDAY        = "onTh";
-    public static final String KEY_SECTIONS_ON_FRIDAY          = "onFr";
-    public static final String KEY_SECTIONS_ON_SATURDAY        = "onSa";
-    public static final String KEY_SECTIONS_ON_SUNDAY          = "onSu";
 
     // TABLE_ASSIGNMENTS columns
     public static final String KEY_ASSIGNMENTS_ID         = "id";
@@ -94,6 +88,38 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String KEY_DUE_DATES_YEAR       = "year";
     public static final String KEY_DUE_DATES_MONTH      = "month";
     public static final String KEY_DUE_DATES_DAY        = "day";
+
+    // TABLE_SCHEDULES columns
+    public static final String KEY_SCHEDULES_TERM_ID            = "termId";
+    public static final String KEY_SCHEDULES_SECTION_ID         = "sectionId";
+    public static final String KEY_SCHEDULES_ON_MONDAY          = "onMo";
+    public static final String KEY_SCHEDULES_LOCATION_MONDAY    = "locationMo";
+    public static final String KEY_SCHEDULES_START_MONDAY       = "startMo";
+    public static final String KEY_SCHEDULES_END_MONDAY         = "endMo";
+    public static final String KEY_SCHEDULES_ON_TUESDAY         = "onTu";
+    public static final String KEY_SCHEDULES_LOCATION_TUESDAY   = "locationTu";
+    public static final String KEY_SCHEDULES_START_TUESDAY      = "startTu";
+    public static final String KEY_SCHEDULES_END_TUESDAY        = "endTu";
+    public static final String KEY_SCHEDULES_ON_WEDNESDAY       = "onWe";
+    public static final String KEY_SCHEDULES_LOCATION_WEDNESDAY = "locationWe";
+    public static final String KEY_SCHEDULES_START_WEDNESDAY    = "startWe";
+    public static final String KEY_SCHEDULES_END_WEDNESDAY      = "endWe";
+    public static final String KEY_SCHEDULES_ON_THURSDAY        = "onTh";
+    public static final String KEY_SCHEDULES_LOCATION_THURSDAY  = "locationTh";
+    public static final String KEY_SCHEDULES_START_THURSDAY     = "startTh";
+    public static final String KEY_SCHEDULES_END_THURSDAY       = "endTh";
+    public static final String KEY_SCHEDULES_ON_FRIDAY          = "onFr";
+    public static final String KEY_SCHEDULES_LOCATION_FRIDAY    = "locationFr";
+    public static final String KEY_SCHEDULES_START_FRIDAY       = "startFr";
+    public static final String KEY_SCHEDULES_END_FRIDAY         = "endFr";
+    public static final String KEY_SCHEDULES_ON_SATURDAY        = "onSa";
+    public static final String KEY_SCHEDULES_LOCATION_SATURDAY  = "locationSa";
+    public static final String KEY_SCHEDULES_START_SATURDAY     = "startSa";
+    public static final String KEY_SCHEDULES_END_SATURDAY       = "endSa";
+    public static final String KEY_SCHEDULES_ON_SUNDAY          = "onSu";
+    public static final String KEY_SCHEDULES_LOCATION_SUNDAY    = "locationSu";
+    public static final String KEY_SCHEDULES_START_SUNDAY       = "startSu";
+    public static final String KEY_SCHEDULES_END_SUNDAY         = "endSu";
 
     private static final int TRUE  = 1;
     private static final int FALSE = 0;
@@ -145,15 +171,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 KEY_SECTIONS_MAX_SCORE_OTHER + " REAL," +
                 KEY_SECTIONS_SCORE_TOTAL + " REAL," +
                 KEY_SECTIONS_MAX_SCORE_TOTAL + " REAL," +
-                KEY_SECTIONS_GRADE + " TEXT," +
-                KEY_SECTIONS_LOCATION + " TEXT," +
-                KEY_SECTIONS_ON_MONDAY + " INTEGER," +
-                KEY_SECTIONS_ON_TUESDAY + " INTEGER," +
-                KEY_SECTIONS_ON_WEDNESDAY + " INTEGER," +
-                KEY_SECTIONS_ON_THURSDAY + " INTEGER," +
-                KEY_SECTIONS_ON_FRIDAY + " INTEGER," +
-                KEY_SECTIONS_ON_SATURDAY + " INTEGER," +
-                KEY_SECTIONS_ON_SUNDAY + " INTEGER)";
+                KEY_SECTIONS_GRADE + " TEXT)";
 
         final String CREATE_TABLE_ASSIGNMENTS = "CREATE TABLE " + TABLE_ASSIGNMENTS + "(" +
                 KEY_ASSIGNMENTS_ID + " INTEGER," +
@@ -175,10 +193,43 @@ public class DBHelper extends SQLiteOpenHelper {
                 KEY_DUE_DATES_MONTH + " INTEGER," +
                 KEY_DUE_DATES_DAY + " INTEGER)";
 
+        final String CREATE_TABLE_SCHEDULES = "CREATE TABLE " + TABLE_SCHEDULES + "(" +
+                KEY_SCHEDULES_TERM_ID + " INTEGER," +
+                KEY_SCHEDULES_SECTION_ID + " INTEGER," +
+                KEY_SCHEDULES_ON_MONDAY + " INTEGER," +
+                KEY_SCHEDULES_LOCATION_MONDAY + " TEXT," +
+                KEY_SCHEDULES_START_MONDAY + " TEXT," +
+                KEY_SCHEDULES_END_MONDAY + " TEXT," +
+                KEY_SCHEDULES_ON_TUESDAY + " INTEGER," +
+                KEY_SCHEDULES_LOCATION_TUESDAY + " TEXT," +
+                KEY_SCHEDULES_START_TUESDAY + " TEXT," +
+                KEY_SCHEDULES_END_TUESDAY + " TEXT," +
+                KEY_SCHEDULES_ON_WEDNESDAY + " INTEGER," +
+                KEY_SCHEDULES_LOCATION_WEDNESDAY + " TEXT," +
+                KEY_SCHEDULES_START_WEDNESDAY + " TEXT," +
+                KEY_SCHEDULES_END_WEDNESDAY + " TEXT," +
+                KEY_SCHEDULES_ON_THURSDAY + " INTEGER," +
+                KEY_SCHEDULES_LOCATION_THURSDAY + " TEXT," +
+                KEY_SCHEDULES_START_THURSDAY + " TEXT," +
+                KEY_SCHEDULES_END_THURSDAY + " TEXT," +
+                KEY_SCHEDULES_ON_FRIDAY + " INTEGER," +
+                KEY_SCHEDULES_LOCATION_FRIDAY + " TEXT," +
+                KEY_SCHEDULES_START_FRIDAY + " TEXT," +
+                KEY_SCHEDULES_END_FRIDAY + " TEXT," +
+                KEY_SCHEDULES_ON_SATURDAY + " INTEGER," +
+                KEY_SCHEDULES_LOCATION_SATURDAY + " TEXT," +
+                KEY_SCHEDULES_START_SATURDAY + " TEXT," +
+                KEY_SCHEDULES_END_SATURDAY + " TEXT," +
+                KEY_SCHEDULES_ON_SUNDAY + " INTEGER," +
+                KEY_SCHEDULES_LOCATION_SUNDAY + " TEXT," +
+                KEY_SCHEDULES_START_SUNDAY + " TEXT," +
+                KEY_SCHEDULES_END_SUNDAY + " TEXT)";
+
         db.execSQL(CREATE_TABLE_TERMS);
         db.execSQL(CREATE_TABLE_SECTIONS);
         db.execSQL(CREATE_TABLE_ASSIGNMENTS);
         db.execSQL(CREATE_TABLE_DUE_DATES);
+        db.execSQL(CREATE_TABLE_SCHEDULES);
     }
 
     @Override
@@ -251,6 +302,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.insert(TABLE_SECTIONS, null, values);
         db.close();
+
+        addSchedule(section.getSchedule(), termId, sectionId);
     }
 
     public void addAssignment(Assignment assignment, int termId, int sectionId, int assignmentId) {
@@ -288,6 +341,52 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    private void addSchedule(Schedule schedule, int termId, int sectionId) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_SCHEDULES_TERM_ID, termId);
+        values.put(KEY_SCHEDULES_SECTION_ID, sectionId);
+
+        SparseBooleanArray active = schedule.getActive();
+        values.put(KEY_SCHEDULES_ON_MONDAY, active.get(Schedule.MONDAY));
+        values.put(KEY_SCHEDULES_ON_TUESDAY, active.get(Schedule.TUESDAY));
+        values.put(KEY_SCHEDULES_ON_WEDNESDAY, active.get(Schedule.WEDNESDAY));
+        values.put(KEY_SCHEDULES_ON_THURSDAY, active.get(Schedule.THURSDAY));
+        values.put(KEY_SCHEDULES_ON_FRIDAY, active.get(Schedule.FRIDAY));
+        values.put(KEY_SCHEDULES_ON_SATURDAY, active.get(Schedule.SATURDAY));
+        values.put(KEY_SCHEDULES_ON_SUNDAY, active.get(Schedule.SUNDAY));
+
+        SparseArray<String> locations = schedule.getLocations();
+        values.put(KEY_SCHEDULES_LOCATION_MONDAY, locations.get(Schedule.MONDAY));
+        values.put(KEY_SCHEDULES_LOCATION_TUESDAY, locations.get(Schedule.TUESDAY));
+        values.put(KEY_SCHEDULES_LOCATION_WEDNESDAY, locations.get(Schedule.WEDNESDAY));
+        values.put(KEY_SCHEDULES_LOCATION_THURSDAY, locations.get(Schedule.THURSDAY));
+        values.put(KEY_SCHEDULES_LOCATION_FRIDAY, locations.get(Schedule.FRIDAY));
+        values.put(KEY_SCHEDULES_LOCATION_SATURDAY, locations.get(Schedule.SATURDAY));
+        values.put(KEY_SCHEDULES_LOCATION_SUNDAY, locations.get(Schedule.SUNDAY));
+
+        SparseArray<String> startTimes = schedule.getStartTimes();
+        values.put(KEY_SCHEDULES_START_MONDAY, startTimes.get(Schedule.MONDAY));
+        values.put(KEY_SCHEDULES_START_TUESDAY, startTimes.get(Schedule.TUESDAY));
+        values.put(KEY_SCHEDULES_START_WEDNESDAY, startTimes.get(Schedule.WEDNESDAY));
+        values.put(KEY_SCHEDULES_START_THURSDAY, startTimes.get(Schedule.THURSDAY));
+        values.put(KEY_SCHEDULES_START_FRIDAY, startTimes.get(Schedule.FRIDAY));
+        values.put(KEY_SCHEDULES_START_SATURDAY, startTimes.get(Schedule.SATURDAY));
+        values.put(KEY_SCHEDULES_START_SUNDAY, startTimes.get(Schedule.SUNDAY));
+
+        SparseArray<String> endTimes = schedule.getEndTimes();
+        values.put(KEY_SCHEDULES_END_MONDAY, endTimes.get(Schedule.MONDAY));
+        values.put(KEY_SCHEDULES_END_TUESDAY, endTimes.get(Schedule.TUESDAY));
+        values.put(KEY_SCHEDULES_END_WEDNESDAY, endTimes.get(Schedule.WEDNESDAY));
+        values.put(KEY_SCHEDULES_END_THURSDAY, endTimes.get(Schedule.THURSDAY));
+        values.put(KEY_SCHEDULES_END_FRIDAY, endTimes.get(Schedule.FRIDAY));
+        values.put(KEY_SCHEDULES_END_SATURDAY, endTimes.get(Schedule.SATURDAY));
+        values.put(KEY_SCHEDULES_END_SUNDAY, endTimes.get(Schedule.SUNDAY));
+
+        db.insert(TABLE_SCHEDULES, null, values);
+    }
+
     public void removeTerm(int termId) {
         SQLiteDatabase db = getWritableDatabase();
 
@@ -303,6 +402,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
         // delete related DueDates
         removeDueDate(termId, -1, -1);
+
+        // delete related Schedules
+        removeSchedule(termId, -1);
 
         // decrement all larger Term ids
         db = getWritableDatabase();
@@ -332,6 +434,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
         // delete related DueDates
         removeDueDate(termId, sectionId, -1);
+
+        // delete related Schedule
+        removeSchedule(termId, sectionId);
 
         // decrement all larger Section ids
         if (sectionId != -1) {
@@ -392,6 +497,19 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void removeSchedule(int termId, int sectionId) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        // delete the Schedule
+        String where = KEY_SCHEDULES_TERM_ID + " = " + termId;
+        if (sectionId != -1) {
+            where += " AND " + KEY_SCHEDULES_SECTION_ID + " = " + sectionId;
+        }
+        db.delete(TABLE_SCHEDULES, where, null);
+
+        db.close();
+    }
+
     public void updateTerm(ContentValues values, int termId) {
         SQLiteDatabase db = getWritableDatabase();
         String where = KEY_TERMS_ID + " = " + termId;
@@ -426,6 +544,15 @@ public class DBHelper extends SQLiteOpenHelper {
                 KEY_DUE_DATES_ID + " = " + dueDateId;
 
         db.update(TABLE_DUE_DATES, values, where, null);
+        db.close();
+    }
+
+    public void updateSchedule(ContentValues values, int termId, int sectionId) {
+        SQLiteDatabase db = getWritableDatabase();
+        String where = KEY_SCHEDULES_TERM_ID + " = " + termId + " AND " +
+                KEY_SCHEDULES_SECTION_ID + " = " + sectionId;
+
+        db.update(TABLE_SCHEDULES, values, where, null);
         db.close();
     }
 
@@ -506,9 +633,13 @@ public class DBHelper extends SQLiteOpenHelper {
                 // get the due dates belonging to this section
                 List<DueDate> dueDates = getDueDates(termId, sectionId);
 
+                // get the Schedule belonging to this Section
+                Schedule schedule = getSchedule(termId, sectionId);
+
                 // create and add the section
                 Section section = new Section(sectionName, gradeThresholds, assignmentWeights,
-                        scores, maxScores, totalScore, maxScore, grade, assignments, dueDates);
+                        scores, maxScores, totalScore, maxScore, grade, assignments, dueDates,
+                        schedule);
                 sections.add(section);
             } while (cursor.moveToNext());
         }
@@ -554,7 +685,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                // gather information form the database
+                // gather information from the database
                 String dueDateName = cursor.getString(3);
                 boolean complete = false;
                 if (cursor.getInt(4) == TRUE) {
@@ -574,5 +705,39 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return dueDates;
+    }
+
+    private Schedule getSchedule(int termId, int sectionId) {
+        SQLiteDatabase db = getReadableDatabase();
+        Schedule schedule = null;
+
+        String query = "SELECT * FROM " + TABLE_SCHEDULES + " WHERE " + KEY_SCHEDULES_TERM_ID +
+                " = " + termId + " AND " + KEY_SCHEDULES_SECTION_ID + " = " + sectionId;
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                // gather information from the database
+                SparseBooleanArray active      = new SparseBooleanArray();
+                SparseArray<String> locations  = new SparseArray<>();
+                SparseArray<String> startTimes = new SparseArray<>();
+                SparseArray<String> endTimes   = new SparseArray<>();
+
+                int day = 0;
+                for (int i = 2; i < 30; i += 4) {
+                    active.put(day, cursor.getInt(i) == TRUE);
+                    locations.put(day, cursor.getString(i+1));
+                    startTimes.put(day, cursor.getString(i+2));
+                    endTimes.put(day, cursor.getString(i+3));
+                    day++;
+                }
+
+                // create the Schedule
+                schedule = new Schedule(active, locations, startTimes, endTimes);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return schedule;
     }
 }

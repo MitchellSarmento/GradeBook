@@ -63,7 +63,8 @@
                 android:focusable="false"
                 android:ems="5"
                 android:hint="@string/start_time"
-                android:id="@+id/monday_start"/>
+                android:id="@+id/monday_start"
+                android:onClick="pickTime"/>
 
             <EditText
                 android:layout_width="0dp"
@@ -73,7 +74,8 @@
                 android:focusable="false"
                 android:ems="5"
                 android:hint="@string/end_time"
-                android:id="@+id/monday_end"/>
+                android:id="@+id/monday_end"
+                android:onClick="pickTime"/>
         </LinearLayout>
 
         <EditText
@@ -107,7 +109,8 @@
                 android:focusable="false"
                 android:ems="5"
                 android:hint="@string/start_time"
-                android:id="@+id/tuesday_start"/>
+                android:id="@+id/tuesday_start"
+                android:onClick="pickTime"/>
 
             <EditText
                 android:layout_width="0dp"
@@ -117,7 +120,8 @@
                 android:focusable="false"
                 android:ems="5"
                 android:hint="@string/end_time"
-                android:id="@+id/tuesday_end"/>
+                android:id="@+id/tuesday_end"
+                android:onClick="pickTime"/>
         </LinearLayout>
 
         <EditText
@@ -151,7 +155,8 @@
                 android:focusable="false"
                 android:ems="5"
                 android:hint="@string/start_time"
-                android:id="@+id/wednesday_start"/>
+                android:id="@+id/wednesday_start"
+                android:onClick="pickTime"/>
 
             <EditText
                 android:layout_width="0dp"
@@ -161,7 +166,8 @@
                 android:focusable="false"
                 android:ems="5"
                 android:hint="@string/end_time"
-                android:id="@+id/wednesday_end"/>
+                android:id="@+id/wednesday_end"
+                android:onClick="pickTime"/>
         </LinearLayout>
 
         <EditText
@@ -195,7 +201,8 @@
                 android:focusable="false"
                 android:ems="5"
                 android:hint="@string/start_time"
-                android:id="@+id/thursday_start"/>
+                android:id="@+id/thursday_start"
+                android:onClick="pickTime"/>
 
             <EditText
                 android:layout_width="0dp"
@@ -205,7 +212,8 @@
                 android:focusable="false"
                 android:ems="5"
                 android:hint="@string/end_time"
-                android:id="@+id/thursday_end"/>
+                android:id="@+id/thursday_end"
+                android:onClick="pickTime"/>
         </LinearLayout>
 
         <EditText
@@ -239,7 +247,8 @@
                 android:focusable="false"
                 android:ems="5"
                 android:hint="@string/start_time"
-                android:id="@+id/friday_start"/>
+                android:id="@+id/friday_start"
+                android:onClick="pickTime"/>
 
             <EditText
                 android:layout_width="0dp"
@@ -249,7 +258,8 @@
                 android:focusable="false"
                 android:ems="5"
                 android:hint="@string/end_time"
-                android:id="@+id/friday_end"/>
+                android:id="@+id/friday_end"
+                android:onClick="pickTime"/>
         </LinearLayout>
 
         <EditText
@@ -283,7 +293,8 @@
                 android:focusable="false"
                 android:ems="5"
                 android:hint="@string/start_time"
-                android:id="@+id/saturday_start"/>
+                android:id="@+id/saturday_start"
+                android:onClick="pickTime"/>
 
             <EditText
                 android:layout_width="0dp"
@@ -293,7 +304,8 @@
                 android:focusable="false"
                 android:ems="5"
                 android:hint="@string/end_time"
-                android:id="@+id/saturday_end"/>
+                android:id="@+id/saturday_end"
+                android:onClick="pickTime"/>
         </LinearLayout>
 
         <EditText
@@ -327,7 +339,8 @@
                 android:focusable="false"
                 android:ems="5"
                 android:hint="@string/start_time"
-                android:id="@+id/sunday_start"/>
+                android:id="@+id/sunday_start"
+                android:onClick="pickTime"/>
 
             <EditText
                 android:layout_width="0dp"
@@ -337,7 +350,8 @@
                 android:focusable="false"
                 android:ems="5"
                 android:hint="@string/end_time"
-                android:id="@+id/sunday_end"/>
+                android:id="@+id/sunday_end"
+                android:onClick="pickTime"/>
         </LinearLayout>
 
         <EditText

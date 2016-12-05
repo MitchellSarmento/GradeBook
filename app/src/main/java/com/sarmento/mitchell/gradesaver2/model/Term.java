@@ -12,7 +12,7 @@ public class Term {
     private boolean archived;
     private List<Section> sections;
 
-    // constructor for create a new term
+    // constructor for creating a new term
     public Term(String termName) {
         this.termName = termName;
         archived = false;

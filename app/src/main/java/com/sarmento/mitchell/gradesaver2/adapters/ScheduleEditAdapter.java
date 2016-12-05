@@ -1,5 +1,6 @@
 package com.sarmento.mitchell.gradesaver2.adapters;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseArray;
@@ -20,14 +21,18 @@ import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.model.Schedule;
 import com.sarmento.mitchell.gradesaver2.model.Section;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapter.ViewHolder> {
+    private Activity activity;
     private List<Section> sections;
     private int termPosition;
     private SparseBooleanArray expandState = new SparseBooleanArray();
+    private List<ViewHolder> holders = new ArrayList<>();
 
-    public ScheduleEditAdapter(List<Section> sections, int termPosition) {
+    public ScheduleEditAdapter(Activity activity, List<Section> sections, int termPosition) {
+        this.activity = activity;
         this.sections = sections;
         this.termPosition = termPosition;
 
@@ -40,7 +45,9 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
     public ScheduleEditAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View inflatedView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_schedule_edit, parent, false);
-        return new ViewHolder(inflatedView);
+        ViewHolder holder = new ViewHolder(inflatedView);
+        holders.add(holder);
+        return holder;
     }
 
     @Override
@@ -69,13 +76,7 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
 
                 // update relevant schedule information
                 Schedule schedule = section.getSchedule();
-                updateSchedule(schedule, holder, Schedule.MONDAY);
-                updateSchedule(schedule, holder, Schedule.TUESDAY);
-                updateSchedule(schedule, holder, Schedule.WEDNESDAY);
-                updateSchedule(schedule, holder, Schedule.THURSDAY);
-                updateSchedule(schedule, holder, Schedule.FRIDAY);
-                updateSchedule(schedule, holder, Schedule.SATURDAY);
-                updateSchedule(schedule, holder, Schedule.SUNDAY);
+                schedule.updateSchedule(activity, holder, termPosition, holder.getAdapterPosition());
             }
         });
 
@@ -95,14 +96,9 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
         return sections.size();
     }
 
-    private void updateSchedule(Schedule schedule, ViewHolder holder, int day) {
-        boolean checked = holder.switches.get(day).isChecked();
-        schedule.getActive().put(day, checked);
-
-        if (checked) {
-            schedule.getStartTimes().put(day, holder.startTimes.get(day).getText().toString());
-            schedule.getEndTimes().put(day, holder.endTimes.get(day).getText().toString());
-            schedule.getLocations().put(day, holder.locations.get(day).getText().toString());
+    public void closeAll() {
+        for (ViewHolder holder : holders) {
+            holder.expandableLayout.collapse();
         }
     }
 
@@ -117,10 +113,10 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
         private TextView sectionHeader;
         private ExpandableLinearLayout expandableLayout;
 
-        private SparseArray<Switch> switches = new SparseArray<>();
-        private SparseArray<EditText> startTimes = new SparseArray<>();
-        private SparseArray<EditText> endTimes = new SparseArray<>();
-        private SparseArray<EditText> locations = new SparseArray<>();
+        public SparseArray<Switch> switches = new SparseArray<>();
+        public SparseArray<EditText> startTimes = new SparseArray<>();
+        public SparseArray<EditText> endTimes = new SparseArray<>();
+        public SparseArray<EditText> locations = new SparseArray<>();
 
         private ViewHolder(View v) {
             super(v);
