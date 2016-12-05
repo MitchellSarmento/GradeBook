@@ -28,12 +28,13 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
     private Activity activity;
     private List<Section> sections;
     private int termPosition;
+
     private SparseBooleanArray expandState = new SparseBooleanArray();
-    private List<ViewHolder> holders = new ArrayList<>();
+    private List<ViewHolder> holders       = new ArrayList<>();
 
     public ScheduleEditAdapter(Activity activity, List<Section> sections, int termPosition) {
-        this.activity = activity;
-        this.sections = sections;
+        this.activity     = activity;
+        this.sections     = sections;
         this.termPosition = termPosition;
 
         for (int i = 0; i < sections.size(); i++) {
@@ -75,8 +76,8 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
                 expandState.put(holder.getAdapterPosition(), false);
 
                 // update relevant schedule information
-                Schedule schedule = section.getSchedule();
-                schedule.updateSchedule(activity, holder, termPosition, holder.getAdapterPosition());
+                section.getSchedule().updateSchedule(activity, holder, termPosition,
+                        holder.getAdapterPosition());
             }
         });
 
@@ -113,14 +114,14 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
         private TextView sectionHeader;
         private ExpandableLinearLayout expandableLayout;
 
-        public SparseArray<Switch> switches = new SparseArray<>();
+        public SparseArray<Switch> switches     = new SparseArray<>();
         public SparseArray<EditText> startTimes = new SparseArray<>();
-        public SparseArray<EditText> endTimes = new SparseArray<>();
-        public SparseArray<EditText> locations = new SparseArray<>();
+        public SparseArray<EditText> endTimes   = new SparseArray<>();
+        public SparseArray<EditText> locations  = new SparseArray<>();
 
         private ViewHolder(View v) {
             super(v);
-            sectionHeader = (TextView) v.findViewById(R.id.header_schedule_edit);
+            sectionHeader    = (TextView) v.findViewById(R.id.header_schedule_edit);
             expandableLayout = (ExpandableLinearLayout) v.findViewById(R.id.details_schedule_edit);
 
             // get switches

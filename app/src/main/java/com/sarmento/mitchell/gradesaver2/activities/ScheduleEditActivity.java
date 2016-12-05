@@ -42,11 +42,8 @@ public class ScheduleEditActivity extends AppCompatActivity {
     }
 
     public void pickTime(final View v) {
-        /*if (((View) v.getParent()).getId() == R.id.monday_end) {
-
-        }*/
-
         final boolean is24HourFormat = DateFormat.is24HourFormat(this);
+
         new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
