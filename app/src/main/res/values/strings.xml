@@ -32,6 +32,15 @@
     <string name="weight_project_default">10.0</string>
     <string name="weight_other_default">0.0</string>
 
+    <!-- Days of the week -->
+    <string name="mon">Mon</string>
+    <string name="tue">Tue</string>
+    <string name="wed">Wed</string>
+    <string name="thu">Thu</string>
+    <string name="fri">Fri</string>
+    <string name="sat">Sat</string>
+    <string name="sun">Sun</string>
+
     <!-- TermsActivity Menu Actions -->
     <string name="action_new_term">New Term</string>
     <string name="action_view_archive">View Archive</string>
@@ -82,4 +91,7 @@
     <string name="total">Total</string>
     <string name="options">Options</string>
     <string name="prompt_delete">Delete?</string>
+    <string name="start_time">Start Time</string>
+    <string name="end_time">End Time</string>
+    <string name="location">Location</string>
 </resources>

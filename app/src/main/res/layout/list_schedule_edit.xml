@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/black"
+        android:id="@+id/top_divider"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top_divider"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:background="@color/color_primary"
+        android:textSize="24sp"
+        android:id="@+id/header_schedule_edit"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/header_schedule_edit"
+        android:background="@android:color/black"
+        android:id="@+id/bottom_divider"/>
+
+    <com.github.aakira.expandablelayout.ExpandableLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:orientation="vertical"
+        android:background="@color/color_b"
+        app:ael_expanded="false"
+        app:ael_interpolator="linear"
+        app:ael_duration="400"
+        android:id="@+id/details_schedule_edit"
+        android:layout_below="@+id/bottom_divider">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Switch
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:gravity="center_horizontal"
+                android:text="@string/mon"
+                android:id="@+id/monday_switch"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:focusable="false"
+                android:ems="5"
+                android:hint="@string/start_time"
+                android:id="@+id/monday_start"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:focusable="false"
+                android:ems="5"
+                android:hint="@string/end_time"
+                android:id="@+id/monday_end"/>
+        </LinearLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:inputType="textCapSentences"
+            android:hint="@string/location"
+            android:selectAllOnFocus="true"
+            android:id="@+id/monday_location"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Switch
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:gravity="center_horizontal"
+                android:text="@string/tue"
+                android:id="@+id/tuesday_switch"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:focusable="false"
+                android:ems="5"
+                android:hint="@string/start_time"
+                android:id="@+id/tuesday_start"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:focusable="false"
+                android:ems="5"
+                android:hint="@string/end_time"
+                android:id="@+id/tuesday_end"/>
+        </LinearLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:inputType="textCapSentences"
+            android:hint="@string/location"
+            android:selectAllOnFocus="true"
+            android:id="@+id/tuesday_location"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Switch
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:gravity="center_horizontal"
+                android:text="@string/wed"
+                android:id="@+id/wednesday_switch"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:focusable="false"
+                android:ems="5"
+                android:hint="@string/start_time"
+                android:id="@+id/wednesday_start"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:focusable="false"
+                android:ems="5"
+                android:hint="@string/end_time"
+                android:id="@+id/wednesday_end"/>
+        </LinearLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:inputType="textCapSentences"
+            android:hint="@string/location"
+            android:selectAllOnFocus="true"
+            android:id="@+id/wednesday_location"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Switch
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:gravity="center_horizontal"
+                android:text="@string/thu"
+                android:id="@+id/thursday_switch"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:focusable="false"
+                android:ems="5"
+                android:hint="@string/start_time"
+                android:id="@+id/thursday_start"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:focusable="false"
+                android:ems="5"
+                android:hint="@string/end_time"
+                android:id="@+id/thursday_end"/>
+        </LinearLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:inputType="textCapSentences"
+            android:hint="@string/location"
+            android:selectAllOnFocus="true"
+            android:id="@+id/thursday_location"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Switch
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:gravity="center_horizontal"
+                android:text="@string/fri"
+                android:id="@+id/friday_switch"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:focusable="false"
+                android:ems="5"
+                android:hint="@string/start_time"
+                android:id="@+id/friday_start"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:focusable="false"
+                android:ems="5"
+                android:hint="@string/end_time"
+                android:id="@+id/friday_end"/>
+        </LinearLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:inputType="textCapSentences"
+            android:hint="@string/location"
+            android:selectAllOnFocus="true"
+            android:id="@+id/friday_location"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Switch
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:gravity="center_horizontal"
+                android:text="@string/sat"
+                android:id="@+id/saturday_switch"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:focusable="false"
+                android:ems="5"
+                android:hint="@string/start_time"
+                android:id="@+id/saturday_start"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:focusable="false"
+                android:ems="5"
+                android:hint="@string/end_time"
+                android:id="@+id/saturday_end"/>
+        </LinearLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:inputType="textCapSentences"
+            android:hint="@string/location"
+            android:selectAllOnFocus="true"
+            android:id="@+id/saturday_location"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Switch
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:gravity="center_horizontal"
+                android:text="@string/sun"
+                android:id="@+id/sunday_switch"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:focusable="false"
+                android:ems="5"
+                android:hint="@string/start_time"
+                android:id="@+id/sunday_start"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:focusable="false"
+                android:ems="5"
+                android:hint="@string/end_time"
+                android:id="@+id/sunday_end"/>
+        </LinearLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:inputType="textCapSentences"
+            android:hint="@string/location"
+            android:selectAllOnFocus="true"
+            android:id="@+id/sunday_location"/>
+    </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+</RelativeLayout>

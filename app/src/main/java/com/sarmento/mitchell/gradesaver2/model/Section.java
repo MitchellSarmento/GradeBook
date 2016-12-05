@@ -45,6 +45,7 @@ public class Section {
     private SparseArray<Double> maxScores;
     private List<Assignment> assignments;
     private List<DueDate> dueDates;
+    private Schedule schedule;
 
     // constructor for creating a new section
     public Section(String sectionName, SparseArray<Double> assignmentWeights, SparseArray<Double> gradeThresholds) {
@@ -58,6 +59,7 @@ public class Section {
         maxScores              = new SparseArray<>();
         assignments            = new ArrayList<>();
         dueDates               = new ArrayList<>();
+        schedule               = new Schedule();
     }
 
     // constructor for loading an existing section
@@ -76,6 +78,8 @@ public class Section {
         this.maxScores = maxScores;
         this.assignments = assignments;
         this.dueDates = dueDates;
+        //TODO
+        schedule = new Schedule();
     }
 
     public void updateSection(Context context, String sectionName,
@@ -163,6 +167,10 @@ public class Section {
 
     public List<DueDate> getDueDates() {
         return dueDates;
+    }
+
+    public Schedule getSchedule() {
+        return schedule;
     }
 
     // convert the Assignment type from String to int
