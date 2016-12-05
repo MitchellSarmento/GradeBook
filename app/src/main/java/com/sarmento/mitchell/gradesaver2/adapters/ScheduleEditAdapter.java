@@ -32,7 +32,7 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
         this.termPosition = termPosition;
 
         for (int i = 0; i < sections.size(); i++) {
-            expandState.append(i, false);
+            expandState.put(i, false);
         }
     }
 
@@ -46,7 +46,15 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
     @Override
     public void onBindViewHolder(final ScheduleEditAdapter.ViewHolder holder, int sectionPosition) {
         final Section section = sections.get(sectionPosition);
+
         holder.sectionHeader.setText(section.getSectionName());
+        holder.sectionHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                holder.expandableLayout.toggle();
+            }
+        });
+
         holder.expandableLayout.setInRecyclerView(true);
         holder.expandableLayout.setExpanded(expandState.get(sectionPosition));
         holder.expandableLayout.setListener(new ExpandableLayoutListenerAdapter() {
@@ -61,33 +69,25 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
 
                 // update relevant schedule information
                 Schedule schedule = section.getSchedule();
-                SparseBooleanArray active = schedule.getActive();
-                SparseArray<String> startTimes = schedule.getStartTimes();
-                SparseArray<String> endTimes = schedule.getEndTimes();
-                SparseArray<String> locations = schedule.getLocations();
-                boolean checked = holder.switches.get(Schedule.MONDAY).isChecked();
-                active.put(Schedule.MONDAY, checked);
-                if (checked) {
-                    startTimes.put(Schedule.MONDAY, holder.startTimes.get(Schedule.MONDAY)
-                            .getText().toString());
-                    endTimes.put(Schedule.MONDAY, holder.endTimes.get(Schedule.MONDAY)
-                            .getText().toString());
-                    locations.put(Schedule.MONDAY, holder.locations.get(Schedule.MONDAY)
-                            .getText().toString());
-                }
+                updateSchedule(schedule, holder, Schedule.MONDAY);
+                updateSchedule(schedule, holder, Schedule.TUESDAY);
+                updateSchedule(schedule, holder, Schedule.WEDNESDAY);
+                updateSchedule(schedule, holder, Schedule.THURSDAY);
+                updateSchedule(schedule, holder, Schedule.FRIDAY);
+                updateSchedule(schedule, holder, Schedule.SATURDAY);
+                updateSchedule(schedule, holder, Schedule.SUNDAY);
             }
         });
 
-        holder.sectionHeader.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                onClickButton(holder.expandableLayout);
-            }
-        });
-    }
-
-    private void onClickButton(final ExpandableLayout expandableLayout) {
-        expandableLayout.toggle();
+        // set fields
+        Schedule schedule = section.getSchedule();
+        setFields(schedule, holder, Schedule.MONDAY);
+        setFields(schedule, holder, Schedule.TUESDAY);
+        setFields(schedule, holder, Schedule.WEDNESDAY);
+        setFields(schedule, holder, Schedule.THURSDAY);
+        setFields(schedule, holder, Schedule.FRIDAY);
+        setFields(schedule, holder, Schedule.SATURDAY);
+        setFields(schedule, holder, Schedule.SUNDAY);
     }
 
     @Override
@@ -95,14 +95,32 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
         return sections.size();
     }
 
+    private void updateSchedule(Schedule schedule, ViewHolder holder, int day) {
+        boolean checked = holder.switches.get(day).isChecked();
+        schedule.getActive().put(day, checked);
+
+        if (checked) {
+            schedule.getStartTimes().put(day, holder.startTimes.get(day).getText().toString());
+            schedule.getEndTimes().put(day, holder.endTimes.get(day).getText().toString());
+            schedule.getLocations().put(day, holder.locations.get(day).getText().toString());
+        }
+    }
+
+    private void setFields(Schedule schedule, ViewHolder holder, int day) {
+        holder.switches.get(day).setChecked(schedule.getActive().get(day));
+        holder.startTimes.get(day).setText(schedule.getStartTimes().get(day));
+        holder.endTimes.get(day).setText(schedule.getEndTimes().get(day));
+        holder.locations.get(day).setText(schedule.getLocations().get(day));
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView sectionHeader;
         private ExpandableLinearLayout expandableLayout;
 
-        private SparseArray<Switch> switches;
-        private SparseArray<EditText> startTimes;
-        private SparseArray<EditText> endTimes;
-        private SparseArray<EditText> locations;
+        private SparseArray<Switch> switches = new SparseArray<>();
+        private SparseArray<EditText> startTimes = new SparseArray<>();
+        private SparseArray<EditText> endTimes = new SparseArray<>();
+        private SparseArray<EditText> locations = new SparseArray<>();
 
         private ViewHolder(View v) {
             super(v);
