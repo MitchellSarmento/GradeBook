@@ -3,6 +3,7 @@ package com.sarmento.mitchell.gradesaver2.activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,6 +16,8 @@ import com.sarmento.mitchell.gradesaver2.views.ScheduleView;
 public class ScheduleActivity extends AppCompatActivity {
     private Academics academics = Academics.getInstance();
     private int termPosition;
+    private Term term;
+    private ScheduleView scheduleView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +26,6 @@ public class ScheduleActivity extends AppCompatActivity {
 
         termPosition = getIntent().getIntExtra(Academics.TERM_POSITION, -1);
 
-        Term term;
         if (academics.inArchive()) {
             term = academics.getArchivedTerms().get(termPosition);
         } else {
@@ -32,7 +34,14 @@ public class ScheduleActivity extends AppCompatActivity {
         setTitle(term.getTermName());
 
         // initialize the ScheduleView
-        ((ScheduleView) findViewById(R.id.details_schedule)).init(term);
+        scheduleView = (ScheduleView) findViewById(R.id.details_schedule);
+        scheduleView.init(term);
+    }
+
+    @Override
+    public void onResume() {
+        scheduleView.init(term);
+        super.onResume();
     }
 
     @Override

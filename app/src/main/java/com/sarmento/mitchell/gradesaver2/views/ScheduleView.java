@@ -60,6 +60,7 @@ public class ScheduleView extends LinearLayout {
             R.id.details_thursday, R.id.details_friday, R.id.details_saturday, R.id.details_sunday};
         for (Schedule.Day day : Schedule.Day.values()) {
             int dayValue = day.getValue();
+            TextView header = (TextView) findViewById(headerViewIds[dayValue]);
             if (locations.get(dayValue).size() > 0) {
                 ScheduleAdapter adapter = new ScheduleAdapter(dayValue, sections);
 
@@ -69,8 +70,12 @@ public class ScheduleView extends LinearLayout {
                 details.addItemDecoration(new DividerItemDecoration(context,
                         layoutManager.getOrientation()));
                 details.setAdapter(adapter);
+
+                if (header.getVisibility() == View.GONE) {
+                    header.setVisibility(View.VISIBLE);
+                }
             } else {
-                ((TextView) findViewById(headerViewIds[dayValue])).setVisibility(View.GONE);
+                header.setVisibility(View.GONE);
             }
         }
     }
