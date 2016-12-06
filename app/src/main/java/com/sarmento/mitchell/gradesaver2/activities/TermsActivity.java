@@ -73,6 +73,12 @@ public class TermsActivity extends AppCompatActivity {
                 academics.setInArchive(true);
                 invalidateOptionsMenu();
                 assignAdapter();
+                return true;
+            case R.id.action_settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

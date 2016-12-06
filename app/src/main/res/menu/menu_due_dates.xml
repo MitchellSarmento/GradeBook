@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_new_due_date"
-        android:icon="@drawable/ic_add_black_24dp"
+        android:icon="@drawable/ic_add_white_24dp"
         android:title="@string/action_new_due_date"
         app:showAsAction="ifRoom"/>
 </menu>

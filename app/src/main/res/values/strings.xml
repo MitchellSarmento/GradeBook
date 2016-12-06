@@ -51,6 +51,7 @@
     <!-- TermsActivity Menu Actions -->
     <string name="action_new_term">New Term</string>
     <string name="action_view_archive">View Archive</string>
+    <string name="action_settings">Settings</string>
 
     <!-- SectionsActivity Menu Actions -->
     <string name="action_new_section">New Section</string>
@@ -65,6 +66,11 @@
 
     <!-- ScheduleActivity Menu Actions -->
     <string name="action_edit_schedule">Edit Schedule</string>
+
+    <!-- Settings -->
+    <string name="about">About</string>
+    <string name="version">Version</string>
+    <string name="license_information">License Information</string>
 
     <!-- Options Arrays -->
     <string-array name="options_term">
@@ -89,6 +95,13 @@
         <item>Edit</item>
         <item>Delete</item>
     </string-array>
+
+    <!-- License Information -->
+    <string name="in_app_icons_google">In-app Icons by Google</string>
+    <string name="in_app_icons_google_license">https://creativecommons.org/licenses/by/4.0/</string>
+    <string name="expandable_layout_aakira">ExpandableLayout by Aakira</string>
+    <string name="expandable_layout_aakira_license">http://www.apache.org/licenses/LICENSE-2.0</string>
+    <string name="expandable_layout_aakira_github">https://github.com/AAkira/ExpandableLayout</string>
 
     <!-- Misc -->
     <string name="cancel">Cancel</string>

@@ -19,8 +19,11 @@
         <activity android:name=".activities.AssignmentsActivity" />
         <activity android:name=".activities.DueDatesActivity" />
         <activity android:name=".activities.ScheduleActivity" />
-        <activity android:name=".activities.ScheduleEditActivity"
+        <activity
+            android:name=".activities.ScheduleEditActivity"
             android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activities.SettingsActivity"
+            android:label="@string/action_settings" />
     </application>
 
 </manifest>
