@@ -83,13 +83,9 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
 
         // set fields
         Schedule schedule = section.getSchedule();
-        setFields(schedule, holder, Schedule.MONDAY);
-        setFields(schedule, holder, Schedule.TUESDAY);
-        setFields(schedule, holder, Schedule.WEDNESDAY);
-        setFields(schedule, holder, Schedule.THURSDAY);
-        setFields(schedule, holder, Schedule.FRIDAY);
-        setFields(schedule, holder, Schedule.SATURDAY);
-        setFields(schedule, holder, Schedule.SUNDAY);
+        for (Schedule.Day day : Schedule.Day.values()) {
+            setFields(schedule, holder, day.getValue());
+        }
     }
 
     @Override
@@ -124,41 +120,23 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
             sectionHeader    = (TextView) v.findViewById(R.id.header_schedule_edit);
             expandableLayout = (ExpandableLinearLayout) v.findViewById(R.id.details_schedule_edit);
 
-            // get switches
-            switches.put(Schedule.MONDAY, (Switch) v.findViewById(R.id.monday_switch));
-            switches.put(Schedule.TUESDAY, (Switch) v.findViewById(R.id.tuesday_switch));
-            switches.put(Schedule.WEDNESDAY, (Switch) v.findViewById(R.id.wednesday_switch));
-            switches.put(Schedule.THURSDAY, (Switch) v.findViewById(R.id.thursday_switch));
-            switches.put(Schedule.FRIDAY, (Switch) v.findViewById(R.id.friday_switch));
-            switches.put(Schedule.SATURDAY, (Switch) v.findViewById(R.id.saturday_switch));
-            switches.put(Schedule.SUNDAY, (Switch) v.findViewById(R.id.sunday_switch));
+            int[] switchIds    = {R.id.monday_switch, R.id.tuesday_switch, R.id.wednesday_switch,
+                    R.id.thursday_switch, R.id.friday_switch, R.id.saturday_switch, R.id.sunday_switch};
+            int[] startTimeIds = {R.id.monday_start, R.id.tuesday_start, R.id.wednesday_start,
+                    R.id.thursday_start, R.id.friday_start, R.id.saturday_start, R.id.sunday_start};
+            int[] endTimeIds   = {R.id.monday_end, R.id.tuesday_end, R.id.wednesday_end,
+                    R.id.thursday_end, R.id.friday_end, R.id.saturday_end, R.id.sunday_end};
+            int[] locationIds  = {R.id.monday_location, R.id.tuesday_location, R.id.wednesday_location,
+                    R.id.thursday_location, R.id.friday_location, R.id.saturday_location,
+                    R.id.sunday_location};
 
-            // get start time views
-            startTimes.put(Schedule.MONDAY, (EditText) v.findViewById(R.id.monday_start));
-            startTimes.put(Schedule.TUESDAY, (EditText) v.findViewById(R.id.tuesday_start));
-            startTimes.put(Schedule.WEDNESDAY, (EditText) v.findViewById(R.id.wednesday_start));
-            startTimes.put(Schedule.THURSDAY, (EditText) v.findViewById(R.id.thursday_start));
-            startTimes.put(Schedule.FRIDAY, (EditText) v.findViewById(R.id.friday_start));
-            startTimes.put(Schedule.SATURDAY, (EditText) v.findViewById(R.id.saturday_start));
-            startTimes.put(Schedule.SUNDAY, (EditText) v.findViewById(R.id.sunday_start));
-
-            // get end time views
-            endTimes.put(Schedule.MONDAY, (EditText) v.findViewById(R.id.monday_end));
-            endTimes.put(Schedule.TUESDAY, (EditText) v.findViewById(R.id.tuesday_end));
-            endTimes.put(Schedule.WEDNESDAY, (EditText) v.findViewById(R.id.wednesday_end));
-            endTimes.put(Schedule.THURSDAY, (EditText) v.findViewById(R.id.thursday_end));
-            endTimes.put(Schedule.FRIDAY, (EditText) v.findViewById(R.id.friday_end));
-            endTimes.put(Schedule.SATURDAY, (EditText) v.findViewById(R.id.saturday_end));
-            endTimes.put(Schedule.SUNDAY, (EditText) v.findViewById(R.id.sunday_end));
-
-            // get location views
-            locations.put(Schedule.MONDAY, (EditText) v.findViewById(R.id.monday_location));
-            locations.put(Schedule.TUESDAY, (EditText) v.findViewById(R.id.tuesday_location));
-            locations.put(Schedule.WEDNESDAY, (EditText) v.findViewById(R.id.wednesday_location));
-            locations.put(Schedule.THURSDAY, (EditText) v.findViewById(R.id.thursday_location));
-            locations.put(Schedule.FRIDAY, (EditText) v.findViewById(R.id.friday_location));
-            locations.put(Schedule.SATURDAY, (EditText) v.findViewById(R.id.saturday_location));
-            locations.put(Schedule.SUNDAY, (EditText) v.findViewById(R.id.sunday_location));
+            for (Schedule.Day day : Schedule.Day.values()) {
+                int dayValue = day.getValue();
+                switches.put(dayValue, (Switch) v.findViewById(switchIds[dayValue]));
+                startTimes.put(dayValue, (EditText) v.findViewById(startTimeIds[dayValue]));
+                endTimes.put(dayValue, (EditText) v.findViewById(endTimeIds[dayValue]));
+                locations.put(dayValue, (EditText) v.findViewById(locationIds[dayValue]));
+            }
         }
     }
 }

@@ -348,41 +348,34 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(KEY_SCHEDULES_TERM_ID, termId);
         values.put(KEY_SCHEDULES_SECTION_ID, sectionId);
 
-        SparseBooleanArray active = schedule.getActive();
-        values.put(KEY_SCHEDULES_ON_MONDAY, active.get(Schedule.MONDAY));
-        values.put(KEY_SCHEDULES_ON_TUESDAY, active.get(Schedule.TUESDAY));
-        values.put(KEY_SCHEDULES_ON_WEDNESDAY, active.get(Schedule.WEDNESDAY));
-        values.put(KEY_SCHEDULES_ON_THURSDAY, active.get(Schedule.THURSDAY));
-        values.put(KEY_SCHEDULES_ON_FRIDAY, active.get(Schedule.FRIDAY));
-        values.put(KEY_SCHEDULES_ON_SATURDAY, active.get(Schedule.SATURDAY));
-        values.put(KEY_SCHEDULES_ON_SUNDAY, active.get(Schedule.SUNDAY));
+        String[] onKeys = {KEY_SCHEDULES_ON_MONDAY, KEY_SCHEDULES_ON_TUESDAY,
+                KEY_SCHEDULES_ON_WEDNESDAY, KEY_SCHEDULES_ON_THURSDAY,
+                KEY_SCHEDULES_ON_FRIDAY, KEY_SCHEDULES_ON_SATURDAY,
+                KEY_SCHEDULES_ON_SUNDAY};
+        String[] locationKeys = {KEY_SCHEDULES_LOCATION_MONDAY,
+                KEY_SCHEDULES_LOCATION_TUESDAY, KEY_SCHEDULES_LOCATION_WEDNESDAY,
+                KEY_SCHEDULES_LOCATION_THURSDAY, KEY_SCHEDULES_LOCATION_FRIDAY,
+                KEY_SCHEDULES_LOCATION_SATURDAY, KEY_SCHEDULES_LOCATION_SUNDAY};
+        String[] startKeys = {KEY_SCHEDULES_START_MONDAY,
+                KEY_SCHEDULES_START_TUESDAY, KEY_SCHEDULES_START_WEDNESDAY,
+                KEY_SCHEDULES_START_THURSDAY, KEY_SCHEDULES_START_FRIDAY,
+                KEY_SCHEDULES_START_SATURDAY, KEY_SCHEDULES_START_SUNDAY};
+        String[] endKeys = {KEY_SCHEDULES_END_MONDAY,
+                KEY_SCHEDULES_END_TUESDAY, KEY_SCHEDULES_END_WEDNESDAY,
+                KEY_SCHEDULES_END_THURSDAY, KEY_SCHEDULES_END_FRIDAY,
+                KEY_SCHEDULES_END_SATURDAY, KEY_SCHEDULES_END_SUNDAY};
 
-        SparseArray<String> locations = schedule.getLocations();
-        values.put(KEY_SCHEDULES_LOCATION_MONDAY, locations.get(Schedule.MONDAY));
-        values.put(KEY_SCHEDULES_LOCATION_TUESDAY, locations.get(Schedule.TUESDAY));
-        values.put(KEY_SCHEDULES_LOCATION_WEDNESDAY, locations.get(Schedule.WEDNESDAY));
-        values.put(KEY_SCHEDULES_LOCATION_THURSDAY, locations.get(Schedule.THURSDAY));
-        values.put(KEY_SCHEDULES_LOCATION_FRIDAY, locations.get(Schedule.FRIDAY));
-        values.put(KEY_SCHEDULES_LOCATION_SATURDAY, locations.get(Schedule.SATURDAY));
-        values.put(KEY_SCHEDULES_LOCATION_SUNDAY, locations.get(Schedule.SUNDAY));
-
+        SparseBooleanArray active      = schedule.getActive();
+        SparseArray<String> locations  = schedule.getLocations();
         SparseArray<String> startTimes = schedule.getStartTimes();
-        values.put(KEY_SCHEDULES_START_MONDAY, startTimes.get(Schedule.MONDAY));
-        values.put(KEY_SCHEDULES_START_TUESDAY, startTimes.get(Schedule.TUESDAY));
-        values.put(KEY_SCHEDULES_START_WEDNESDAY, startTimes.get(Schedule.WEDNESDAY));
-        values.put(KEY_SCHEDULES_START_THURSDAY, startTimes.get(Schedule.THURSDAY));
-        values.put(KEY_SCHEDULES_START_FRIDAY, startTimes.get(Schedule.FRIDAY));
-        values.put(KEY_SCHEDULES_START_SATURDAY, startTimes.get(Schedule.SATURDAY));
-        values.put(KEY_SCHEDULES_START_SUNDAY, startTimes.get(Schedule.SUNDAY));
-
-        SparseArray<String> endTimes = schedule.getEndTimes();
-        values.put(KEY_SCHEDULES_END_MONDAY, endTimes.get(Schedule.MONDAY));
-        values.put(KEY_SCHEDULES_END_TUESDAY, endTimes.get(Schedule.TUESDAY));
-        values.put(KEY_SCHEDULES_END_WEDNESDAY, endTimes.get(Schedule.WEDNESDAY));
-        values.put(KEY_SCHEDULES_END_THURSDAY, endTimes.get(Schedule.THURSDAY));
-        values.put(KEY_SCHEDULES_END_FRIDAY, endTimes.get(Schedule.FRIDAY));
-        values.put(KEY_SCHEDULES_END_SATURDAY, endTimes.get(Schedule.SATURDAY));
-        values.put(KEY_SCHEDULES_END_SUNDAY, endTimes.get(Schedule.SUNDAY));
+        SparseArray<String> endTimes   = schedule.getEndTimes();
+        for (Schedule.Day day : Schedule.Day.values()) {
+            int dayValue = day.getValue();
+            values.put(onKeys[dayValue], active.get(dayValue));
+            values.put(locationKeys[dayValue], locations.get(dayValue));
+            values.put(startKeys[dayValue], startTimes.get(dayValue));
+            values.put(endKeys[dayValue], endTimes.get(dayValue));
+        }
 
         db.insert(TABLE_SCHEDULES, null, values);
     }
