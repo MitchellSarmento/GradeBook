@@ -27,6 +27,7 @@ public class SectionsActivity extends AppCompatActivity {
         termPosition = getIntent().getIntExtra(Academics.TERM_POSITION, -1);
 
         Term term = Academics.getInstance().getCurrentTerms().get(termPosition);
+        setTitle(term.getTermName());
 
         RecyclerView sections = (RecyclerView) findViewById(R.id.sections);
         sections.setLayoutManager(new LinearLayoutManager(this));

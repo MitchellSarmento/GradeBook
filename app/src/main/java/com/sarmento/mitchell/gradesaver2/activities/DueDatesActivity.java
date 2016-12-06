@@ -29,6 +29,7 @@ public class DueDatesActivity extends AppCompatActivity {
 
         Section section = Academics.getInstance().getCurrentTerms().get(termPosition)
                 .getSections().get(sectionPosition);
+        setTitle(section.getSectionName());
 
         RecyclerView dueDates = (RecyclerView) findViewById(R.id.due_dates);
         dueDates.setLayoutManager(new LinearLayoutManager(this));

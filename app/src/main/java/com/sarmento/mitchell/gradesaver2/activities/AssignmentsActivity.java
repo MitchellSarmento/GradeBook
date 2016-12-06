@@ -33,6 +33,7 @@ public class AssignmentsActivity extends AppCompatActivity {
 
         section = Academics.getInstance().getCurrentTerms().get(termPosition)
                 .getSections().get(sectionPosition);
+        setTitle(section.getSectionName());
 
         header = (SectionHeader) findViewById(R.id.header_section);
         header.init(section);

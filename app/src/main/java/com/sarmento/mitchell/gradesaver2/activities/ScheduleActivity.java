@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
+import com.sarmento.mitchell.gradesaver2.model.Term;
 import com.sarmento.mitchell.gradesaver2.views.ScheduleView;
 
 public class ScheduleActivity extends AppCompatActivity {
@@ -20,6 +21,9 @@ public class ScheduleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_schedule);
 
         termPosition = getIntent().getIntExtra(Academics.TERM_POSITION, -1);
+
+        Term term = Academics.getInstance().getCurrentTerms().get(termPosition);
+        setTitle(term.getTermName());
 
         // initialize the ScheduleView
         ((ScheduleView) findViewById(R.id.details_schedule))

@@ -28,6 +28,7 @@ public class ScheduleEditActivity extends AppCompatActivity {
         termPosition = getIntent().getIntExtra(Academics.TERM_POSITION, -1);
 
         Term term = Academics.getInstance().getCurrentTerms().get(termPosition);
+        setTitle(term.getTermName());
 
         RecyclerView schedules = (RecyclerView) findViewById(R.id.schedules);
         schedules.setLayoutManager(new LinearLayoutManager(this));
