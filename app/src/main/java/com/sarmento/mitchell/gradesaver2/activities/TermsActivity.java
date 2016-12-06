@@ -1,5 +1,6 @@
 package com.sarmento.mitchell.gradesaver2.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,7 +15,10 @@ import com.sarmento.mitchell.gradesaver2.dialogs.TermDialogFragment;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
 
 public class TermsActivity extends AppCompatActivity {
-    private TermAdapter adapter;
+    private Academics academics;
+    private RecyclerView terms;
+    private TermAdapter currentAdapter;
+    private TermAdapter archiveAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,12 +26,15 @@ public class TermsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_terms);
 
         // load data
-        Academics academics = Academics.getInstance(this);
+        academics = Academics.getInstance(this);
 
-        RecyclerView currentTerms = (RecyclerView) findViewById(R.id.current_terms);
-        currentTerms.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new TermAdapter(academics.getCurrentTerms());
-        currentTerms.setAdapter(adapter);
+        terms = (RecyclerView) findViewById(R.id.current_terms);
+        terms.setLayoutManager(new LinearLayoutManager(this));
+
+        currentAdapter = new TermAdapter(academics.getCurrentTerms());
+        archiveAdapter = new TermAdapter(academics.getArchivedTerms());
+
+        assignAdapter();
     }
 
     @Override
@@ -36,14 +43,23 @@ public class TermsActivity extends AppCompatActivity {
         updateList();
     }
 
-    public void updateList() {
-        adapter.notifyDataSetChanged();
+    @Override
+    public void onBackPressed() {
+        if (academics.inArchive()) {
+            academics.setInArchive(false);
+            invalidateOptionsMenu();
+            assignAdapter();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_terms, menu);
+        if (!academics.inArchive()) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.menu_terms, menu);
+        }
         return true;
     }
 
@@ -53,8 +69,30 @@ public class TermsActivity extends AppCompatActivity {
             case R.id.action_new_term:
                 new TermDialogFragment().show(getFragmentManager(), getString(R.string.action_new_term));
                 return true;
+            case R.id.action_view_archive:
+                academics.setInArchive(true);
+                invalidateOptionsMenu();
+                assignAdapter();
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void assignAdapter() {
+        if (academics.inArchive()) {
+            terms.setAdapter(archiveAdapter);
+            setTitle(getString(R.string.archive));
+        } else {
+            terms.setAdapter(currentAdapter);
+            setTitle(getString(R.string.app_name));
+        }
+    }
+
+    public void updateList() {
+        if (academics.inArchive()) {
+            archiveAdapter.notifyDataSetChanged();
+        } else {
+            currentAdapter.notifyDataSetChanged();
         }
     }
 }

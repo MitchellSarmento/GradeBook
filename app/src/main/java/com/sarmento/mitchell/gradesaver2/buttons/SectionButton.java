@@ -38,7 +38,9 @@ public class SectionButton extends Button implements View.OnClickListener, View.
 
         setButtonText(scorePercent);
         setOnClickListener(this);
-        setOnLongClickListener(this);
+        if (!Academics.getInstance().inArchive()) {
+            setOnLongClickListener(this);
+        }
         setBackgroundColor(ResourcesCompat.getColor(getResources(),
                 getButtonColor(scorePercent), null));
     }

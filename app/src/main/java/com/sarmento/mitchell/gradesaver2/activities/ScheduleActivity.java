@@ -13,6 +13,7 @@ import com.sarmento.mitchell.gradesaver2.model.Term;
 import com.sarmento.mitchell.gradesaver2.views.ScheduleView;
 
 public class ScheduleActivity extends AppCompatActivity {
+    private Academics academics = Academics.getInstance();
     private int termPosition;
 
     @Override
@@ -22,18 +23,24 @@ public class ScheduleActivity extends AppCompatActivity {
 
         termPosition = getIntent().getIntExtra(Academics.TERM_POSITION, -1);
 
-        Term term = Academics.getInstance().getCurrentTerms().get(termPosition);
+        Term term;
+        if (academics.inArchive()) {
+            term = academics.getArchivedTerms().get(termPosition);
+        } else {
+            term = academics.getCurrentTerms().get(termPosition);
+        }
         setTitle(term.getTermName());
 
         // initialize the ScheduleView
-        ((ScheduleView) findViewById(R.id.details_schedule))
-                .init(Academics.getInstance().getCurrentTerms().get(termPosition));
+        ((ScheduleView) findViewById(R.id.details_schedule)).init(term);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_schedule, menu);
+        if (!academics.inArchive()) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.menu_schedule, menu);
+        }
         return true;
     }
 

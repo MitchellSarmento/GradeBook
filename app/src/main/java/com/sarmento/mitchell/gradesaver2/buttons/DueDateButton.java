@@ -42,8 +42,10 @@ public class DueDateButton extends Button implements View.OnClickListener, View.
         daysRemaining = getDaysRemaining(dueDate.getDate());
 
         setButtonText();
-        setOnClickListener(this);
-        setOnLongClickListener(this);
+        if (!Academics.getInstance().inArchive()) {
+            setOnClickListener(this);
+            setOnLongClickListener(this);
+        }
         setButtonColor();
     }
 

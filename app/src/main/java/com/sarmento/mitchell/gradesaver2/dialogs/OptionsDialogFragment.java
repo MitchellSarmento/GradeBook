@@ -17,10 +17,11 @@ import com.sarmento.mitchell.gradesaver2.model.Academics;
 public class OptionsDialogFragment extends DialogFragment implements Dialog.OnClickListener {
     public static final String ITEM_TYPE  = "itemType";
 
-    public static final int TERM       = 0;
-    public static final int SECTION    = 1;
-    public static final int ASSIGNMENT = 2;
-    public static final int DUE_DATE   = 3;
+    public static final int TERM          = 0;
+    public static final int TERM_ARCHIVED = 1;
+    public static final int SECTION       = 2;
+    public static final int ASSIGNMENT    = 3;
+    public static final int DUE_DATE      = 4;
 
     public static final String EDITING = "editing";
 
@@ -28,6 +29,11 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
         private static final int EDIT    = 0;
         private static final int DELETE  = 1;
         private static final int ARCHIVE = 2;
+    }
+
+    private static class TermArchivedOptions {
+        private static final int DELETE    = 0;
+        private static final int UNARCHIVE = 1;
     }
 
     private static class SectionOptions {
@@ -46,7 +52,8 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
         private static final int DELETE = 1;
     }
 
-    private Activity context;
+    private Activity activity;
+    private Bundle arguments;
     private int itemType;
     private int termPosition;
     private int sectionPosition;
@@ -55,12 +62,13 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        context  = getActivity();
-        itemType = getArguments().getInt(ITEM_TYPE);
+        activity  = getActivity();
+        arguments = getArguments();
+        itemType  = arguments.getInt(ITEM_TYPE);
         getPositions();
         String[] options = getOptions();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setItems(options, this);
 
         return builder.create();
@@ -69,21 +77,24 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
     private void getPositions() {
         switch (itemType) {
             case TERM:
-                termPosition = getArguments().getInt(Academics.TERM_POSITION);
+                termPosition = arguments.getInt(Academics.TERM_POSITION);
+                break;
+            case TERM_ARCHIVED:
+                termPosition = arguments.getInt(Academics.TERM_POSITION);
                 break;
             case SECTION:
-                termPosition    = getArguments().getInt(Academics.TERM_POSITION);
-                sectionPosition = getArguments().getInt(Academics.SECTION_POSITION);
+                termPosition    = arguments.getInt(Academics.TERM_POSITION);
+                sectionPosition = arguments.getInt(Academics.SECTION_POSITION);
                 break;
             case ASSIGNMENT:
-                termPosition       = getArguments().getInt(Academics.TERM_POSITION);
-                sectionPosition    = getArguments().getInt(Academics.SECTION_POSITION);
-                assignmentPosition = getArguments().getInt(Academics.ASSIGNMENT_POSITION);
+                termPosition       = arguments.getInt(Academics.TERM_POSITION);
+                sectionPosition    = arguments.getInt(Academics.SECTION_POSITION);
+                assignmentPosition = arguments.getInt(Academics.ASSIGNMENT_POSITION);
                 break;
             case DUE_DATE:
-                termPosition    = getArguments().getInt(Academics.TERM_POSITION);
-                sectionPosition = getArguments().getInt(Academics.SECTION_POSITION);
-                dueDatePosition = getArguments().getInt(Academics.DUE_DATE_POSITION);
+                termPosition    = arguments.getInt(Academics.TERM_POSITION);
+                sectionPosition = arguments.getInt(Academics.SECTION_POSITION);
+                dueDatePosition = arguments.getInt(Academics.DUE_DATE_POSITION);
                 break;
         }
     }
@@ -109,13 +120,34 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                         confirmAction = new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                Academics.getInstance().removeTerm(context, termPosition);
-                                ((TermsActivity) context).updateList();
+                                Academics.getInstance().removeTerm(activity, termPosition, false);
+                                ((TermsActivity) activity).updateList();
                                 dialog.dismiss();
                             }
                         };
                         break;
                     case TermOptions.ARCHIVE:
+                        Academics.getInstance().setTermIsArchived(activity, true, termPosition);
+                        ((TermsActivity) activity).updateList();
+                        break;
+                }
+                break;
+            case TERM_ARCHIVED:
+                switch (option) {
+                    case TermArchivedOptions.DELETE:
+                        showConfirmationDialog = true;
+                        confirmAction = new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                Academics.getInstance().removeTerm(activity, termPosition, true);
+                                ((TermsActivity) activity).updateList();
+                                dialog.dismiss();
+                            }
+                        };
+                        break;
+                    case TermArchivedOptions.UNARCHIVE:
+                        Academics.getInstance().setTermIsArchived(activity, false, termPosition);
+                        ((TermsActivity) activity).updateList();
                         break;
                 }
                 break;
@@ -133,8 +165,8 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
                                 Academics.getInstance().getCurrentTerms().get(termPosition)
-                                        .removeSection(context, termPosition, sectionPosition);
-                                ((SectionsActivity) context).updateList();
+                                        .removeSection(activity, termPosition, sectionPosition);
+                                ((SectionsActivity) activity).updateList();
                                 dialog.dismiss();
                             }
                         };
@@ -159,9 +191,9 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                             public void onClick(DialogInterface dialog, int id) {
                                 Academics.getInstance().getCurrentTerms().get(termPosition)
                                         .getSections().get(sectionPosition)
-                                        .removeAssignment(context, termPosition,
+                                        .removeAssignment(activity, termPosition,
                                                 sectionPosition, assignmentPosition);
-                                ((AssignmentsActivity) context).updateList();
+                                ((AssignmentsActivity) activity).updateList();
                                 dialog.dismiss();
                             }
                         };
@@ -184,9 +216,9 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                             public void onClick(DialogInterface dialog, int id) {
                                 Academics.getInstance().getCurrentTerms().get(termPosition)
                                         .getSections().get(sectionPosition)
-                                        .removeDueDate(context, termPosition,
+                                        .removeDueDate(activity, termPosition,
                                                 sectionPosition, dueDatePosition);
-                                ((DueDatesActivity) context).updateList();
+                                ((DueDatesActivity) activity).updateList();
                                 dialog.dismiss();
                             }
                         };
@@ -218,6 +250,8 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
         switch (itemType) {
             case TERM:
                 return getResources().getStringArray(R.array.options_term);
+            case TERM_ARCHIVED:
+                return getResources().getStringArray(R.array.options_term_archived);
             case SECTION:
                 return getResources().getStringArray(R.array.options_section);
             case ASSIGNMENT:

@@ -17,6 +17,7 @@ import com.sarmento.mitchell.gradesaver2.model.Section;
 import com.sarmento.mitchell.gradesaver2.views.SectionHeader;
 
 public class AssignmentsActivity extends AppCompatActivity {
+    private Academics academics = Academics.getInstance();
     private int termPosition;
     private int sectionPosition;
     private AssignmentAdapter adapter;
@@ -31,8 +32,13 @@ public class AssignmentsActivity extends AppCompatActivity {
         termPosition    = getIntent().getIntExtra(Academics.TERM_POSITION, -1);
         sectionPosition = getIntent().getIntExtra(Academics.SECTION_POSITION, -1);
 
-        section = Academics.getInstance().getCurrentTerms().get(termPosition)
-                .getSections().get(sectionPosition);
+        if (academics.inArchive()) {
+            section = academics.getArchivedTerms().get(termPosition)
+                    .getSections().get(sectionPosition);
+        } else {
+            section = academics.getCurrentTerms().get(termPosition)
+                    .getSections().get(sectionPosition);
+        }
         setTitle(section.getSectionName());
 
         header = (SectionHeader) findViewById(R.id.header_section);
@@ -58,7 +64,11 @@ public class AssignmentsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_assignments, menu);
+        if (!academics.inArchive()) {
+            inflater.inflate(R.menu.menu_assignments, menu);
+        } else {
+            inflater.inflate(R.menu.menu_assignments_archive, menu);
+        }
         return true;
     }
 

@@ -1,6 +1,7 @@
 package com.sarmento.mitchell.gradesaver2.model;
 
 
+import android.content.ContentValues;
 import android.content.Context;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public class Academics {
 
     private static Academics instance = null;
     private boolean loaded = false;
+    private boolean inArchive = false;
     private List<Term> currentTerms;
     private List<Term> archivedTerms;
 
@@ -58,6 +60,10 @@ public class Academics {
         return currentTerms;
     }
 
+    public List<Term> getArchivedTerms() {
+        return archivedTerms;
+    }
+
     public void addTerm(Context context, Term term, int termPosition) {
         currentTerms.add(term);
 
@@ -65,10 +71,76 @@ public class Academics {
         db.addTerm(term, termPosition);
     }
 
-    public void removeTerm(Context context, int termPosition) {
-        currentTerms.remove(termPosition);
+    public void removeTerm(Context context, int termPosition, boolean archived) {
+        if (archived) {
+            archivedTerms.remove(termPosition);
+        } else {
+            currentTerms.remove(termPosition);
+        }
 
         DBHelper db = new DBHelper(context);
-        db.removeTerm(termPosition);
+        db.removeTerm(termPosition, archived);
     }
+
+    public boolean inArchive() {
+        return inArchive;
+    }
+
+    public void setInArchive(boolean inArchive) {
+        this.inArchive = inArchive;
+    }
+
+    public void setTermIsArchived(Context context, boolean archiving, int termPosition) {
+        DBHelper db = new DBHelper(context);
+        ContentValues updateValues;
+        Term term;
+        int newPosition;
+        int target;
+
+        if (archiving) {
+            term        = currentTerms.get(termPosition);
+            newPosition = archivedTerms.size();
+            target      = currentTerms.size();
+
+            currentTerms.remove(termPosition);
+            archivedTerms.add(term);
+        } else {
+            term        = archivedTerms.get(termPosition);
+            newPosition = currentTerms.size();
+            target      = archivedTerms.size();
+
+            archivedTerms.remove(termPosition);
+            currentTerms.add(term);
+        }
+
+        term.setArchived(archiving);
+        updateValues = new ContentValues();
+        updateValues.put(DBHelper.KEY_TERMS_ARCHIVED, archiving);
+        updateValues.put(DBHelper.KEY_TERMS_ID, newPosition);
+        db.updateTerm(updateValues, termPosition, !archiving);
+
+        // update Term ids in the database to compensate for this Term's removal
+        for (int i = termPosition; i < target; i++) {
+            updateValues = new ContentValues();
+            updateValues.put(DBHelper.KEY_TERMS_ID, i);
+            db.updateTerm(updateValues, i+1, !archiving);
+        }
+    }
+
+    /*public void setArchived(Context context, boolean archived, int termPosition) {
+        this.archived = archived;
+
+        // update the Term in the database
+        DBHelper db = new DBHelper(context);
+        ContentValues updateValues = new ContentValues();
+        updateValues.put(DBHelper.KEY_TERMS_ARCHIVED, archived);
+        if (archived) {
+            updateValues.put(DBHelper.KEY_TERMS_ID, Academics.getInstance().getArchivedTerms()
+                    .size());
+        } else {
+            updateValues.put(DBHelper.KEY_TERMS_ID, Academics.getInstance().getCurrentTerms()
+                    .size());
+        }
+        db.updateTerm(updateValues, termPosition);
+    }*/
 }

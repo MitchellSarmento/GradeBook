@@ -15,6 +15,7 @@ import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.Section;
 
 public class DueDatesActivity extends AppCompatActivity {
+    private Academics academics = Academics.getInstance();
     private int termPosition;
     private int sectionPosition;
     private DueDateAdapter adapter;
@@ -27,8 +28,14 @@ public class DueDatesActivity extends AppCompatActivity {
         termPosition    = getIntent().getIntExtra(Academics.TERM_POSITION, -1);
         sectionPosition = getIntent().getIntExtra(Academics.SECTION_POSITION, -1);
 
-        Section section = Academics.getInstance().getCurrentTerms().get(termPosition)
-                .getSections().get(sectionPosition);
+        Section section;
+        if (academics.inArchive()) {
+            section = academics.getArchivedTerms().get(termPosition)
+                    .getSections().get(sectionPosition);
+        } else {
+            section = academics.getCurrentTerms().get(termPosition)
+                    .getSections().get(sectionPosition);
+        }
         setTitle(section.getSectionName());
 
         RecyclerView dueDates = (RecyclerView) findViewById(R.id.due_dates);
@@ -49,8 +56,10 @@ public class DueDatesActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_due_dates, menu);
+        if (!academics.inArchive()) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.menu_due_dates, menu);
+        }
         return true;
     }
 

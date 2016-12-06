@@ -37,7 +37,7 @@ public class Term {
         DBHelper db = new DBHelper(context);
         ContentValues updateValues = new ContentValues();
         updateValues.put(DBHelper.KEY_TERMS_NAME, termName);
-        db.updateTerm(updateValues, termPosition);
+        db.updateTerm(updateValues, termPosition, archived);
     }
 
     public List<Section> getSections() {
@@ -60,5 +60,9 @@ public class Term {
 
     public boolean isArchived() {
         return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 }

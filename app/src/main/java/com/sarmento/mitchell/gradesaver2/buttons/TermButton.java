@@ -48,7 +48,11 @@ public class TermButton extends Button implements View.OnClickListener, View.OnL
         OptionsDialogFragment dialog = new OptionsDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(Academics.TERM_POSITION, termPosition);
-        bundle.putInt(OptionsDialogFragment.ITEM_TYPE, OptionsDialogFragment.TERM);
+        if (Academics.getInstance().inArchive()) {
+            bundle.putInt(OptionsDialogFragment.ITEM_TYPE, OptionsDialogFragment.TERM_ARCHIVED);
+        } else {
+            bundle.putInt(OptionsDialogFragment.ITEM_TYPE, OptionsDialogFragment.TERM);
+        }
         dialog.setArguments(bundle);
         dialog.show(((Activity) context).getFragmentManager(), context.getString(R.string.options));
         return true;

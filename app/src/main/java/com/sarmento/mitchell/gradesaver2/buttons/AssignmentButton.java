@@ -45,7 +45,9 @@ public class AssignmentButton extends Button implements View.OnLongClickListener
         double scorePercent = score / maxScore * 100;
 
         setButtonText(score, maxScore, scorePercent);
-        setOnLongClickListener(this);
+        if (!Academics.getInstance().inArchive()) {
+            setOnLongClickListener(this);
+        }
         setBackgroundColor(ResourcesCompat.getColor(getResources(),
                 getButtonColor(scorePercent), null));
     }
@@ -73,10 +75,18 @@ public class AssignmentButton extends Button implements View.OnLongClickListener
     }
 
     private int getButtonColor(double scorePercent) {
-        Section section = Academics.getInstance().getCurrentTerms().get(termPosition)
-                .getSections().get(sectionPosition);
-        SparseArray<Double> gradeThresholds = section.getGradeThresholds();
+        Academics academics = Academics.getInstance();
+        Section section;
 
+        if (academics.inArchive()) {
+            section = academics.getArchivedTerms().get(termPosition)
+                    .getSections().get(sectionPosition);
+        } else {
+            section = academics.getCurrentTerms().get(termPosition)
+                    .getSections().get(sectionPosition);
+        }
+
+        SparseArray<Double> gradeThresholds = section.getGradeThresholds();
         if (scorePercent >= gradeThresholds.get(Section.LOW_A)) {
             return R.color.color_a;
         } else if (scorePercent >= gradeThresholds.get(Section.LOW_B)) {

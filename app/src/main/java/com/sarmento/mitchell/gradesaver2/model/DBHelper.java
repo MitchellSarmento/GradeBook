@@ -380,11 +380,17 @@ public class DBHelper extends SQLiteOpenHelper {
         db.insert(TABLE_SCHEDULES, null, values);
     }
 
-    public void removeTerm(int termId) {
+    public void removeTerm(int termId, boolean archived) {
         SQLiteDatabase db = getWritableDatabase();
 
+        int isArchived = TRUE;
+        if (!archived) {
+            isArchived = FALSE;
+        }
+
         // delete the Term
-        String where = KEY_TERMS_ID + " = " + termId;
+        String where = KEY_TERMS_ID + " = " + termId + " AND " +
+                KEY_TERMS_ARCHIVED + " = " + isArchived;
         db.delete(TABLE_TERMS, where, null);
 
         // delete related Sections
@@ -503,9 +509,15 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void updateTerm(ContentValues values, int termId) {
+    public void updateTerm(ContentValues values, int termId, boolean archived) {
         SQLiteDatabase db = getWritableDatabase();
-        String where = KEY_TERMS_ID + " = " + termId;
+
+        int isArchived = TRUE;
+        if (!archived) {
+            isArchived = FALSE;
+        }
+        String where = KEY_TERMS_ID + " = " + termId + " AND " +
+                KEY_TERMS_ARCHIVED + " = " + isArchived;
 
         db.update(TABLE_TERMS, values, where, null);
         db.close();

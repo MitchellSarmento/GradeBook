@@ -72,6 +72,10 @@
         <item>Delete</item>
         <item>Archive</item>
     </string-array>
+    <string-array name="options_term_archived">
+        <item>Delete</item>
+        <item>Unarchive</item>
+    </string-array>
     <string-array name="options_section">
         <item>Edit</item>
         <item>Delete</item>
@@ -101,4 +105,5 @@
     <string name="start_time">Start Time</string>
     <string name="end_time">End Time</string>
     <string name="location">Location</string>
+    <string name="archive">Archive</string>
 </resources>
