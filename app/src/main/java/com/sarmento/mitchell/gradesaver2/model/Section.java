@@ -3,18 +3,12 @@ package com.sarmento.mitchell.gradesaver2.model;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.util.Log;
 import android.util.SparseArray;
 
 import com.sarmento.mitchell.gradesaver2.R;
-import com.sarmento.mitchell.gradesaver2.activities.AssignmentsActivity;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 public class Section {
     public static final int HIGH_A = 0;
@@ -68,29 +62,29 @@ public class Section {
                    SparseArray<Double> scores, SparseArray<Double> maxScores,
                    double totalScore, double maxScore, String grade,
                    List<Assignment> assignments, List<DueDate> dueDates, Schedule schedule) {
-        this.sectionName = sectionName;
-        this.maxScore = maxScore;
-        this.totalScore = totalScore;
-        this.grade = grade;
-        this.gradeThresholds = gradeThresholds;
+        this.sectionName       = sectionName;
+        this.maxScore          = maxScore;
+        this.totalScore        = totalScore;
+        this.grade             = grade;
+        this.gradeThresholds   = gradeThresholds;
         this.assignmentWeights = assignmentWeights;
-        this.scores = scores;
-        this.maxScores = maxScores;
-        this.assignments = assignments;
-        this.dueDates = dueDates;
-        this.schedule = schedule;
+        this.scores            = scores;
+        this.maxScores         = maxScores;
+        this.assignments       = assignments;
+        this.dueDates          = dueDates;
+        this.schedule          = schedule;
     }
 
     public void updateSection(Context context, String sectionName,
                               SparseArray<Double> assignmentWeights,
                               SparseArray<Double> gradeThresholds,
                               int termPosition, int sectionPosition) {
-        DBHelper db = new DBHelper(context);
-        this.sectionName = sectionName;
+        this.sectionName       = sectionName;
         this.assignmentWeights = assignmentWeights;
-        this.gradeThresholds = gradeThresholds;
+        this.gradeThresholds   = gradeThresholds;
 
         // update the Section in the database
+        DBHelper db = new DBHelper(context);
         ContentValues updateValues = new ContentValues();
         updateValues.put(DBHelper.KEY_SECTIONS_NAME, sectionName);
         updateValues.put(DBHelper.KEY_SECTIONS_WEIGHT_HOMEWORK,
@@ -228,8 +222,8 @@ public class Section {
 
     public void addAssignment(Context context, Assignment assignment, int termPosition,
                               int sectionPosition, int assignmentPosition) {
-        DBHelper db = new DBHelper(context);
         assignments.add(assignment);
+        DBHelper db = new DBHelper(context);
         db.addAssignment(assignment, termPosition, sectionPosition, assignmentPosition);
 
         // convert the assignment type from String to int
@@ -244,7 +238,7 @@ public class Section {
 
         // if there is not current score then initialize the score and max score to 0
         if (currentScore == null) {
-            currentScore = 0.0;
+            currentScore    = 0.0;
             currentMaxScore = 0.0;
         }
 
@@ -313,15 +307,15 @@ public class Section {
 
     public void addDueDate(Context context, DueDate dueDate, int termPosition,
                            int sectionPosition, int dueDatePosition) {
-        DBHelper db = new DBHelper(context);
         dueDates.add(dueDate);
+        DBHelper db = new DBHelper(context);
         db.addDueDate(dueDate, termPosition, sectionPosition, dueDatePosition);
     }
 
     public void removeDueDate(Context context, int termPosition, int sectionPosition,
                               int dueDatePosition) {
-        DBHelper db = new DBHelper(context);
         dueDates.remove(dueDatePosition);
+        DBHelper db = new DBHelper(context);
         db.removeDueDate(termPosition, sectionPosition, dueDatePosition);
     }
 
@@ -351,7 +345,7 @@ public class Section {
     private String calculateGrade() {
         // get the weighted scores for each assignment type
         totalScore = 0;
-        maxScore = 0;
+        maxScore   = 0;
         int[] assignmentTypes = {HOMEWORK, QUIZ, MIDTERM, FINAL, PROJECT, OTHER};
         for (int assignmentType : assignmentTypes) {
             // skip this type if there are no scores for it

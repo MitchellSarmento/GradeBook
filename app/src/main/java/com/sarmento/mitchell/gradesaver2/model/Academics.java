@@ -47,10 +47,10 @@ public class Academics {
     // load from the database
     private void loadData(Context context) {
         if (!loaded) {
-            DBHelper db = new DBHelper(context);
-            currentTerms = db.getTerms(false);
+            DBHelper db   = new DBHelper(context);
+            currentTerms  = db.getTerms(false);
             archivedTerms = db.getTerms(true);
-            loaded = true;
+            loaded        = true;
         }
     }
 
@@ -59,14 +59,16 @@ public class Academics {
     }
 
     public void addTerm(Context context, Term term, int termPosition) {
-        DBHelper db = new DBHelper(context);
         currentTerms.add(term);
+
+        DBHelper db = new DBHelper(context);
         db.addTerm(term, termPosition);
     }
 
     public void removeTerm(Context context, int termPosition) {
-        DBHelper db = new DBHelper(context);
         currentTerms.remove(termPosition);
+
+        DBHelper db = new DBHelper(context);
         db.removeTerm(termPosition);
     }
 }

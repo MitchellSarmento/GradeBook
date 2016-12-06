@@ -1,11 +1,9 @@
 package com.sarmento.mitchell.gradesaver2.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.buttons.SectionButton;

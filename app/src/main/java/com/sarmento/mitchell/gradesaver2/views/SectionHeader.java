@@ -3,7 +3,6 @@ package com.sarmento.mitchell.gradesaver2.views;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 

@@ -15,7 +15,7 @@ public class Schedule {
 
         private int value;
 
-        private Day(int value) {
+        Day(int value) {
             this.value = value;
         }
 

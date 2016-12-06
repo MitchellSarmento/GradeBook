@@ -18,9 +18,6 @@ import com.sarmento.mitchell.gradesaver2.model.DueDate;
 import com.sarmento.mitchell.gradesaver2.model.Section;
 
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 public class DueDateDialogFragment extends DialogFragment {
     private int termPosition;
@@ -36,7 +33,7 @@ public class DueDateDialogFragment extends DialogFragment {
         final Bundle arguments    = getArguments();
         final boolean editing     = arguments.containsKey(OptionsDialogFragment.EDITING);
 
-        termPosition = getArguments().getInt(Academics.TERM_POSITION);
+        termPosition    = getArguments().getInt(Academics.TERM_POSITION);
         sectionPosition = getArguments().getInt(Academics.SECTION_POSITION);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

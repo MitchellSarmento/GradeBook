@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.View;
 
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.activities.AssignmentsActivity;
@@ -56,7 +55,7 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        context = getActivity();
+        context  = getActivity();
         itemType = getArguments().getInt(ITEM_TYPE);
         getPositions();
         String[] options = getOptions();

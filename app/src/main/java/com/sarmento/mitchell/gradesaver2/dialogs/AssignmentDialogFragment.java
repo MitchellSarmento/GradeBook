@@ -35,7 +35,7 @@ public class AssignmentDialogFragment extends DialogFragment {
         final Bundle arguments    = getArguments();
         final boolean editing     = arguments.containsKey(OptionsDialogFragment.EDITING);
 
-        termPosition = getArguments().getInt(Academics.TERM_POSITION);
+        termPosition    = getArguments().getInt(Academics.TERM_POSITION);
         sectionPosition = getArguments().getInt(Academics.SECTION_POSITION);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);

@@ -14,21 +14,21 @@ public class Assignment {
     public Assignment(String assignmentName, String assignmentType, double score, double maxScore, String grade) {
         this.assignmentName = assignmentName;
         this.assignmentType = assignmentType;
-        this.score = score;
-        this.maxScore = maxScore;
-        this.grade = grade;
+        this.score          = score;
+        this.maxScore       = maxScore;
+        this.grade          = grade;
     }
 
     public void updateAssignment(Context context, String assignmentName,
                                  double score, double maxScore, String assignmentType,
                                  int termPosition, int sectionPosition, int assignmentPosition) {
-        DBHelper db = new DBHelper(context);
         this.assignmentName = assignmentName;
-        this.score = score;
-        this.maxScore = maxScore;
+        this.score          = score;
+        this.maxScore       = maxScore;
         this.assignmentType = assignmentType;
 
         // update the Assignment in the database
+        DBHelper db = new DBHelper(context);
         ContentValues updateValues = new ContentValues();
         updateValues.put(DBHelper.KEY_ASSIGNMENTS_NAME, assignmentName);
         updateValues.put(DBHelper.KEY_ASSIGNMENTS_SCORE, score);

@@ -17,7 +17,6 @@ import com.sarmento.mitchell.gradesaver2.model.Schedule;
 import com.sarmento.mitchell.gradesaver2.model.Term;
 
 public class ScheduleEditActivity extends AppCompatActivity {
-    private int termPosition;
     private ScheduleEditAdapter adapter;
 
     @Override
@@ -25,7 +24,7 @@ public class ScheduleEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule_edit);
 
-        termPosition = getIntent().getIntExtra(Academics.TERM_POSITION, -1);
+        int termPosition = getIntent().getIntExtra(Academics.TERM_POSITION, -1);
 
         Term term = Academics.getInstance().getCurrentTerms().get(termPosition);
         setTitle(term.getTermName());

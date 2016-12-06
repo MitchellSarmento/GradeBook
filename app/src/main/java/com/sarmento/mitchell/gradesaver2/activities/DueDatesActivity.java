@@ -24,7 +24,7 @@ public class DueDatesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_due_dates);
 
-        termPosition = getIntent().getIntExtra(Academics.TERM_POSITION, -1);
+        termPosition    = getIntent().getIntExtra(Academics.TERM_POSITION, -1);
         sectionPosition = getIntent().getIntExtra(Academics.SECTION_POSITION, -1);
 
         Section section = Academics.getInstance().getCurrentTerms().get(termPosition)

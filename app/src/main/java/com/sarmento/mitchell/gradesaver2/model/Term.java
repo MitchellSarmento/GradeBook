@@ -15,8 +15,8 @@ public class Term {
     // constructor for creating a new term
     public Term(String termName) {
         this.termName = termName;
-        archived = false;
-        sections = new ArrayList<>();
+        archived      = false;
+        sections      = new ArrayList<>();
     }
 
     // constructor for loading an existing term
@@ -31,10 +31,10 @@ public class Term {
     }
 
     public void setTermName(Context context, String termName, int termPosition) {
-        DBHelper db = new DBHelper(context);
         this.termName = termName;
 
         // update the Term in the database
+        DBHelper db = new DBHelper(context);
         ContentValues updateValues = new ContentValues();
         updateValues.put(DBHelper.KEY_TERMS_NAME, termName);
         db.updateTerm(updateValues, termPosition);
@@ -45,14 +45,16 @@ public class Term {
     }
 
     public void addSection(Context context, Section section, int termPosition, int sectionPosition) {
-        DBHelper db = new DBHelper(context);
         sections.add(section);
+
+        DBHelper db = new DBHelper(context);
         db.addSection(section, termPosition, sectionPosition);
     }
 
     public void removeSection(Context context, int termPosition, int sectionPosition) {
-        DBHelper db = new DBHelper(context);
         sections.remove(sectionPosition);
+
+        DBHelper db = new DBHelper(context);
         db.removeSection(termPosition, sectionPosition);
     }
 

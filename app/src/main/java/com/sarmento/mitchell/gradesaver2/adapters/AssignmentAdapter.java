@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.buttons.AssignmentButton;
 import com.sarmento.mitchell.gradesaver2.model.Assignment;
-import com.sarmento.mitchell.gradesaver2.model.Section;
 
 import java.util.List;
 

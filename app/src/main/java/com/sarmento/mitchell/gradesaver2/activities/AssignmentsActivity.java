@@ -28,7 +28,7 @@ public class AssignmentsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assignments);
 
-        termPosition = getIntent().getIntExtra(Academics.TERM_POSITION, -1);
+        termPosition    = getIntent().getIntExtra(Academics.TERM_POSITION, -1);
         sectionPosition = getIntent().getIntExtra(Academics.SECTION_POSITION, -1);
 
         section = Academics.getInstance().getCurrentTerms().get(termPosition)
