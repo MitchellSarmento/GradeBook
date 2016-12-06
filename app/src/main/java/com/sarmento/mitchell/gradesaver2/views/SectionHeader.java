@@ -14,6 +14,7 @@ import java.util.Locale;
 
 public class SectionHeader extends LinearLayout {
     private Context context;
+    private Section section;
     private TextView gradeThresholdA;
     private TextView gradeThresholdB;
     private TextView gradeThresholdC;
@@ -46,6 +47,8 @@ public class SectionHeader extends LinearLayout {
     }
 
     public void init(Section section) {
+        this.section = section;
+
         SparseArray<Double> gradeThresholds = section.getGradeThresholds();
         gradeThresholdA.setText(context.getString(R.string.a) + " " +
                 gradeThresholds.get(Section.HIGH_A) + " - " + gradeThresholds.get(Section.LOW_A));
@@ -68,27 +71,27 @@ public class SectionHeader extends LinearLayout {
 
         String scoreString;
 
-        scoreString = section.scoreToString(scores.get(Section.HOMEWORK),
+        scoreString = scoreToString(scores.get(Section.HOMEWORK),
                 maxScores.get(Section.HOMEWORK), Section.HOMEWORK);
         scoreHomework.setText(scoreString + "/" + assignmentWeights.get(Section.HOMEWORK) + "%");
 
-        scoreString = section.scoreToString(scores.get(Section.QUIZ),
+        scoreString = scoreToString(scores.get(Section.QUIZ),
                 maxScores.get(Section.QUIZ), Section.QUIZ);
         scoreQuiz.setText(scoreString + "/" + assignmentWeights.get(Section.QUIZ) + "%");
 
-        scoreString = section.scoreToString(scores.get(Section.MIDTERM),
+        scoreString = scoreToString(scores.get(Section.MIDTERM),
                 maxScores.get(Section.MIDTERM), Section.MIDTERM);
         scoreMidterm.setText(scoreString + "/" + assignmentWeights.get(Section.MIDTERM) + "%");
 
-        scoreString = section.scoreToString(scores.get(Section.FINAL),
+        scoreString = scoreToString(scores.get(Section.FINAL),
                 maxScores.get(Section.FINAL), Section.FINAL);
         scoreFinal.setText(scoreString + "/" + assignmentWeights.get(Section.FINAL) + "%");
 
-        scoreString = section.scoreToString(scores.get(Section.PROJECT),
+        scoreString = scoreToString(scores.get(Section.PROJECT),
                 maxScores.get(Section.PROJECT), Section.PROJECT);
         scoreProject.setText(scoreString + "/" + assignmentWeights.get(Section.PROJECT) + "%");
 
-        scoreString = section.scoreToString(scores.get(Section.OTHER),
+        scoreString = scoreToString(scores.get(Section.OTHER),
                 maxScores.get(Section.OTHER), Section.OTHER);
         scoreOther.setText(scoreString + "/" + assignmentWeights.get(Section.OTHER) + "%");
 
@@ -101,5 +104,13 @@ public class SectionHeader extends LinearLayout {
                     section.getGrade();
         }
         grade.setText(context.getText(R.string.total) + " " + scoreString);
+    }
+
+    public String scoreToString(Double score, Double maxScore, int assignmentType) {
+        if (score == null || maxScore == null || maxScore == 0) {
+            return "-";
+        }
+        return String.format(Locale.getDefault(), "%.2f",
+                score / maxScore * section.getAssignmentWeights().get(assignmentType));
     }
 }

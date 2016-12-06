@@ -348,14 +348,6 @@ public class Section {
         return assignmentTypes;
     }
 
-    public String scoreToString(Double score, Double maxScore, int assignmentType) {
-        if (score == null || maxScore == null || maxScore == 0) {
-            return "-";
-        }
-        return String.format(Locale.getDefault(), "%.2f",
-                score / maxScore * assignmentWeights.get(assignmentType));
-    }
-
     private String calculateGrade() {
         // get the weighted scores for each assignment type
         totalScore = 0;
