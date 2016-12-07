@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.sarmento.mitchell.gradesaver2.R;
@@ -31,7 +32,7 @@ public class TermDialogFragment extends DialogFragment {
 
         // set layout
         LayoutInflater inflater = activity.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_term, null);
+        final View dialogView = inflater.inflate(R.layout.dialog_term, null);
         builder.setView(dialogView);
 
         // get relevant views
@@ -45,37 +46,66 @@ public class TermDialogFragment extends DialogFragment {
             termNameEntry.setText(term.getTermName());
         }
 
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.setPositiveButton(R.string.confirm, null);
+
+        final AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
+            public void onShow(DialogInterface dialogInterface) {
+                Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+
+                negativeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // get user input
+                        String termName = termNameEntry.getText().toString();
+
+                        InputCheck inputCheck = validateInput(termName);
+                        if (inputCheck == InputCheck.VALID) {
+                            // check if editing
+                            if (editing) {
+                                // edit existing Term
+                                term.setTermName(activity, termName, termPosition);
+                                ((TermsActivity) activity).updateList();
+                            } else {
+                                // create new Term
+                                term = new Term(termName);
+
+                                // add new Term
+                                termPosition = academics.getCurrentTerms().size();
+                                academics.addTerm(activity, term, termPosition);
+                            }
+                            dialog.dismiss();
+                        } else if (inputCheck == InputCheck.ERROR_NO_NAME) {
+                            dialogView.findViewById(R.id.error_term_no_name)
+                                    .setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
             }
         });
 
-        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                // get user input
-                String termName = termNameEntry.getText().toString();
+        return dialog;
+    }
 
-                // check if editing
-                if (editing) {
-                    // edit existing Term
-                    term.setTermName(activity, termName, termPosition);
-                    ((TermsActivity) activity).updateList();
-                } else {
-                    // create new Term
-                    term = new Term(termName);
+    private enum InputCheck {
+        VALID, ERROR_NO_NAME;
+    }
 
-                    // add new Term
-                    termPosition = academics.getCurrentTerms().size();
-                    academics.addTerm(activity, term, termPosition);
-                }
-
-                dialog.dismiss();
-            }
-        });
-
-        return builder.create();
+    private InputCheck validateInput(String termName) {
+        if (termName.trim().equals("")) {
+            return InputCheck.ERROR_NO_NAME;
+        } else {
+            return InputCheck.VALID;
+        }
     }
 }

@@ -96,6 +96,12 @@
         <item>Delete</item>
     </string-array>
 
+    <!-- Error Messages -->
+    <string name="error_term_no_name">Please enter a Term name</string>
+    <string name="error_section_no_name">Please enter a Section name</string>
+    <string name="error_section_assignment_weights">Assignment weights do not total 100%</string>
+    <string name="error_section_grade_thresholds">Invalid grade thresholds</string>
+
     <!-- License Information -->
     <string name="in_app_icons_google">In-app Icons by Google</string>
     <string name="in_app_icons_google_license">https://creativecommons.org/licenses/by/4.0/</string>

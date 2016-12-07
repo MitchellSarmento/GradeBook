@@ -55,31 +55,14 @@ public class AssignmentDialogFragment extends DialogFragment {
         final Section section = academics.getCurrentTerms().get(termPosition)
                 .getSections().get(sectionPosition);
         List<Integer> relevantTypes = section.getRelevantAssignmentTypes();
+
+        int[] stringIds = {R.string.homework, R.string.quiz, R.string.midterm,
+                R.string.string_final, R.string.project, R.string.other};
         List<String> types = new ArrayList<>();
         for (int type : relevantTypes) {
-            switch (type) {
-                case Section.HOMEWORK:
-                    types.add(getString(R.string.homework));
-                    break;
-                case Section.QUIZ:
-                    types.add(getString(R.string.quiz));
-                    break;
-                case Section.MIDTERM:
-                    types.add(getString(R.string.midterm));
-                    break;
-                case Section.FINAL:
-                    types.add(getString(R.string.string_final));
-                    break;
-                case Section.PROJECT:
-                    types.add(getString(R.string.project));
-                    break;
-                case Section.OTHER:
-                    types.add(getString(R.string.other));
-                    break;
-                default:
-                    break;
-            }
+            types.add(getString(stringIds[type]));
         }
+
         ArrayAdapter<String> typesAdapter = new ArrayAdapter<>(activity,
                 android.R.layout.simple_spinner_item, types);
         typesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

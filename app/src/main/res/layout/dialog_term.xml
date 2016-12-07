@@ -15,6 +15,15 @@
         android:inputType="textCapSentences"
         android:hint="@string/term"
         android:selectAllOnFocus="true"
-        android:ems="10"
-        android:id="@+id/term_entry" />
+        android:id="@+id/term_entry"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:textSize="12sp"
+        android:textColor="@android:color/holo_red_light"
+        android:text="@string/error_term_no_name"
+        android:visibility="gone"
+        android:id="@+id/error_term_no_name"/>
 </LinearLayout>

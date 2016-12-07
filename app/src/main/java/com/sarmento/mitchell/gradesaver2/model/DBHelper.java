@@ -47,12 +47,21 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String KEY_SECTIONS_LOW_D              = "lowD";
     public static final String KEY_SECTIONS_HIGH_F             = "highF";
     public static final String KEY_SECTIONS_LOW_F              = "lowF";
+    public static final String[] KEY_SECTIONS_GRADE_THRESHOLDS = {
+            KEY_SECTIONS_HIGH_A, KEY_SECTIONS_LOW_A, KEY_SECTIONS_HIGH_B, KEY_SECTIONS_LOW_B,
+            KEY_SECTIONS_HIGH_C, KEY_SECTIONS_LOW_C, KEY_SECTIONS_HIGH_D, KEY_SECTIONS_LOW_D,
+            KEY_SECTIONS_HIGH_F, KEY_SECTIONS_LOW_F
+    };
     public static final String KEY_SECTIONS_WEIGHT_HOMEWORK    = "weightHomework";
     public static final String KEY_SECTIONS_WEIGHT_QUIZ        = "weightQuiz";
     public static final String KEY_SECTIONS_WEIGHT_MIDTERM     = "weightMidterm";
     public static final String KEY_SECTIONS_WEIGHT_FINAL       = "weightFinal";
     public static final String KEY_SECTIONS_WEIGHT_PROJECT     = "weightProject";
     public static final String KEY_SECTIONS_WEIGHT_OTHER       = "weightOther";
+    public static final String[] KEY_SECTIONS_WEIGHTS          = {
+            KEY_SECTIONS_WEIGHT_HOMEWORK, KEY_SECTIONS_WEIGHT_QUIZ, KEY_SECTIONS_WEIGHT_MIDTERM,
+            KEY_SECTIONS_WEIGHT_FINAL, KEY_SECTIONS_WEIGHT_PROJECT, KEY_SECTIONS_WEIGHT_OTHER
+    };
     public static final String KEY_SECTIONS_SCORE_HOMEWORK     = "scoreHomework";
     public static final String KEY_SECTIONS_MAX_SCORE_HOMEWORK = "maxScoreHomework";
     public static final String KEY_SECTIONS_SCORE_QUIZ         = "scoreQuiz";
@@ -65,6 +74,14 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String KEY_SECTIONS_MAX_SCORE_PROJECT  = "maxScoreProject";
     public static final String KEY_SECTIONS_SCORE_OTHER        = "scoreOther";
     public static final String KEY_SECTIONS_MAX_SCORE_OTHER    = "maxScoreOther";
+    public static final String[] KEY_SECTIONS_SCORES             = {
+            KEY_SECTIONS_SCORE_HOMEWORK, KEY_SECTIONS_MAX_SCORE_HOMEWORK,
+            KEY_SECTIONS_SCORE_QUIZ, KEY_SECTIONS_MAX_SCORE_QUIZ,
+            KEY_SECTIONS_SCORE_MIDTERM, KEY_SECTIONS_MAX_SCORE_MIDTERM,
+            KEY_SECTIONS_SCORE_FINAL, KEY_SECTIONS_MAX_SCORE_FINAL,
+            KEY_SECTIONS_SCORE_PROJECT, KEY_SECTIONS_MAX_SCORE_PROJECT,
+            KEY_SECTIONS_SCORE_OTHER, KEY_SECTIONS_MAX_SCORE_OTHER
+    };
     public static final String KEY_SECTIONS_SCORE_TOTAL        = "scoreTotal";
     public static final String KEY_SECTIONS_MAX_SCORE_TOTAL    = "maxScoreTotal";
     public static final String KEY_SECTIONS_GRADE              = "grade";
@@ -263,40 +280,22 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(KEY_SECTIONS_NAME, section.getSectionName());
 
         SparseArray<Double> gradeThresholds = section.getGradeThresholds();
-        values.put(KEY_SECTIONS_HIGH_A, gradeThresholds.get(Section.HIGH_A));
-        values.put(KEY_SECTIONS_LOW_A, gradeThresholds.get(Section.LOW_A));
-        values.put(KEY_SECTIONS_HIGH_B, gradeThresholds.get(Section.HIGH_B));
-        values.put(KEY_SECTIONS_LOW_B, gradeThresholds.get(Section.LOW_B));
-        values.put(KEY_SECTIONS_HIGH_C, gradeThresholds.get(Section.HIGH_C));
-        values.put(KEY_SECTIONS_LOW_C, gradeThresholds.get(Section.LOW_C));
-        values.put(KEY_SECTIONS_HIGH_D, gradeThresholds.get(Section.HIGH_D));
-        values.put(KEY_SECTIONS_LOW_D, gradeThresholds.get(Section.LOW_D));
-        values.put(KEY_SECTIONS_HIGH_F, gradeThresholds.get(Section.HIGH_F));
-        values.put(KEY_SECTIONS_LOW_F, gradeThresholds.get(Section.LOW_F));
+        for (Section.GradeThreshold threshold : Section.GradeThreshold.values()) {
+            int thresholdValue = threshold.getValue();
+            values.put(KEY_SECTIONS_GRADE_THRESHOLDS[thresholdValue],
+                    gradeThresholds.get(thresholdValue));
+        }
 
         SparseArray<Double> assignmentWeights = section.getAssignmentWeights();
-        values.put(KEY_SECTIONS_WEIGHT_HOMEWORK, assignmentWeights.get(Section.HOMEWORK));
-        values.put(KEY_SECTIONS_WEIGHT_QUIZ, assignmentWeights.get(Section.QUIZ));
-        values.put(KEY_SECTIONS_WEIGHT_MIDTERM, assignmentWeights.get(Section.MIDTERM));
-        values.put(KEY_SECTIONS_WEIGHT_FINAL, assignmentWeights.get(Section.FINAL));
-        values.put(KEY_SECTIONS_WEIGHT_PROJECT, assignmentWeights.get(Section.PROJECT));
-        values.put(KEY_SECTIONS_WEIGHT_OTHER, assignmentWeights.get(Section.OTHER));
-
         SparseArray<Double> scores = section.getScores();
-        values.put(KEY_SECTIONS_SCORE_HOMEWORK, scores.get(Section.HOMEWORK));
-        values.put(KEY_SECTIONS_SCORE_QUIZ, scores.get(Section.QUIZ));
-        values.put(KEY_SECTIONS_SCORE_MIDTERM, scores.get(Section.MIDTERM));
-        values.put(KEY_SECTIONS_SCORE_FINAL, scores.get(Section.FINAL));
-        values.put(KEY_SECTIONS_SCORE_PROJECT, scores.get(Section.PROJECT));
-        values.put(KEY_SECTIONS_SCORE_OTHER, scores.get(Section.OTHER));
-
         SparseArray<Double> maxScores = section.getMaxScores();
-        values.put(KEY_SECTIONS_MAX_SCORE_HOMEWORK, maxScores.get(Section.HOMEWORK));
-        values.put(KEY_SECTIONS_MAX_SCORE_QUIZ, maxScores.get(Section.QUIZ));
-        values.put(KEY_SECTIONS_MAX_SCORE_MIDTERM, maxScores.get(Section.MIDTERM));
-        values.put(KEY_SECTIONS_MAX_SCORE_FINAL, maxScores.get(Section.FINAL));
-        values.put(KEY_SECTIONS_MAX_SCORE_PROJECT, maxScores.get(Section.PROJECT));
-        values.put(KEY_SECTIONS_MAX_SCORE_OTHER, maxScores.get(Section.OTHER));
+        for (Section.AssignmentType type : Section.AssignmentType.values()) {
+            int typeValue = type.getValue();
+            values.put(KEY_SECTIONS_WEIGHTS[typeValue],
+                    assignmentWeights.get(typeValue));
+            values.put(KEY_SECTIONS_SCORES[typeValue*2], scores.get(typeValue));
+            values.put(KEY_SECTIONS_SCORES[typeValue*2+1], maxScores.get(typeValue));
+        }
 
         values.put(KEY_SECTIONS_SCORE_TOTAL, section.getTotalScore());
         values.put(KEY_SECTIONS_MAX_SCORE_TOTAL, section.getMaxScore());

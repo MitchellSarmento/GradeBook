@@ -71,14 +71,14 @@ public class SectionButton extends Button implements View.OnClickListener, View.
     private int getButtonColor(double scorePercent) {
         SparseArray<Double> gradeThresholds = section.getGradeThresholds();
 
-        if (scorePercent >= gradeThresholds.get(Section.LOW_A) ||
+        if (scorePercent >= gradeThresholds.get(Section.GradeThreshold.LOW_A.getValue()) ||
                 Double.isNaN(scorePercent)) {
             return R.color.color_a;
-        } else if (scorePercent >= gradeThresholds.get(Section.LOW_B)) {
+        } else if (scorePercent >= gradeThresholds.get(Section.GradeThreshold.LOW_B.getValue())) {
             return R.color.color_b;
-        } else if (scorePercent >= gradeThresholds.get(Section.LOW_C)) {
+        } else if (scorePercent >= gradeThresholds.get(Section.GradeThreshold.LOW_C.getValue())) {
             return R.color.color_c;
-        } else if (scorePercent >= gradeThresholds.get(Section.LOW_D)) {
+        } else if (scorePercent >= gradeThresholds.get(Section.GradeThreshold.LOW_D.getValue())) {
             return R.color.color_d;
         } else {
             return R.color.color_f;

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.sarmento.mitchell.gradesaver2.R;
@@ -40,111 +41,143 @@ public class SectionDialogFragment extends DialogFragment {
         builder.setView(dialogView);
 
         // get relevant views
-        final EditText sectionNameEntry    = (EditText) dialogView.findViewById(R.id.section_entry);
-        final EditText weightHomeworkEntry = (EditText) dialogView.findViewById(R.id.weight_homework);
-        final EditText weightQuizzesEntry  = (EditText) dialogView.findViewById(R.id.weight_quizzes);
-        final EditText weightMidtermEntry  = (EditText) dialogView.findViewById(R.id.weight_midterm);
-        final EditText weightFinalEntry    = (EditText) dialogView.findViewById(R.id.weight_final);
-        final EditText weightProjectEntry  = (EditText) dialogView.findViewById(R.id.weight_project);
-        final EditText weightOtherEntry    = (EditText) dialogView.findViewById(R.id.weight_other);
-        final EditText highAEntry          = (EditText) dialogView.findViewById(R.id.high_a);
-        final EditText lowAEntry           = (EditText) dialogView.findViewById(R.id.low_a);
-        final EditText highBEntry          = (EditText) dialogView.findViewById(R.id.high_b);
-        final EditText lowBEntry           = (EditText) dialogView.findViewById(R.id.low_b);
-        final EditText highCEntry          = (EditText) dialogView.findViewById(R.id.high_c);
-        final EditText lowCEntry           = (EditText) dialogView.findViewById(R.id.low_c);
-        final EditText highDEntry          = (EditText) dialogView.findViewById(R.id.high_d);
-        final EditText lowDEntry           = (EditText) dialogView.findViewById(R.id.low_d);
-        final EditText highFEntry          = (EditText) dialogView.findViewById(R.id.high_f);
-        final EditText lowFEntry           = (EditText) dialogView.findViewById(R.id.low_f);
+        final EditText sectionNameEntry  = (EditText) dialogView.findViewById(R.id.section_entry);
+        final EditText[] weightEntries   = {
+                (EditText) dialogView.findViewById(R.id.weight_homework),
+                (EditText) dialogView.findViewById(R.id.weight_quizzes),
+                (EditText) dialogView.findViewById(R.id.weight_midterm),
+                (EditText) dialogView.findViewById(R.id.weight_final),
+                (EditText) dialogView.findViewById(R.id.weight_project),
+                (EditText) dialogView.findViewById(R.id.weight_other)
+        };
+        final EditText[] thresholdEntries = {
+                (EditText) dialogView.findViewById(R.id.high_a),
+                (EditText) dialogView.findViewById(R.id.low_a),
+                (EditText) dialogView.findViewById(R.id.high_b),
+                (EditText) dialogView.findViewById(R.id.low_b),
+                (EditText) dialogView.findViewById(R.id.high_c),
+                (EditText) dialogView.findViewById(R.id.low_c),
+                (EditText) dialogView.findViewById(R.id.high_d),
+                (EditText) dialogView.findViewById(R.id.low_d),
+                (EditText) dialogView.findViewById(R.id.high_f),
+                (EditText) dialogView.findViewById(R.id.low_f)
+        };
 
         // set fields if editing
         if (editing) {
             sectionPosition = arguments.getInt(Academics.SECTION_POSITION);
             section = academics.getCurrentTerms().get(termPosition)
                     .getSections().get(sectionPosition);
-            SparseArray<Double> assignmentWeights = section.getAssignmentWeights();
-            SparseArray<Double> gradeThresholds   = section.getGradeThresholds();
-
             sectionNameEntry.setText(section.getSectionName());
-            weightHomeworkEntry.setText(String.valueOf(assignmentWeights.get(Section.HOMEWORK)));
-            weightQuizzesEntry.setText(String.valueOf(assignmentWeights.get(Section.QUIZ)));
-            weightMidtermEntry.setText(String.valueOf(assignmentWeights.get(Section.MIDTERM)));
-            weightFinalEntry.setText(String.valueOf(assignmentWeights.get(Section.FINAL)));
-            weightProjectEntry.setText(String.valueOf(assignmentWeights.get(Section.PROJECT)));
-            weightOtherEntry.setText(String.valueOf(assignmentWeights.get(Section.OTHER)));
-            highAEntry.setText(String.valueOf(gradeThresholds.get(Section.HIGH_A)));
-            lowAEntry.setText(String.valueOf(gradeThresholds.get(Section.LOW_A)));
-            highBEntry.setText(String.valueOf(gradeThresholds.get(Section.HIGH_B)));
-            lowBEntry.setText(String.valueOf(gradeThresholds.get(Section.LOW_B)));
-            highCEntry.setText(String.valueOf(gradeThresholds.get(Section.HIGH_C)));
-            lowCEntry.setText(String.valueOf(gradeThresholds.get(Section.LOW_C)));
-            highDEntry.setText(String.valueOf(gradeThresholds.get(Section.HIGH_D)));
-            lowDEntry.setText(String.valueOf(gradeThresholds.get(Section.LOW_D)));
-            highFEntry.setText(String.valueOf(gradeThresholds.get(Section.HIGH_F)));
-            lowFEntry.setText(String.valueOf(gradeThresholds.get(Section.LOW_F)));
+
+            SparseArray<Double> assignmentWeights = section.getAssignmentWeights();
+            for (Section.AssignmentType type : Section.AssignmentType.values()) {
+                int typeValue = type.getValue();
+                weightEntries[typeValue].setText(
+                        String.valueOf(assignmentWeights.get(typeValue)));
+            }
+
+            SparseArray<Double> gradeThresholds   = section.getGradeThresholds();
+            for (Section.GradeThreshold threshold : Section.GradeThreshold.values()) {
+                int thresholdValue = threshold.getValue();
+                thresholdEntries[thresholdValue].setText(
+                        String.valueOf(gradeThresholds.get(thresholdValue)));
+            }
         }
 
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.setPositiveButton(R.string.confirm, null);
+
+        final AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
+            public void onShow(DialogInterface dialogInterface) {
+                Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+
+                negativeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // get user input
+                        String sectionName = sectionNameEntry.getText().toString();
+
+                        SparseArray<Double> assignmentWeights = new SparseArray<>();
+                        for (Section.AssignmentType type : Section.AssignmentType.values()) {
+                            int typeValue = type.getValue();
+                            assignmentWeights.put(typeValue,
+                                    Double.valueOf(weightEntries[typeValue].getText().toString()));
+                        }
+
+                        SparseArray<Double> gradeThresholds = new SparseArray<>();
+                        for (Section.GradeThreshold threshold : Section.GradeThreshold.values()) {
+                            int thresholdValue = threshold.getValue();
+                            gradeThresholds.put(thresholdValue,
+                                    Double.valueOf(thresholdEntries[thresholdValue].getText().toString()));
+                        }
+
+                        InputCheck inputCheck = validateInput(sectionName, assignmentWeights, gradeThresholds);
+                        if (inputCheck == InputCheck.VALID) {
+                            // check if editing
+                            if (editing) {
+                                // edit existing Section
+                                section.updateSection(activity, sectionName, assignmentWeights, gradeThresholds,
+                                        termPosition, sectionPosition);
+                                ((SectionsActivity) activity).updateList();
+                            } else {
+                                // create new Section
+                                section = new Section(sectionName, assignmentWeights, gradeThresholds);
+
+                                // add new Section
+                                Term term = academics.getCurrentTerms().get(termPosition);
+                                sectionPosition = term.getSections().size();
+                                term.addSection(activity, section, termPosition, sectionPosition);
+                                ((SectionsActivity) activity).updateList();
+                            }
+                            dialog.dismiss();
+                        } else if (inputCheck == InputCheck.ERROR_NO_NAME) {
+
+                        } else if (inputCheck == InputCheck.ERROR_ASSIGNMENT_WEIGHTS) {
+
+                        } else if (inputCheck == InputCheck.ERROR_GRADE_THRESHOLDS) {
+
+                        }
+                    }
+                });
             }
         });
 
-        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                // get user input
-                String sectionName = sectionNameEntry.getText().toString();
+        return dialog;
+    }
 
-                SparseArray<Double> assignmentWeights = new SparseArray<>();
-                assignmentWeights.put(Section.HOMEWORK,
-                        Double.valueOf(weightHomeworkEntry.getText().toString()));
-                assignmentWeights.put(Section.QUIZ,
-                        Double.valueOf(weightQuizzesEntry.getText().toString()));
-                assignmentWeights.put(Section.MIDTERM,
-                        Double.valueOf(weightMidtermEntry.getText().toString()));
-                assignmentWeights.put(Section.FINAL,
-                        Double.valueOf(weightFinalEntry.getText().toString()));
-                assignmentWeights.put(Section.PROJECT,
-                        Double.valueOf(weightProjectEntry.getText().toString()));
-                assignmentWeights.put(Section.OTHER,
-                        Double.valueOf(weightOtherEntry.getText().toString()));
+    /*private enum InputCheck {
+        VALID, ERROR_NO_NAME;
+    }
 
-                SparseArray<Double> gradeThresholds = new SparseArray<>();
-                gradeThresholds.put(Section.HIGH_A, Double.valueOf(highAEntry.getText().toString()));
-                gradeThresholds.put(Section.LOW_A, Double.valueOf(lowAEntry.getText().toString()));
-                gradeThresholds.put(Section.HIGH_B, Double.valueOf(highBEntry.getText().toString()));
-                gradeThresholds.put(Section.LOW_B, Double.valueOf(lowBEntry.getText().toString()));
-                gradeThresholds.put(Section.HIGH_C, Double.valueOf(highCEntry.getText().toString()));
-                gradeThresholds.put(Section.LOW_C, Double.valueOf(lowCEntry.getText().toString()));
-                gradeThresholds.put(Section.HIGH_D, Double.valueOf(highDEntry.getText().toString()));
-                gradeThresholds.put(Section.LOW_D, Double.valueOf(lowDEntry.getText().toString()));
-                gradeThresholds.put(Section.HIGH_F, Double.valueOf(highFEntry.getText().toString()));
-                gradeThresholds.put(Section.LOW_F, Double.valueOf(lowFEntry.getText().toString()));
+    private InputCheck validateInput(String termName) {
+        if (termName.trim().equals("")) {
+            return InputCheck.ERROR_NO_NAME;
+        } else {
+            return InputCheck.VALID;
+        }
+    }*/
 
-                // check if editing
-                if (editing) {
-                    // edit existing Section
-                    section.updateSection(activity, sectionName, assignmentWeights, gradeThresholds,
-                            termPosition, sectionPosition);
-                    ((SectionsActivity) activity).updateList();
-                } else {
-                    // create new Section
-                    section = new Section(sectionName, assignmentWeights, gradeThresholds);
+    private enum InputCheck {
+        VALID, ERROR_NO_NAME, ERROR_ASSIGNMENT_WEIGHTS, ERROR_GRADE_THRESHOLDS;
+    }
 
-                    // add new Section
-                    Term term = academics.getCurrentTerms().get(termPosition);
-                    sectionPosition = term.getSections().size();
-                    term.addSection(activity, section, termPosition, sectionPosition);
-                    ((SectionsActivity) activity).updateList();
-                }
+    private InputCheck validateInput(String sectionName, SparseArray<Double> assignmentWeights,
+                                     SparseArray<Double> gradeThresholds) {
+        if (sectionName.trim().equals("")) {
+            return InputCheck.ERROR_NO_NAME;
+        }
 
-                dialog.dismiss();
-            }
-        });
-
-        return builder.create();
+        return InputCheck.VALID;
     }
 }

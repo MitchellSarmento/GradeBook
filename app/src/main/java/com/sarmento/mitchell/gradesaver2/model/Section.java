@@ -11,23 +11,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Section {
-    public static final int HIGH_A = 0;
-    public static final int LOW_A  = 1;
-    public static final int HIGH_B = 2;
-    public static final int LOW_B  = 3;
-    public static final int HIGH_C = 4;
-    public static final int LOW_C  = 5;
-    public static final int HIGH_D = 6;
-    public static final int LOW_D  = 7;
-    public static final int HIGH_F = 8;
-    public static final int LOW_F  = 9;
+    public enum GradeThreshold {
+        HIGH_A(0), LOW_A(1), HIGH_B(2), LOW_B(3), HIGH_C(4), LOW_C(5),
+        HIGH_D(6), LOW_D(7), HIGH_F(8), LOW_F(9);
 
-    public static final int HOMEWORK = 0;
-    public static final int QUIZ     = 1;
-    public static final int MIDTERM  = 2;
-    public static final int FINAL    = 3;
-    public static final int PROJECT  = 4;
-    public static final int OTHER    = 5;
+        private int value;
+
+        GradeThreshold(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
+    public enum AssignmentType {
+        HOMEWORK(0), QUIZ(1), MIDTERM(2), FINAL(3), PROJECT(4), OTHER(5);
+
+        private int value;
+
+        AssignmentType(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
 
     private String sectionName;
     private double maxScore;
@@ -90,38 +101,16 @@ public class Section {
         DBHelper db = new DBHelper(context);
         ContentValues updateValues = new ContentValues();
         updateValues.put(DBHelper.KEY_SECTIONS_NAME, sectionName);
-        updateValues.put(DBHelper.KEY_SECTIONS_WEIGHT_HOMEWORK,
-                assignmentWeights.get(HOMEWORK));
-        updateValues.put(DBHelper.KEY_SECTIONS_WEIGHT_QUIZ,
-                assignmentWeights.get(QUIZ));
-        updateValues.put(DBHelper.KEY_SECTIONS_WEIGHT_MIDTERM,
-                assignmentWeights.get(MIDTERM));
-        updateValues.put(DBHelper.KEY_SECTIONS_WEIGHT_FINAL,
-                assignmentWeights.get(FINAL));
-        updateValues.put(DBHelper.KEY_SECTIONS_WEIGHT_PROJECT,
-                assignmentWeights.get(PROJECT));
-        updateValues.put(DBHelper.KEY_SECTIONS_WEIGHT_OTHER,
-                assignmentWeights.get(OTHER));
-        updateValues.put(DBHelper.KEY_SECTIONS_HIGH_A,
-                gradeThresholds.get(HIGH_A));
-        updateValues.put(DBHelper.KEY_SECTIONS_LOW_A,
-                gradeThresholds.get(LOW_A));
-        updateValues.put(DBHelper.KEY_SECTIONS_HIGH_B,
-                gradeThresholds.get(HIGH_B));
-        updateValues.put(DBHelper.KEY_SECTIONS_LOW_B,
-                gradeThresholds.get(LOW_B));
-        updateValues.put(DBHelper.KEY_SECTIONS_HIGH_C,
-                gradeThresholds.get(HIGH_C));
-        updateValues.put(DBHelper.KEY_SECTIONS_LOW_C,
-                gradeThresholds.get(LOW_C));
-        updateValues.put(DBHelper.KEY_SECTIONS_HIGH_D,
-                gradeThresholds.get(HIGH_D));
-        updateValues.put(DBHelper.KEY_SECTIONS_LOW_D,
-                gradeThresholds.get(LOW_D));
-        updateValues.put(DBHelper.KEY_SECTIONS_HIGH_F,
-                gradeThresholds.get(HIGH_F));
-        updateValues.put(DBHelper.KEY_SECTIONS_LOW_F,
-                gradeThresholds.get(LOW_F));
+        for (AssignmentType type : AssignmentType.values()) {
+            int typeValue = type.getValue();
+            updateValues.put(DBHelper.KEY_SECTIONS_WEIGHTS[typeValue],
+                    assignmentWeights.get(typeValue));
+        }
+        for (GradeThreshold threshold : GradeThreshold.values()) {
+            int thresholdValue = threshold.getValue();
+            updateValues.put(DBHelper.KEY_SECTIONS_GRADE_THRESHOLDS[thresholdValue],
+                    gradeThresholds.get(thresholdValue));
+        }
         db.updateSection(updateValues, termPosition, sectionPosition);
     }
 
@@ -187,17 +176,17 @@ public class Section {
     private int convertAssignmentType(Context context, String assignmentType) {
         int type;
         if (assignmentType.equals(context.getString(R.string.homework))) {
-            type = Section.HOMEWORK;
+            type = AssignmentType.HOMEWORK.getValue();
         } else if (assignmentType.equals(context.getString(R.string.quiz))) {
-            type = Section.QUIZ;
+            type = AssignmentType.QUIZ.getValue();
         } else if (assignmentType.equals(context.getString(R.string.midterm))) {
-            type = Section.MIDTERM;
+            type = AssignmentType.MIDTERM.getValue();
         } else if (assignmentType.equals(context.getString(R.string.string_final))) {
-            type = Section.FINAL;
+            type = AssignmentType.FINAL.getValue();
         } else if (assignmentType.equals(context.getString(R.string.project))) {
-            type = Section.PROJECT;
+            type = AssignmentType.PROJECT.getValue();
         } else {
-            type = Section.OTHER;
+            type = AssignmentType.OTHER.getValue();
         }
         return type;
     }
@@ -206,35 +195,8 @@ public class Section {
     private String[] getColumnKeys(int type) {
         String keyScore = "";
         String keyMaxScore = "";
-        switch (type) {
-            case HOMEWORK:
-                keyScore    = DBHelper.KEY_SECTIONS_SCORE_HOMEWORK;
-                keyMaxScore = DBHelper.KEY_SECTIONS_MAX_SCORE_HOMEWORK;
-                break;
-            case QUIZ:
-                keyScore    = DBHelper.KEY_SECTIONS_SCORE_QUIZ;
-                keyMaxScore = DBHelper.KEY_SECTIONS_MAX_SCORE_QUIZ;
-                break;
-            case MIDTERM:
-                keyScore    = DBHelper.KEY_SECTIONS_SCORE_MIDTERM;
-                keyMaxScore = DBHelper.KEY_SECTIONS_MAX_SCORE_MIDTERM;
-                break;
-            case FINAL:
-                keyScore    = DBHelper.KEY_SECTIONS_SCORE_FINAL;
-                keyMaxScore = DBHelper.KEY_SECTIONS_MAX_SCORE_FINAL;
-                break;
-            case PROJECT:
-                keyScore    = DBHelper.KEY_SECTIONS_SCORE_PROJECT;
-                keyMaxScore = DBHelper.KEY_SECTIONS_MAX_SCORE_PROJECT;
-                break;
-            case OTHER:
-                keyScore    = DBHelper.KEY_SECTIONS_SCORE_OTHER;
-                keyMaxScore = DBHelper.KEY_SECTIONS_MAX_SCORE_OTHER;
-                break;
-            default:
-                break;
-        }
-        return new String[]{keyScore, keyMaxScore};
+        return new String[]{DBHelper.KEY_SECTIONS_SCORES[type],
+                DBHelper.KEY_SECTIONS_SCORES[type+1]};
     }
 
     public void addAssignment(Context context, Assignment assignment, int termPosition,
@@ -338,23 +300,11 @@ public class Section {
 
     public List<Integer> getRelevantAssignmentTypes() {
         List<Integer> assignmentTypes = new ArrayList<>();
-        if (assignmentWeights.get(HOMEWORK) != 0) {
-            assignmentTypes.add(HOMEWORK);
-        }
-        if (assignmentWeights.get(QUIZ) != 0) {
-            assignmentTypes.add(QUIZ);
-        }
-        if (assignmentWeights.get(MIDTERM) != 0) {
-            assignmentTypes.add(MIDTERM);
-        }
-        if (assignmentWeights.get(FINAL) != 0) {
-            assignmentTypes.add(FINAL);
-        }
-        if (assignmentWeights.get(PROJECT) != 0) {
-            assignmentTypes.add(PROJECT);
-        }
-        if (assignmentWeights.get(OTHER) != 0) {
-            assignmentTypes.add(OTHER);
+        for (AssignmentType type : AssignmentType.values()) {
+            int typeValue = type.getValue();
+            if (assignmentWeights.get(typeValue) != 0) {
+                assignmentTypes.add(typeValue);
+            }
         }
         return assignmentTypes;
     }
@@ -363,27 +313,27 @@ public class Section {
         // get the weighted scores for each assignment type
         totalScore = 0;
         maxScore   = 0;
-        int[] assignmentTypes = {HOMEWORK, QUIZ, MIDTERM, FINAL, PROJECT, OTHER};
-        for (int assignmentType : assignmentTypes) {
+        for (AssignmentType type : AssignmentType.values()) {
+            int typeValue = type.getValue();
             // skip this type if there are no scores for it
-            Double typeScore    = scores.get(assignmentType);
-            Double typeMaxScore = maxScores.get(assignmentType);
+            Double typeScore    = scores.get(typeValue);
+            Double typeMaxScore = maxScores.get(typeValue);
             if (typeMaxScore != null && typeMaxScore != 0) {
-                totalScore += typeScore / typeMaxScore * assignmentWeights.get(assignmentType);
-                maxScore += assignmentWeights.get(assignmentType);
+                totalScore += typeScore / typeMaxScore * assignmentWeights.get(typeValue);
+                maxScore   += assignmentWeights.get(typeValue);
             }
         }
 
         double scorePercent = totalScore / maxScore * 100;
 
-        if (scorePercent >= gradeThresholds.get(LOW_A) ||
+        if (scorePercent >= gradeThresholds.get(GradeThreshold.LOW_A.getValue()) ||
                 Double.isNaN(scorePercent)) {
             return "A";
-        } else if (scorePercent >= gradeThresholds.get(LOW_B)) {
+        } else if (scorePercent >= gradeThresholds.get(GradeThreshold.LOW_B.getValue())) {
             return "B";
-        } else if (scorePercent >= gradeThresholds.get(LOW_C)) {
+        } else if (scorePercent >= gradeThresholds.get(GradeThreshold.LOW_C.getValue())) {
             return "C";
-        } else if (scorePercent >= gradeThresholds.get(LOW_D)) {
+        } else if (scorePercent >= gradeThresholds.get(GradeThreshold.LOW_D.getValue())) {
             return "D";
         } else {
             return "F";
@@ -393,14 +343,14 @@ public class Section {
     public String calculateAssignmentGrade(double myScore, double maxScore) {
         double scorePercent = myScore / maxScore * 100;
 
-        if (scorePercent >= gradeThresholds.get(LOW_A) ||
+        if (scorePercent >= gradeThresholds.get(GradeThreshold.LOW_A.getValue()) ||
                 Double.isNaN(scorePercent)) {
             return "A";
-        } else if (scorePercent >= gradeThresholds.get(LOW_B)) {
+        } else if (scorePercent >= gradeThresholds.get(GradeThreshold.LOW_B.getValue())) {
             return "B";
-        } else if (scorePercent >= gradeThresholds.get(LOW_C)) {
+        } else if (scorePercent >= gradeThresholds.get(GradeThreshold.LOW_C.getValue())) {
             return "C";
-        } else if (scorePercent >= gradeThresholds.get(LOW_D)) {
+        } else if (scorePercent >= gradeThresholds.get(GradeThreshold.LOW_D.getValue())) {
             return "D";
         } else {
             return "F";
