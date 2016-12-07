@@ -90,6 +90,7 @@
     <string-array name="options_assignment">
         <item>Edit</item>
         <item>Delete</item>
+        <item>Attach Picture</item>
     </string-array>
     <string-array name="options_due_date">
         <item>Edit</item>

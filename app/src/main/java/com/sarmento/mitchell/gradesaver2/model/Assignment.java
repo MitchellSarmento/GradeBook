@@ -3,6 +3,10 @@ package com.sarmento.mitchell.gradesaver2.model;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.graphics.Bitmap;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Assignment {
     private String assignmentName;
@@ -10,6 +14,7 @@ public class Assignment {
     private double score;
     private double maxScore;
     private String grade;
+    private List<Bitmap> images;
 
     public Assignment(String assignmentName, String assignmentType, double score, double maxScore, String grade) {
         this.assignmentName = assignmentName;
@@ -17,6 +22,7 @@ public class Assignment {
         this.score          = score;
         this.maxScore       = maxScore;
         this.grade          = grade;
+        images              = new ArrayList<>();
     }
 
     public void updateAssignment(Context context, String assignmentName,
@@ -55,5 +61,13 @@ public class Assignment {
 
     public String getGrade() {
         return grade;
+    }
+
+    public List<Bitmap> getImages() {
+        return images;
+    }
+
+    public void addImage(Bitmap bitmap) {
+        images.add(bitmap);
     }
 }

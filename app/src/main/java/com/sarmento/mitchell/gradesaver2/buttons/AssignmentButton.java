@@ -2,6 +2,7 @@ package com.sarmento.mitchell.gradesaver2.buttons;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
@@ -15,6 +16,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.sarmento.mitchell.gradesaver2.R;
+import com.sarmento.mitchell.gradesaver2.activities.AssignmentImagesActivity;
+import com.sarmento.mitchell.gradesaver2.activities.AssignmentsActivity;
 import com.sarmento.mitchell.gradesaver2.dialogs.OptionsDialogFragment;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.Assignment;
@@ -22,7 +25,7 @@ import com.sarmento.mitchell.gradesaver2.model.Section;
 
 import java.util.Locale;
 
-public class AssignmentButton extends Button implements View.OnLongClickListener {
+public class AssignmentButton extends Button implements View.OnClickListener, View.OnLongClickListener {
     private Context context;
     private Assignment assignment;
     private int termPosition;
@@ -34,7 +37,8 @@ public class AssignmentButton extends Button implements View.OnLongClickListener
         this.context = context;
     }
 
-    public void init(Assignment assignment, int termPosition, int sectionPosition, int assignmentPosition) {
+    public void init(Assignment assignment, int termPosition,
+                     int sectionPosition, int assignmentPosition) {
         this.assignment         = assignment;
         this.termPosition       = termPosition;
         this.sectionPosition    = sectionPosition;
@@ -45,6 +49,7 @@ public class AssignmentButton extends Button implements View.OnLongClickListener
         double scorePercent = score / maxScore * 100;
 
         setButtonText(score, maxScore, scorePercent);
+        setOnClickListener(this);
         if (!Academics.getInstance().inArchive()) {
             setOnLongClickListener(this);
         }
@@ -101,6 +106,18 @@ public class AssignmentButton extends Button implements View.OnLongClickListener
     }
 
     @Override
+    public void onClick(View v) {
+        if (assignment.getImages().size() > 0) {
+            Intent intent = new Intent(context, AssignmentImagesActivity.class);
+            intent.putExtra(Academics.TERM_POSITION, termPosition);
+            intent.putExtra(Academics.SECTION_POSITION, sectionPosition);
+            intent.putExtra(Academics.ASSIGNMENT_POSITION, assignmentPosition);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
+    }
+
+    @Override
     public boolean onLongClick(View v) {
         OptionsDialogFragment dialog = new OptionsDialogFragment();
         Bundle bundle = new Bundle();
@@ -109,7 +126,7 @@ public class AssignmentButton extends Button implements View.OnLongClickListener
         bundle.putInt(Academics.ASSIGNMENT_POSITION, assignmentPosition);
         bundle.putInt(OptionsDialogFragment.ITEM_TYPE, OptionsDialogFragment.ASSIGNMENT);
         dialog.setArguments(bundle);
-        dialog.show(((Activity) context).getFragmentManager(), context.getString(R.string.options));
+        dialog.show(((Activity)context).getFragmentManager(), context.getString(R.string.options));
         return true;
     }
 }

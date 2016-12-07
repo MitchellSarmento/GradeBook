@@ -5,7 +5,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.activities.AssignmentsActivity;
@@ -43,8 +46,9 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
     }
 
     private static class AssignmentOptions {
-        private static final int EDIT   = 0;
-        private static final int DELETE = 1;
+        private static final int EDIT           = 0;
+        private static final int DELETE         = 1;
+        private static final int ATTACH_PICTURE = 2;
     }
 
     private static class DueDateOptions {
@@ -201,6 +205,11 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                                 dialog.dismiss();
                             }
                         };
+                        break;
+                    case AssignmentOptions.ATTACH_PICTURE:
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        ((AssignmentsActivity) activity).setAssignmentPosition(assignmentPosition);
+                        activity.startActivityForResult(intent, AssignmentsActivity.IMAGE_CAPTURE);
                         break;
                 }
                 break;

@@ -22,8 +22,10 @@
         <activity
             android:name=".activities.ScheduleEditActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".activities.SettingsActivity"
+        <activity
+            android:name=".activities.SettingsActivity"
             android:label="@string/action_settings" />
+        <activity android:name=".activities.AssignmentImagesActivity"></activity>
     </application>
 
 </manifest>
