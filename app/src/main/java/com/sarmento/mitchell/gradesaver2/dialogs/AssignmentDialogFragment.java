@@ -9,8 +9,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.activities.AssignmentsActivity;
@@ -51,6 +53,13 @@ public class AssignmentDialogFragment extends DialogFragment {
         final EditText maxScoreEntry       = (EditText) dialogView.findViewById(R.id.max_score);
         final Spinner assignmentTypeEntry  = (Spinner) dialogView.findViewById(R.id.assignment_type);
 
+        // get error Views
+        final TextView[] errorViews = {
+                (TextView) dialogView.findViewById(R.id.error_assignment_no_name),
+                (TextView) dialogView.findViewById(R.id.error_assignment_no_my_score),
+                (TextView) dialogView.findViewById(R.id.error_assignment_no_max_score)
+        };
+
         // set the spinner data to relevant assignment types
         final Section section = academics.getCurrentTerms().get(termPosition)
                 .getSections().get(sectionPosition);
@@ -79,44 +88,110 @@ public class AssignmentDialogFragment extends DialogFragment {
             assignmentTypeEntry.setSelection(typesAdapter.getPosition(assignment.getAssignmentType()));
         }
 
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.setPositiveButton(R.string.confirm, null);
+
+        final AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
+            public void onShow(DialogInterface dialogInterface) {
+                Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+
+                negativeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // get user input
+                        String assignmentName = assignmentNameEntry.getText().toString();
+                        String myScoreString  = myScoreEntry.getText().toString();
+                        String maxScoreString = maxScoreEntry.getText().toString();
+                        String assignmentType = String.valueOf(assignmentTypeEntry.getSelectedItem());
+
+                        InputCheck inputCheck = validateInput(assignmentName,
+                                myScoreString, maxScoreString);
+                        if (inputCheck == InputCheck.VALID) {
+                            double myScore  = Double.valueOf(myScoreString);
+                            double maxScore = Double.valueOf(maxScoreString);
+
+                            // check if editing
+                            if (editing) {
+                                // editing existing Assignment
+                                assignment.updateAssignment(activity, assignmentName, myScore, maxScore,
+                                        assignmentType, termPosition, sectionPosition, assignmentPosition);
+                                ((AssignmentsActivity) activity).updateList();
+                            } else {
+                                // create new assignment
+                                assignment = new Assignment(assignmentName, assignmentType,
+                                        myScore, maxScore, section.calculateAssignmentGrade(myScore, maxScore));
+
+                                // add new assignment
+                                assignmentPosition = section.getAssignments().size();
+                                section.addAssignment(getActivity(), assignment, termPosition,
+                                        sectionPosition, assignmentPosition);
+                                ((AssignmentsActivity) getActivity()).updateList();
+                            }
+                            dialog.dismiss();
+                        } else {
+                            int inputCheckValue = inputCheck.getValue();
+
+                            // display the appropriate error View
+                            errorViews[inputCheckValue].setVisibility(View.VISIBLE);
+
+                            // remove other error Views that may be visible
+                            for (InputCheck check : InputCheck.values()) {
+                                int checkValue = check.getValue();
+                                if (checkValue != -1 && checkValue != inputCheckValue) {
+                                    TextView errorView = errorViews[checkValue];
+                                    if (errorView.getVisibility() == View.VISIBLE) {
+                                        errorView.setVisibility(View.GONE);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
             }
         });
+        return dialog;
+    }
 
-        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                // get user input
-                String assignmentName = assignmentNameEntry.getText().toString();
-                double myScore        = Double.valueOf(myScoreEntry.getText().toString());
-                double maxScore       = Double.valueOf(maxScoreEntry.getText().toString());
-                String assignmentType = String.valueOf(assignmentTypeEntry.getSelectedItem());
+    private enum InputCheck {
+        VALID(-1), ERROR_NO_NAME(0), ERROR_NO_MY_SCORE(1), ERROR_NO_MAX_SCORE(2);
 
-                // check if editing
-                if (editing) {
-                    // editing existing Assignment
-                    assignment.updateAssignment(activity, assignmentName, myScore, maxScore,
-                            assignmentType, termPosition, sectionPosition, assignmentPosition);
-                    ((AssignmentsActivity) activity).updateList();
-                } else {
-                    // create new assignment
-                    assignment = new Assignment(assignmentName, assignmentType,
-                            myScore, maxScore, section.calculateAssignmentGrade(myScore, maxScore));
+        private int value;
 
-                    // add new assignment
-                    assignmentPosition = section.getAssignments().size();
-                    section.addAssignment(getActivity(), assignment, termPosition,
-                            sectionPosition, assignmentPosition);
-                    ((AssignmentsActivity) getActivity()).updateList();
-                }
+        InputCheck(int value) {
+            this.value = value;
+        }
 
-                dialog.dismiss();
-            }
-        });
+        public int getValue() {
+            return value;
+        }
+    }
 
-        return builder.create();
+    private InputCheck validateInput(String assignmentName, String myScore, String maxScore) {
+        // check for missing Assignment name
+        if (assignmentName.trim().equals("")) {
+            return InputCheck.ERROR_NO_NAME;
+        }
+
+        // check for missing My Score
+        if (!myScore.matches(".*\\d+.*")) {
+            return InputCheck.ERROR_NO_MY_SCORE;
+        }
+
+        // check for missing Max Score
+        if (!maxScore.matches(".*\\d+.*")) {
+            return InputCheck.ERROR_NO_MAX_SCORE;
+        }
+
+        return InputCheck.VALID;
     }
 }

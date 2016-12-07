@@ -70,5 +70,35 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/assignment_type"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:textSize="12sp"
+            android:textColor="@android:color/holo_red_light"
+            android:text="@string/error_assignment_no_name"
+            android:visibility="gone"
+            android:id="@+id/error_assignment_no_name"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:textSize="12sp"
+            android:textColor="@android:color/holo_red_light"
+            android:text="@string/error_assignment_no_my_score"
+            android:visibility="gone"
+            android:id="@+id/error_assignment_no_my_score"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:textSize="12sp"
+            android:textColor="@android:color/holo_red_light"
+            android:text="@string/error_assignment_no_max_score"
+            android:visibility="gone"
+            android:id="@+id/error_assignment_no_max_score"/>
     </LinearLayout>
 </ScrollView>

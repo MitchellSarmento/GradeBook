@@ -101,6 +101,9 @@
     <string name="error_section_no_name">Please enter a Section name</string>
     <string name="error_section_assignment_weights">Assignment weights do not total 100%</string>
     <string name="error_section_grade_thresholds">Invalid grade thresholds</string>
+    <string name="error_assignment_no_name">Please enter an Assignment name</string>
+    <string name="error_assignment_no_my_score">Please enter a value for My Score</string>
+    <string name="error_assignment_no_max_score">Please enter a value for Max Score</string>
 
     <!-- License Information -->
     <string name="in_app_icons_google">In-app Icons by Google</string>
