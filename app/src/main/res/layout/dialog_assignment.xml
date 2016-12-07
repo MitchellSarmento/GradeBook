@@ -26,6 +26,16 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:textSize="12sp"
+            android:textColor="@android:color/holo_red_light"
+            android:text="@string/error_assignment_no_name"
+            android:visibility="gone"
+            android:id="@+id/error_assignment_no_name"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:paddingTop="@dimen/activity_vertical_margin"
             android:text="@string/my_score"
             android:gravity="center_horizontal"/>
@@ -40,6 +50,16 @@
             android:ems="5"
             android:maxLength="5"
             android:id="@+id/my_score"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textSize="12sp"
+            android:textColor="@android:color/holo_red_light"
+            android:text="@string/error_assignment_no_my_score"
+            android:visibility="gone"
+            android:id="@+id/error_assignment_no_my_score"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -62,6 +82,26 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textSize="12sp"
+            android:textColor="@android:color/holo_red_light"
+            android:text="@string/error_assignment_no_max_score"
+            android:visibility="gone"
+            android:id="@+id/error_assignment_no_max_score"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textSize="12sp"
+            android:textColor="@android:color/holo_red_light"
+            android:text="@string/error_assignment_zero_max_score"
+            android:visibility="gone"
+            android:id="@+id/error_assignment_zero_max_score"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:paddingTop="@dimen/activity_vertical_margin"
             android:text="@string/type"
             android:gravity="center_horizontal"/>
@@ -70,35 +110,5 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/assignment_type"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:textSize="12sp"
-            android:textColor="@android:color/holo_red_light"
-            android:text="@string/error_assignment_no_name"
-            android:visibility="gone"
-            android:id="@+id/error_assignment_no_name"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:textSize="12sp"
-            android:textColor="@android:color/holo_red_light"
-            android:text="@string/error_assignment_no_my_score"
-            android:visibility="gone"
-            android:id="@+id/error_assignment_no_my_score"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:textSize="12sp"
-            android:textColor="@android:color/holo_red_light"
-            android:text="@string/error_assignment_no_max_score"
-            android:visibility="gone"
-            android:id="@+id/error_assignment_no_max_score"/>
     </LinearLayout>
 </ScrollView>

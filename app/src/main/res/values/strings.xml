@@ -97,13 +97,15 @@
     </string-array>
 
     <!-- Error Messages -->
-    <string name="error_term_no_name">Please enter a Term name</string>
-    <string name="error_section_no_name">Please enter a Section name</string>
+    <string name="error_term_no_name">Please enter a name for the term</string>
+    <string name="error_section_no_name">Please enter a name for the section</string>
     <string name="error_section_assignment_weights">Assignment weights do not total 100%</string>
     <string name="error_section_grade_thresholds">Invalid grade thresholds</string>
-    <string name="error_assignment_no_name">Please enter an Assignment name</string>
+    <string name="error_assignment_no_name">Please enter a name for the assignment</string>
     <string name="error_assignment_no_my_score">Please enter a value for My Score</string>
     <string name="error_assignment_no_max_score">Please enter a value for Max Score</string>
+    <string name="error_assignment_zero_max_score">Max Score cannot be zero</string>
+    <string name="error_due_date_no_name">Please enter a name for the assignment</string>
 
     <!-- License Information -->
     <string name="in_app_icons_google">In-app Icons by Google</string>

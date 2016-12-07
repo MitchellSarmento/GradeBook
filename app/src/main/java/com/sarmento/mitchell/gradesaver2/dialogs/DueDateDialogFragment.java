@@ -8,8 +8,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.activities.DueDatesActivity;
@@ -47,6 +49,11 @@ public class DueDateDialogFragment extends DialogFragment {
         final EditText dueDateEntry = (EditText) dialogView.findViewById(R.id.due_date_entry);
         final DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.date);
 
+        // get error views
+        final TextView[] errorViews = {
+                (TextView) dialogView.findViewById(R.id.error_due_date_no_name)
+        };
+
         // set fields if editing
         if (editing) {
             dueDatePosition = arguments.getInt(Academics.DUE_DATE_POSITION);
@@ -60,47 +67,88 @@ public class DueDateDialogFragment extends DialogFragment {
                     due.get(Calendar.DAY_OF_MONTH), null);
         }
 
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.setPositiveButton(R.string.confirm, null);
+
+        final AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
+            public void onShow(DialogInterface dialogInterface) {
+                Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+
+                negativeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // get user input
+                        String dueDateName = dueDateEntry.getText().toString();
+                        int month = datePicker.getMonth();
+                        int day   = datePicker.getDayOfMonth();
+                        int year  = datePicker.getYear();
+                        Calendar date = Calendar.getInstance();
+                        date.set(year, month, day);
+
+                        InputCheck inputCheck = validateInput(dueDateName);
+                        if (inputCheck == InputCheck.VALID) {
+                            // check if editing
+                            if (editing) {
+                                // edit existing DueDate
+                                dueDate.updateDueDate(activity, dueDateName, date, termPosition, sectionPosition,
+                                        dueDatePosition);
+                                ((DueDatesActivity) activity).updateList();
+                            } else {
+                                // create new due date
+                                DueDate dueDate = new DueDate(dueDateName, false, date);
+
+                                // add new due date
+                                Section section = Academics.getInstance().getCurrentTerms().get(termPosition)
+                                        .getSections().get(sectionPosition);
+                                int dueDatePosition = section.getDueDates().size();
+                                section.addDueDate(getActivity(), dueDate, termPosition, sectionPosition,
+                                        dueDatePosition);
+                                ((DueDatesActivity) getActivity()).updateList();
+                            }
+                        } else {
+                            int inputCheckValue = inputCheck.getValue();
+
+                            // display the appropriate error View
+                            errorViews[inputCheckValue].setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
             }
         });
 
-        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                // get user input
-                String dueDateName = dueDateEntry.getText().toString();
-                int month = datePicker.getMonth();
-                int day   = datePicker.getDayOfMonth();
-                int year  = datePicker.getYear();
-                Calendar date = Calendar.getInstance();
-                date.set(year, month, day);
+        return dialog;
+    }
 
-                // check if editing
-                if (editing) {
-                    // edit existing DueDate
-                    dueDate.updateDueDate(activity, dueDateName, date, termPosition, sectionPosition,
-                            dueDatePosition);
-                    ((DueDatesActivity) activity).updateList();
-                } else {
-                    // create new due date
-                    DueDate dueDate = new DueDate(dueDateName, false, date);
+    private enum InputCheck {
+        VALID(-1), ERROR_NO_NAME(0);
 
-                    // add new due date
-                    Section section = Academics.getInstance().getCurrentTerms().get(termPosition)
-                            .getSections().get(sectionPosition);
-                    int dueDatePosition = section.getDueDates().size();
-                    section.addDueDate(getActivity(), dueDate, termPosition, sectionPosition,
-                            dueDatePosition);
-                    ((DueDatesActivity) getActivity()).updateList();
-                }
+        private int value;
 
-                dialog.dismiss();
-            }
-        });
+        InputCheck(int value) {
+            this.value = value;
+        }
 
-        return builder.create();
+        public int getValue() {
+            return value;
+        }
+    }
+
+    private InputCheck validateInput(String dueDateName) {
+        // check for missing Term name
+        if (dueDateName.trim().equals("")) {
+            return InputCheck.ERROR_NO_NAME;
+        }
+
+        return InputCheck.VALID;
     }
 }

@@ -57,7 +57,8 @@ public class AssignmentDialogFragment extends DialogFragment {
         final TextView[] errorViews = {
                 (TextView) dialogView.findViewById(R.id.error_assignment_no_name),
                 (TextView) dialogView.findViewById(R.id.error_assignment_no_my_score),
-                (TextView) dialogView.findViewById(R.id.error_assignment_no_max_score)
+                (TextView) dialogView.findViewById(R.id.error_assignment_no_max_score),
+                (TextView) dialogView.findViewById(R.id.error_assignment_zero_max_score)
         };
 
         // set the spinner data to relevant assignment types
@@ -163,7 +164,8 @@ public class AssignmentDialogFragment extends DialogFragment {
     }
 
     private enum InputCheck {
-        VALID(-1), ERROR_NO_NAME(0), ERROR_NO_MY_SCORE(1), ERROR_NO_MAX_SCORE(2);
+        VALID(-1), ERROR_NO_NAME(0), ERROR_NO_MY_SCORE(1), ERROR_NO_MAX_SCORE(2),
+        ERROR_ZERO_MAX_SCORE(3);
 
         private int value;
 
@@ -190,6 +192,11 @@ public class AssignmentDialogFragment extends DialogFragment {
         // check for missing Max Score
         if (!maxScore.matches(".*\\d+.*")) {
             return InputCheck.ERROR_NO_MAX_SCORE;
+        }
+
+        // check for zero Max Score
+        if (Double.valueOf(maxScore) == 0) {
+            return InputCheck.ERROR_ZERO_MAX_SCORE;
         }
 
         return InputCheck.VALID;
