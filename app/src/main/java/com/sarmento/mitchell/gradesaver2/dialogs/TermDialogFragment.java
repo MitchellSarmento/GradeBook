@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.activities.TermsActivity;
@@ -32,11 +33,16 @@ public class TermDialogFragment extends DialogFragment {
 
         // set layout
         LayoutInflater inflater = activity.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.dialog_term, null);
+        View dialogView = inflater.inflate(R.layout.dialog_term, null);
         builder.setView(dialogView);
 
         // get relevant views
         final EditText termNameEntry = (EditText) dialogView.findViewById(R.id.term_entry);
+
+        // get error views
+        final TextView[] errorViews = {
+                (TextView) dialogView.findViewById(R.id.error_term_no_name)
+        };
 
         // set fields if editing
         if (editing) {
@@ -85,9 +91,11 @@ public class TermDialogFragment extends DialogFragment {
                                 academics.addTerm(activity, term, termPosition);
                             }
                             dialog.dismiss();
-                        } else if (inputCheck == InputCheck.ERROR_NO_NAME) {
-                            dialogView.findViewById(R.id.error_term_no_name)
-                                    .setVisibility(View.VISIBLE);
+                        } else {
+                            int inputCheckValue = inputCheck.getValue();
+
+                            // display the appropriate error View
+                            errorViews[inputCheckValue].setVisibility(View.VISIBLE);
                         }
                     }
                 });
@@ -98,14 +106,25 @@ public class TermDialogFragment extends DialogFragment {
     }
 
     private enum InputCheck {
-        VALID, ERROR_NO_NAME;
+        VALID(-1), ERROR_NO_NAME(0);
+
+        private int value;
+
+        InputCheck(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
     }
 
     private InputCheck validateInput(String termName) {
+        // check for missing Term name
         if (termName.trim().equals("")) {
             return InputCheck.ERROR_NO_NAME;
-        } else {
-            return InputCheck.VALID;
         }
+
+        return InputCheck.VALID;
     }
 }

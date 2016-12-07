@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.activities.SectionsActivity;
@@ -37,7 +38,7 @@ public class SectionDialogFragment extends DialogFragment {
 
         // set layout
         LayoutInflater inflater = activity.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_section, null);
+        final View dialogView = inflater.inflate(R.layout.dialog_section, null);
         builder.setView(dialogView);
 
         // get relevant views
@@ -61,6 +62,13 @@ public class SectionDialogFragment extends DialogFragment {
                 (EditText) dialogView.findViewById(R.id.low_d),
                 (EditText) dialogView.findViewById(R.id.high_f),
                 (EditText) dialogView.findViewById(R.id.low_f)
+        };
+
+        // get error views
+        final TextView[] errorViews = {
+                (TextView) dialogView.findViewById(R.id.error_section_no_name),
+                (TextView) dialogView.findViewById(R.id.error_section_assignment_weights),
+                (TextView) dialogView.findViewById(R.id.error_section_grade_thresholds)
         };
 
         // set fields if editing
@@ -141,12 +149,22 @@ public class SectionDialogFragment extends DialogFragment {
                                 ((SectionsActivity) activity).updateList();
                             }
                             dialog.dismiss();
-                        } else if (inputCheck == InputCheck.ERROR_NO_NAME) {
+                        } else {
+                            int inputCheckValue = inputCheck.getValue();
 
-                        } else if (inputCheck == InputCheck.ERROR_ASSIGNMENT_WEIGHTS) {
+                            // display the appropriate error View
+                            errorViews[inputCheckValue].setVisibility(View.VISIBLE);
 
-                        } else if (inputCheck == InputCheck.ERROR_GRADE_THRESHOLDS) {
-
+                            // remove other error Views that may be visible
+                            for (InputCheck check : InputCheck.values()) {
+                                int checkValue = check.getValue();
+                                if (checkValue != -1 && checkValue != inputCheckValue) {
+                                    TextView errorView = errorViews[checkValue];
+                                    if (errorView.getVisibility() == View.VISIBLE) {
+                                        errorView.setVisibility(View.GONE);
+                                    }
+                                }
+                            }
                         }
                     }
                 });
@@ -156,26 +174,53 @@ public class SectionDialogFragment extends DialogFragment {
         return dialog;
     }
 
-    /*private enum InputCheck {
-        VALID, ERROR_NO_NAME;
-    }
-
-    private InputCheck validateInput(String termName) {
-        if (termName.trim().equals("")) {
-            return InputCheck.ERROR_NO_NAME;
-        } else {
-            return InputCheck.VALID;
-        }
-    }*/
-
     private enum InputCheck {
-        VALID, ERROR_NO_NAME, ERROR_ASSIGNMENT_WEIGHTS, ERROR_GRADE_THRESHOLDS;
+        VALID(-1), ERROR_NO_NAME(0), ERROR_ASSIGNMENT_WEIGHTS(1), ERROR_GRADE_THRESHOLDS(2);
+
+        private int value;
+
+        InputCheck(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
     }
 
     private InputCheck validateInput(String sectionName, SparseArray<Double> assignmentWeights,
                                      SparseArray<Double> gradeThresholds) {
+        // check for missing Section name
         if (sectionName.trim().equals("")) {
             return InputCheck.ERROR_NO_NAME;
+        }
+
+        // check for assignment weights totaling a value other than 100%
+        double totalAssignmentWeights = 0;
+        for (Section.AssignmentType type : Section.AssignmentType.values()) {
+            int typeValue = type.getValue();
+            totalAssignmentWeights += assignmentWeights.get(typeValue);
+        }
+        if (totalAssignmentWeights != 100) {
+            return InputCheck.ERROR_ASSIGNMENT_WEIGHTS;
+        }
+
+        // check for grade threshold errors
+        for (Section.GradeThreshold threshold : Section.GradeThreshold.values()) {
+            int thresholdValue = threshold.getValue();
+            if (thresholdValue % 2 == 0) {
+                // check for upper bound < lower bound
+                if (gradeThresholds.get(thresholdValue) <= gradeThresholds.get(thresholdValue+1)) {
+                    return InputCheck.ERROR_GRADE_THRESHOLDS;
+                }
+            } else {
+                // check for lower bound of a higher grade < high bound of a lower grade
+                if (threshold != Section.GradeThreshold.LOW_F) {
+                    if (gradeThresholds.get(thresholdValue) <= gradeThresholds.get(thresholdValue + 1)) {
+                        return InputCheck.ERROR_GRADE_THRESHOLDS;
+                    }
+                }
+            }
         }
 
         return InputCheck.VALID;
