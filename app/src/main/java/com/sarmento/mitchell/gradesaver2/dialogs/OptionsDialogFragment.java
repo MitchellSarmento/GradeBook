@@ -172,6 +172,10 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                         };
                         break;
                     case SectionOptions.SET_FINAL_GRADE:
+                        editing    = true;
+                        editDialog = new FinalGradeDialogFragment();
+                        bundle.putInt(Academics.TERM_POSITION, termPosition);
+                        bundle.putInt(Academics.SECTION_POSITION, sectionPosition);
                         break;
                 }
                 break;

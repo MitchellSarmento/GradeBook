@@ -68,6 +68,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String KEY_SECTIONS_SCORE_TOTAL        = "scoreTotal";
     public static final String KEY_SECTIONS_MAX_SCORE_TOTAL    = "maxScoreTotal";
     public static final String KEY_SECTIONS_GRADE              = "grade";
+    public static final String KEY_SECTIONS_FINAL_GRADE        = "finalGrade";
 
     // TABLE_ASSIGNMENTS columns
     public static final String KEY_ASSIGNMENTS_ID         = "id";
@@ -171,7 +172,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 KEY_SECTIONS_MAX_SCORE_OTHER + " REAL," +
                 KEY_SECTIONS_SCORE_TOTAL + " REAL," +
                 KEY_SECTIONS_MAX_SCORE_TOTAL + " REAL," +
-                KEY_SECTIONS_GRADE + " TEXT)";
+                KEY_SECTIONS_GRADE + " TEXT," +
+                KEY_SECTIONS_FINAL_GRADE + " TEXT)";
 
         final String CREATE_TABLE_ASSIGNMENTS = "CREATE TABLE " + TABLE_ASSIGNMENTS + "(" +
                 KEY_ASSIGNMENTS_ID + " INTEGER," +
@@ -299,6 +301,7 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(KEY_SECTIONS_SCORE_TOTAL, section.getTotalScore());
         values.put(KEY_SECTIONS_MAX_SCORE_TOTAL, section.getMaxScore());
         values.put(KEY_SECTIONS_GRADE, section.getGrade());
+        values.put(KEY_SECTIONS_FINAL_GRADE, section.getFinalGrade());
 
         db.insert(TABLE_SECTIONS, null, values);
         db.close();
@@ -629,8 +632,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
                 }
                 double totalScore = cursor.getDouble(31);
-                double maxScore = cursor.getDouble(32);
-                String grade = cursor.getString(33);
+                double maxScore   = cursor.getDouble(32);
+                String grade      = cursor.getString(33);
+                String finalGrade = cursor.getString(34);
 
                 // get the assignments belonging to this section
                 List<Assignment> assignments = getAssignments(termId, sectionId);
@@ -643,8 +647,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
                 // create and add the section
                 Section section = new Section(sectionName, gradeThresholds, assignmentWeights,
-                        scores, maxScores, totalScore, maxScore, grade, assignments, dueDates,
-                        schedule);
+                        scores, maxScores, totalScore, maxScore, grade, finalGrade,
+                        assignments, dueDates, schedule);
                 sections.add(section);
             } while (cursor.moveToNext());
         }

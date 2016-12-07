@@ -59,7 +59,13 @@ public class SectionButton extends Button implements View.OnClickListener, View.
         String scoreString = String.format(Locale.getDefault(), "%.2f", scorePercent) + "% " +
                 grade;
 
-        setText(sectionName + "\n" + scoreString);
+        // third line
+        String finalGrade = section.getFinalGrade();
+        if (!finalGrade.equals("")) {
+            finalGrade = "\n" + context.getString(R.string.final_grade) + ": " + finalGrade;
+        }
+
+        setText(sectionName + "\n" + scoreString + finalGrade);
     }
 
     private int getButtonColor(double scorePercent) {

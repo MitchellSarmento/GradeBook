@@ -33,6 +33,7 @@ public class Section {
     private double maxScore;
     private double totalScore;
     private String grade;
+    private String finalGrade;
     private SparseArray<Double> gradeThresholds;
     private SparseArray<Double> assignmentWeights;
     private SparseArray<Double> scores;
@@ -47,6 +48,7 @@ public class Section {
         maxScore               = 0.0;
         totalScore             = 0.0;
         grade                  = "A";
+        finalGrade             = "";
         this.assignmentWeights = assignmentWeights;
         this.gradeThresholds   = gradeThresholds;
         scores                 = new SparseArray<>();
@@ -60,12 +62,13 @@ public class Section {
     public Section(String sectionName, SparseArray<Double> gradeThresholds,
                    SparseArray<Double> assignmentWeights,
                    SparseArray<Double> scores, SparseArray<Double> maxScores,
-                   double totalScore, double maxScore, String grade,
+                   double totalScore, double maxScore, String grade, String finalGrade,
                    List<Assignment> assignments, List<DueDate> dueDates, Schedule schedule) {
         this.sectionName       = sectionName;
         this.maxScore          = maxScore;
         this.totalScore        = totalScore;
         this.grade             = grade;
+        this.finalGrade        = finalGrade;
         this.gradeThresholds   = gradeThresholds;
         this.assignmentWeights = assignmentWeights;
         this.scores            = scores;
@@ -164,6 +167,20 @@ public class Section {
 
     public Schedule getSchedule() {
         return schedule;
+    }
+
+    public String getFinalGrade() {
+        return finalGrade;
+    }
+
+    public void setFinalGrade(Context context, String finalGrade, int termPosition,
+                              int sectionPosition) {
+        this.finalGrade = finalGrade;
+
+        DBHelper db = new DBHelper(context);
+        ContentValues updateValues = new ContentValues();
+        updateValues.put(DBHelper.KEY_SECTIONS_FINAL_GRADE, finalGrade);
+        db.updateSection(updateValues, termPosition, sectionPosition);
     }
 
     // convert the Assignment type from String to int
