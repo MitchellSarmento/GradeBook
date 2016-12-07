@@ -33,7 +33,7 @@ public class AssignmentImagesActivity extends AppCompatActivity {
                     .getSections().get(sectionPosition).getAssignments().get(assignmentPosition);
         }
         setTitle(assignment.getAssignmentName());
-        
+
         ImageView mainImage = (ImageView) findViewById(R.id.image_main);
         mainImage.setImageBitmap(assignment.getImages().get(0));
     }
