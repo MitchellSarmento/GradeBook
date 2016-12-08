@@ -8,10 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Academics {
-    public static final String TERM_POSITION       = "termPosition";
-    public static final String SECTION_POSITION    = "sectionPosition";
-    public static final String ASSIGNMENT_POSITION = "assignmentPosition";
-    public static final String DUE_DATE_POSITION   = "dueDatePosition";
+    public static final String TERM_POSITION             = "termPosition";
+    public static final String SECTION_POSITION          = "sectionPosition";
+    public static final String ASSIGNMENT_POSITION       = "assignmentPosition";
+    public static final String ASSIGNMENT_IMAGE_POSITION = "assignmentImagePosition";
+    public static final String DUE_DATE_POSITION         = "dueDatePosition";
 
     private static Academics instance = null;
     private boolean loaded = false;
@@ -126,21 +127,4 @@ public class Academics {
             db.updateTerm(updateValues, i+1, !archiving);
         }
     }
-
-    /*public void setArchived(Context context, boolean archived, int termPosition) {
-        this.archived = archived;
-
-        // update the Term in the database
-        DBHelper db = new DBHelper(context);
-        ContentValues updateValues = new ContentValues();
-        updateValues.put(DBHelper.KEY_TERMS_ARCHIVED, archived);
-        if (archived) {
-            updateValues.put(DBHelper.KEY_TERMS_ID, Academics.getInstance().getArchivedTerms()
-                    .size());
-        } else {
-            updateValues.put(DBHelper.KEY_TERMS_ID, Academics.getInstance().getCurrentTerms()
-                    .size());
-        }
-        db.updateTerm(updateValues, termPosition);
-    }*/
 }

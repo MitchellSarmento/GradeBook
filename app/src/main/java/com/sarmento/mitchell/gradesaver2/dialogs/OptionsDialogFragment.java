@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import com.sarmento.mitchell.gradesaver2.R;
+import com.sarmento.mitchell.gradesaver2.activities.AssignmentImagesActivity;
 import com.sarmento.mitchell.gradesaver2.activities.AssignmentsActivity;
 import com.sarmento.mitchell.gradesaver2.activities.DueDatesActivity;
 import com.sarmento.mitchell.gradesaver2.activities.SectionsActivity;
@@ -20,11 +21,12 @@ import com.sarmento.mitchell.gradesaver2.model.Academics;
 public class OptionsDialogFragment extends DialogFragment implements Dialog.OnClickListener {
     public static final String ITEM_TYPE  = "itemType";
 
-    public static final int TERM          = 0;
-    public static final int TERM_ARCHIVED = 1;
-    public static final int SECTION       = 2;
-    public static final int ASSIGNMENT    = 3;
-    public static final int DUE_DATE      = 4;
+    public static final int TERM             = 0;
+    public static final int TERM_ARCHIVED    = 1;
+    public static final int SECTION          = 2;
+    public static final int ASSIGNMENT       = 3;
+    public static final int ASSIGNMENT_IMAGE = 4;
+    public static final int DUE_DATE         = 5;
 
     public static final String EDITING = "editing";
 
@@ -48,7 +50,15 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
     private static class AssignmentOptions {
         private static final int EDIT           = 0;
         private static final int DELETE         = 1;
-        private static final int ATTACH_PICTURE = 2;
+    }
+
+    private static class AssignmentImageOptions {
+        private static final int DELETE     = 0;
+        private static final int PROPERTIES = 1;
+    }
+
+    private static class AssignmentImageArchiveOptions {
+        private static final int PROPERTIES = 0;
     }
 
     private static class DueDateOptions {
@@ -56,12 +66,14 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
         private static final int DELETE = 1;
     }
 
+    private Academics academics = Academics.getInstance();
     private Activity activity;
     private Bundle arguments;
     private int itemType;
     private int termPosition;
     private int sectionPosition;
     private int assignmentPosition;
+    private int assignmentImagePosition;
     private int dueDatePosition;
 
     @Override
@@ -95,6 +107,12 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                 sectionPosition    = arguments.getInt(Academics.SECTION_POSITION);
                 assignmentPosition = arguments.getInt(Academics.ASSIGNMENT_POSITION);
                 break;
+            case ASSIGNMENT_IMAGE:
+                termPosition            = arguments.getInt(Academics.TERM_POSITION);
+                sectionPosition         = arguments.getInt(Academics.SECTION_POSITION);
+                assignmentPosition      = arguments.getInt(Academics.ASSIGNMENT_POSITION);
+                assignmentImagePosition = arguments.getInt(Academics.ASSIGNMENT_IMAGE_POSITION);
+                break;
             case DUE_DATE:
                 termPosition    = arguments.getInt(Academics.TERM_POSITION);
                 sectionPosition = arguments.getInt(Academics.SECTION_POSITION);
@@ -124,14 +142,14 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                         confirmAction = new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                Academics.getInstance().removeTerm(activity, termPosition, false);
+                                academics.removeTerm(activity, termPosition, false);
                                 ((TermsActivity) activity).updateList();
                                 dialog.dismiss();
                             }
                         };
                         break;
                     case TermOptions.ARCHIVE:
-                        Academics.getInstance().setTermIsArchived(activity, true, termPosition);
+                        academics.setTermIsArchived(activity, true, termPosition);
                         ((TermsActivity) activity).updateList();
                         break;
                 }
@@ -143,14 +161,14 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                         confirmAction = new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                Academics.getInstance().removeTerm(activity, termPosition, true);
+                                academics.removeTerm(activity, termPosition, true);
                                 ((TermsActivity) activity).updateList();
                                 dialog.dismiss();
                             }
                         };
                         break;
                     case TermArchivedOptions.UNARCHIVE:
-                        Academics.getInstance().setTermIsArchived(activity, false, termPosition);
+                        academics.setTermIsArchived(activity, false, termPosition);
                         ((TermsActivity) activity).updateList();
                         break;
                 }
@@ -168,7 +186,7 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                         confirmAction = new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                Academics.getInstance().getCurrentTerms().get(termPosition)
+                                academics.getCurrentTerms().get(termPosition)
                                         .removeSection(activity, termPosition, sectionPosition);
                                 ((SectionsActivity) activity).updateList();
                                 dialog.dismiss();
@@ -197,7 +215,7 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                         confirmAction = new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                Academics.getInstance().getCurrentTerms().get(termPosition)
+                                academics.getCurrentTerms().get(termPosition)
                                         .getSections().get(sectionPosition)
                                         .removeAssignment(activity, termPosition,
                                                 sectionPosition, assignmentPosition);
@@ -206,11 +224,33 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                             }
                         };
                         break;
-                    case AssignmentOptions.ATTACH_PICTURE:
-                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        ((AssignmentsActivity) activity).setAssignmentPosition(assignmentPosition);
-                        activity.startActivityForResult(intent, AssignmentsActivity.IMAGE_CAPTURE);
-                        break;
+                }
+                break;
+            case ASSIGNMENT_IMAGE:
+                if (academics.inArchive()) {
+                    switch (option) {
+                        case AssignmentImageArchiveOptions.PROPERTIES:
+                            break;
+                    }
+                } else {
+                    switch (option) {
+                        case AssignmentImageOptions.DELETE:
+                            showConfirmationDialog = true;
+                            confirmAction = new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    academics.getCurrentTerms().get(termPosition)
+                                            .getSections().get(sectionPosition)
+                                            .getAssignments().get(assignmentPosition)
+                                            .removeImage(assignmentImagePosition);
+                                    ((AssignmentImagesActivity) activity)
+                                            .deleteView(assignmentImagePosition);
+                                }
+                            };
+                            break;
+                        case AssignmentImageOptions.PROPERTIES:
+                            break;
+                    }
                 }
                 break;
             case DUE_DATE:
@@ -227,7 +267,7 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                         confirmAction = new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                Academics.getInstance().getCurrentTerms().get(termPosition)
+                                academics.getCurrentTerms().get(termPosition)
                                         .getSections().get(sectionPosition)
                                         .removeDueDate(activity, termPosition,
                                                 sectionPosition, dueDatePosition);
@@ -269,6 +309,12 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                 return getResources().getStringArray(R.array.options_section);
             case ASSIGNMENT:
                 return getResources().getStringArray(R.array.options_assignment);
+            case ASSIGNMENT_IMAGE:
+                if (academics.inArchive()) {
+                    return getResources().getStringArray(R.array.options_assignment_image_archived);
+                } else {
+                    return getResources().getStringArray(R.array.options_assignment_image);
+                }
             case DUE_DATE:
                 return getResources().getStringArray(R.array.options_due_date);
             default:

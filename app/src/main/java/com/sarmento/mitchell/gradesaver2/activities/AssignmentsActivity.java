@@ -22,8 +22,6 @@ import com.sarmento.mitchell.gradesaver2.model.Section;
 import com.sarmento.mitchell.gradesaver2.views.SectionHeader;
 
 public class AssignmentsActivity extends AppCompatActivity {
-    public static final int IMAGE_CAPTURE = 0;
-
     private Academics academics = Academics.getInstance();
     private int termPosition;
     private int sectionPosition;
@@ -100,26 +98,5 @@ public class AssignmentsActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
-
-            Assignment assignment;
-            if (academics.inArchive()) {
-                assignment = academics.getArchivedTerms().get(termPosition)
-                        .getSections().get(sectionPosition).getAssignments().get(assignmentPosition);
-            } else {
-                assignment = academics.getCurrentTerms().get(termPosition)
-                        .getSections().get(sectionPosition).getAssignments().get(assignmentPosition);
-            }
-            assignment.addImage(imageBitmap);
-        }
-    }
-
-    public void setAssignmentPosition(int assignmentPosition) {
-        this.assignmentPosition = assignmentPosition;
     }
 }

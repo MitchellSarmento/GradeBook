@@ -67,6 +67,9 @@
     <!-- ScheduleActivity Menu Actions -->
     <string name="action_edit_schedule">Edit Schedule</string>
 
+    <!-- AssignmentImagesActivity Menu Actions -->
+    <string name="action_add_picture">Add Picture</string>
+
     <!-- Settings -->
     <string name="about">About</string>
     <string name="version">Version</string>
@@ -90,7 +93,13 @@
     <string-array name="options_assignment">
         <item>Edit</item>
         <item>Delete</item>
-        <item>Attach Picture</item>
+    </string-array>
+    <string-array name="options_assignment_image">
+        <item>Delete</item>
+        <item>Properties</item>
+    </string-array>
+    <string-array name="options_assignment_image_archived">
+        <item>Properties</item>
     </string-array>
     <string-array name="options_due_date">
         <item>Edit</item>

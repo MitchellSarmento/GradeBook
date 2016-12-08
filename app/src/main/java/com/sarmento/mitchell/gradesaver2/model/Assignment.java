@@ -70,4 +70,8 @@ public class Assignment {
     public void addImage(Bitmap bitmap) {
         images.add(bitmap);
     }
+
+    public void removeImage(int imagePosition) {
+        images.remove(imagePosition);
+    }
 }

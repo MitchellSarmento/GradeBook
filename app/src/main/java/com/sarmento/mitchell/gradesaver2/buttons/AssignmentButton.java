@@ -107,14 +107,12 @@ public class AssignmentButton extends Button implements View.OnClickListener, Vi
 
     @Override
     public void onClick(View v) {
-        if (assignment.getImages().size() > 0) {
-            Intent intent = new Intent(context, AssignmentImagesActivity.class);
-            intent.putExtra(Academics.TERM_POSITION, termPosition);
-            intent.putExtra(Academics.SECTION_POSITION, sectionPosition);
-            intent.putExtra(Academics.ASSIGNMENT_POSITION, assignmentPosition);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        }
+        Intent intent = new Intent(context, AssignmentImagesActivity.class);
+        intent.putExtra(Academics.TERM_POSITION, termPosition);
+        intent.putExtra(Academics.SECTION_POSITION, sectionPosition);
+        intent.putExtra(Academics.ASSIGNMENT_POSITION, assignmentPosition);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
     @Override
