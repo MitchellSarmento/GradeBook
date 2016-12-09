@@ -3,6 +3,7 @@ package com.sarmento.mitchell.gradesaver2.adapters;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +15,14 @@ import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
-    private List<Bitmap> images;
+    private List<String> imagePaths;
     private int termPosition;
     private int sectionPosition;
     private int assignmentPosition;
 
-    public ImageAdapter(List<Bitmap> images, int termPosition, int sectionPosition,
+    public ImageAdapter(List<String> imagePaths, int termPosition, int sectionPosition,
                         int assignmentPosition) {
-        this.images             = images;
+        this.imagePaths         = imagePaths;
         this.termPosition       = termPosition;
         this.sectionPosition    = sectionPosition;
         this.assignmentPosition = assignmentPosition;
@@ -38,7 +39,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     public void onBindViewHolder(ImageAdapter.ViewHolder holder, int imagePosition) {
         ScrollImageView view = holder.imageView;
         view.init(termPosition, sectionPosition, assignmentPosition, imagePosition);
-        Bitmap image = images.get(imagePosition);
+        Bitmap image = BitmapFactory.decodeFile(imagePaths.get(imagePosition));
         int scaledHeight = image.getHeight() / 2;
         int scaledWidth = image.getWidth() / 2;
         view.setImageBitmap(Bitmap.createScaledBitmap(image, scaledWidth, scaledHeight, false));
@@ -46,7 +47,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return images.size();
+        return imagePaths.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

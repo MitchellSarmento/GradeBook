@@ -4,8 +4,11 @@ package com.sarmento.mitchell.gradesaver2.model;
 import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Assignment {
@@ -14,15 +17,34 @@ public class Assignment {
     private double score;
     private double maxScore;
     private String grade;
-    private List<Bitmap> images;
+    private List<String> imagePaths;
 
-    public Assignment(String assignmentName, String assignmentType, double score, double maxScore, String grade) {
+    // constructor for creating a new Assignment
+    public Assignment(String assignmentName, String assignmentType, double score, double maxScore,
+                      String grade) {
         this.assignmentName = assignmentName;
         this.assignmentType = assignmentType;
         this.score          = score;
         this.maxScore       = maxScore;
         this.grade          = grade;
-        images              = new ArrayList<>();
+        imagePaths          = new LinkedList<>();
+    }
+
+    // constructor for loading an existing Assignment
+    public Assignment(String assignmentName, String assignmentType, double score, double maxScore,
+                      String grade, String imagePaths) {
+        this.assignmentName = assignmentName;
+        this.assignmentType = assignmentType;
+        this.score          = score;
+        this.maxScore       = maxScore;
+        this.grade          = grade;
+
+        if (imagePaths != null) {
+            String[] paths = imagePaths.split(", ");
+            this.imagePaths = new LinkedList<>(Arrays.asList(paths));
+        } else {
+            this.imagePaths = new LinkedList<>();
+        }
     }
 
     public void updateAssignment(Context context, String assignmentName,
@@ -63,15 +85,35 @@ public class Assignment {
         return grade;
     }
 
-    public List<Bitmap> getImages() {
-        return images;
+    public List<String> getImagePaths() {
+        return imagePaths;
     }
 
-    public void addImage(Bitmap bitmap) {
-        images.add(bitmap);
+    public void addImagePath(Context context, String path, int termPosition, int sectionPosition,
+                             int assignmentPosition) {
+        imagePaths.add(path);
+
+        // update the assignment in the database
+        DBHelper db = new DBHelper(context);
+        ContentValues updateValues = new ContentValues();
+        String[] paths = imagePaths.toArray(new String[0]);
+        String pathsString = Arrays.toString(paths);
+        pathsString = pathsString.substring(1, pathsString.length()-1);
+        updateValues.put(DBHelper.KEY_ASSIGNMENTS_IMAGE_PATHS, pathsString);
+        db.updateAssignment(updateValues, termPosition, sectionPosition, assignmentPosition);
     }
 
-    public void removeImage(int imagePosition) {
-        images.remove(imagePosition);
+    public void removeImagePath(Context context, int imagePosition, int termPosition,
+                                int sectionPosition, int assignmentPosition) {
+        imagePaths.remove(imagePosition);
+
+        // update the assignment in the database
+        DBHelper db = new DBHelper(context);
+        ContentValues updateValues = new ContentValues();
+        String[] paths = imagePaths.toArray(new String[0]);
+        String pathsString = Arrays.toString(paths);
+        pathsString = pathsString.substring(1, pathsString.length()-1);
+        updateValues.put(DBHelper.KEY_ASSIGNMENTS_IMAGE_PATHS, pathsString);
+        db.updateAssignment(updateValues, termPosition, sectionPosition, assignmentPosition);
     }
 }

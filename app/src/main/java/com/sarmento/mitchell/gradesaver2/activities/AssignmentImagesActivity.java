@@ -43,7 +43,7 @@ public class AssignmentImagesActivity extends AppCompatActivity {
     private int assignmentPosition;
     private ImageAdapter adapter;
     private Assignment assignment;
-    private List<Bitmap> images;
+    private List<String> imagePaths;
     private PhotoView imageMain;
     private RecyclerView imageScroll;
 
@@ -69,7 +69,7 @@ public class AssignmentImagesActivity extends AppCompatActivity {
         }
         setTitle(assignment.getAssignmentName());
 
-        images      = assignment.getImages();
+        imagePaths  = assignment.getImagePaths();
         imageMain   = (PhotoView) findViewById(R.id.image_main);
         imageScroll = (RecyclerView) findViewById(R.id.image_scroll);
         setViews();
@@ -120,13 +120,15 @@ public class AssignmentImagesActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            assignment.addImage(BitmapFactory.decodeFile(currentPicturePath));
+            //assignment.addImage(BitmapFactory.decodeFile(currentPicturePath));
+            assignment.addImagePath(this, currentPicturePath, termPosition, sectionPosition,
+                    assignmentPosition);
             setViews();
         }
     }
 
     private void setViews() {
-        int numImages = images.size();
+        int numImages = imagePaths.size();
 
         if (numImages > 0) {
             if (adapter == null) {
@@ -134,7 +136,7 @@ public class AssignmentImagesActivity extends AppCompatActivity {
 
                 imageScroll.setLayoutManager(new LinearLayoutManager(
                         this, LinearLayoutManager.HORIZONTAL, false));
-                adapter = new ImageAdapter(images, termPosition, sectionPosition,
+                adapter = new ImageAdapter(imagePaths, termPosition, sectionPosition,
                         assignmentPosition);
                 imageScroll.setAdapter(adapter);
             } else {
@@ -146,7 +148,7 @@ public class AssignmentImagesActivity extends AppCompatActivity {
     }
 
     public void deleteView(int deletedPosition) {
-        int numImages = images.size();
+        int numImages = imagePaths.size();
 
         if (numImages > 0) {
             adapter.notifyDataSetChanged();
@@ -161,7 +163,7 @@ public class AssignmentImagesActivity extends AppCompatActivity {
     }
 
     public void setImageMain(int imagePosition) {
-        imageMain.setImageBitmap(images.get(imagePosition));
+        imageMain.setImageBitmap(BitmapFactory.decodeFile(imagePaths.get(imagePosition)));
         imageMainPosition = imagePosition;
         if (!imageMain.canZoom()) {
             imageMain.setZoomable(true);

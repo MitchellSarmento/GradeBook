@@ -12,6 +12,7 @@ import android.util.SparseBooleanArray;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -88,14 +89,15 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String KEY_SECTIONS_FINAL_GRADE        = "finalGrade";
 
     // TABLE_ASSIGNMENTS columns
-    public static final String KEY_ASSIGNMENTS_ID         = "id";
-    public static final String KEY_ASSIGNMENTS_TERM_ID    = "termId";
-    public static final String KEY_ASSIGNMENTS_SECTION_ID = "sectionId";
-    public static final String KEY_ASSIGNMENTS_NAME       = "name";
-    public static final String KEY_ASSIGNMENTS_TYPE       = "type";
-    public static final String KEY_ASSIGNMENTS_SCORE      = "score";
-    public static final String KEY_ASSIGNMENTS_MAX_SCORE  = "maxScore";
-    public static final String KEY_ASSIGNMENTS_GRADE      = "grade";
+    public static final String KEY_ASSIGNMENTS_ID          = "id";
+    public static final String KEY_ASSIGNMENTS_TERM_ID     = "termId";
+    public static final String KEY_ASSIGNMENTS_SECTION_ID  = "sectionId";
+    public static final String KEY_ASSIGNMENTS_NAME        = "name";
+    public static final String KEY_ASSIGNMENTS_TYPE        = "type";
+    public static final String KEY_ASSIGNMENTS_SCORE       = "score";
+    public static final String KEY_ASSIGNMENTS_MAX_SCORE   = "maxScore";
+    public static final String KEY_ASSIGNMENTS_GRADE       = "grade";
+    public static final String KEY_ASSIGNMENTS_IMAGE_PATHS = "imagePath";
 
     // TABLE_DUE_DATES columns
     public static final String KEY_DUE_DATES_ID         = "id";
@@ -200,7 +202,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 KEY_ASSIGNMENTS_TYPE + " TEXT," +
                 KEY_ASSIGNMENTS_SCORE + " REAL," +
                 KEY_ASSIGNMENTS_MAX_SCORE + " REAL," +
-                KEY_ASSIGNMENTS_GRADE + " TEXT)";
+                KEY_ASSIGNMENTS_GRADE + " TEXT," +
+                KEY_ASSIGNMENTS_IMAGE_PATHS + " TEXT)";
 
         final String CREATE_TABLE_DUE_DATES = "CREATE TABLE " + TABLE_DUE_DATES + "(" +
                 KEY_DUE_DATES_ID + " INTEGER," +
@@ -669,12 +672,14 @@ public class DBHelper extends SQLiteOpenHelper {
                 // gather information from the database
                 String assignmentName = cursor.getString(3);
                 String assignmentType = cursor.getString(4);
-                double score = cursor.getDouble(5);
-                double maxScore = cursor.getDouble(6);
-                String grade = cursor.getString(7);
+                double score          = cursor.getDouble(5);
+                double maxScore       = cursor.getDouble(6);
+                String grade          = cursor.getString(7);
+                String imagePaths     = cursor.getString(8);
 
                 // create and add the assignment
-                Assignment assignment = new Assignment(assignmentName, assignmentType, score, maxScore, grade);
+                Assignment assignment = new Assignment(assignmentName, assignmentType, score,
+                        maxScore, grade, imagePaths);
                 assignments.add(assignment);
             } while (cursor.moveToNext());
         }

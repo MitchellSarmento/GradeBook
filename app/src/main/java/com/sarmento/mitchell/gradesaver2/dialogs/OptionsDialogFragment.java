@@ -242,7 +242,8 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                                     academics.getCurrentTerms().get(termPosition)
                                             .getSections().get(sectionPosition)
                                             .getAssignments().get(assignmentPosition)
-                                            .removeImage(assignmentImagePosition);
+                                            .removeImagePath(activity, assignmentImagePosition,
+                                                    termPosition, sectionPosition, assignmentPosition);
                                     ((AssignmentImagesActivity) activity)
                                             .deleteView(assignmentImagePosition);
                                 }
