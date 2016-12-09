@@ -4,8 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.hardware.Camera;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraConstrainedHighSpeedCaptureSession;
+import android.hardware.camera2.CaptureRequest;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +34,7 @@ import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.Assignment;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,6 +45,7 @@ import uk.co.senab.photoview.PhotoView;
 
 public class AssignmentImagesActivity extends AppCompatActivity {
     public static final int IMAGE_CAPTURE = 0;
+    private static final int NO_IMAGE     = -1;
 
     private Academics academics = Academics.getInstance();
     private int termPosition;
@@ -47,7 +57,7 @@ public class AssignmentImagesActivity extends AppCompatActivity {
     private PhotoView imageMain;
     private RecyclerView imageScroll;
 
-    private int imageMainPosition = 0;
+    private int imageMainPosition = NO_IMAGE;
     private String currentPicturePath;
 
     @Override
@@ -102,8 +112,46 @@ public class AssignmentImagesActivity extends AppCompatActivity {
                     startActivityForResult(intent, IMAGE_CAPTURE);
                 }
                 return true;
+            case R.id.action_rotate_left:
+                if (imageMainPosition != NO_IMAGE) {
+                    rotateImage(-90);
+                }
+                return true;
+            case R.id.action_rotate_right:
+                if (imageMainPosition != NO_IMAGE) {
+                    rotateImage(90);
+                }
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void rotateImage(int rotation) {
+        imageMain.setRotationBy(rotation);
+
+        // save rotation change
+        Bitmap oldImage = BitmapFactory.decodeFile(currentPicturePath);
+        Matrix matrix = new Matrix();
+        matrix.postRotate(rotation);
+
+        Bitmap newImage = Bitmap.createBitmap(oldImage, 0, 0, oldImage.getWidth(),
+                oldImage.getHeight(), matrix, true);
+        File file = new File(currentPicturePath);
+        if (file.exists()) {
+            try {
+                if (file.delete()) {
+                    FileOutputStream out = new FileOutputStream(file);
+                    newImage.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                    out.flush();
+                    out.close();
+                    assignment.getImagePaths().set(imageMainPosition, currentPicturePath);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            setImageMain(imageMainPosition);
+            setViews();
         }
     }
 
@@ -156,13 +204,15 @@ public class AssignmentImagesActivity extends AppCompatActivity {
             }
         } else {
             adapter.notifyDataSetChanged();
+            imageMainPosition = NO_IMAGE;
             imageMain.setImageResource(R.drawable.ic_photo_gray_24dp);
             imageMain.setZoomable(false);
         }
     }
 
     public void setImageMain(int imagePosition) {
-        imageMain.setImageBitmap(BitmapFactory.decodeFile(imagePaths.get(imagePosition)));
+        currentPicturePath = imagePaths.get(imagePosition);
+        imageMain.setImageBitmap(BitmapFactory.decodeFile(currentPicturePath));
         imageMainPosition = imagePosition;
         if (!imageMain.canZoom()) {
             imageMain.setZoomable(true);

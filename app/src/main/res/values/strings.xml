@@ -69,6 +69,8 @@
 
     <!-- AssignmentImagesActivity Menu Actions -->
     <string name="action_add_picture">Add Picture</string>
+    <string name="action_rotate_left">Rotate Left</string>
+    <string name="action_rotate_right">Rotate Right</string>
 
     <!-- Settings -->
     <string name="about">About</string>

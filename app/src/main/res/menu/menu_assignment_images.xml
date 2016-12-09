@@ -3,6 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_rotate_left"
+        android:icon="@drawable/ic_rotate_left_white_24dp"
+        android:title="@string/action_rotate_left"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_rotate_right"
+        android:icon="@drawable/ic_rotate_right_white_24dp"
+        android:title="@string/action_rotate_right"
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/action_add_picture"
         android:icon="@drawable/ic_add_white_24dp"
         android:title="@string/action_add_picture"
