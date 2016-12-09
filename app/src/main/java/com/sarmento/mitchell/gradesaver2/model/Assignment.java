@@ -40,7 +40,7 @@ public class Assignment {
         this.maxScore       = maxScore;
         this.grade          = grade;
 
-        if (imagePaths != null) {
+        if (imagePaths != null && !imagePaths.equals("")) {
             String[] paths = imagePaths.split(", ");
             this.imagePaths = new LinkedList<>(Arrays.asList(paths));
         } else {
@@ -109,7 +109,7 @@ public class Assignment {
         // delete the picture from the device
         File imageToDelete = new File(imagePaths.get(imagePosition));
         imageToDelete.delete();
-        
+
         // delete the path
         imagePaths.remove(imagePosition);
 
