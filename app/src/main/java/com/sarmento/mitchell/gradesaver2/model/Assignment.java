@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -105,6 +106,11 @@ public class Assignment {
 
     public void removeImagePath(Context context, int imagePosition, int termPosition,
                                 int sectionPosition, int assignmentPosition) {
+        // delete the picture from the device
+        File imageToDelete = new File(imagePaths.get(imagePosition));
+        imageToDelete.delete();
+        
+        // delete the path
         imagePaths.remove(imagePosition);
 
         // update the assignment in the database

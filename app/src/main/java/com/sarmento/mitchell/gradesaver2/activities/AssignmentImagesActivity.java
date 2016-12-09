@@ -120,7 +120,6 @@ public class AssignmentImagesActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            //assignment.addImage(BitmapFactory.decodeFile(currentPicturePath));
             assignment.addImagePath(this, currentPicturePath, termPosition, sectionPosition,
                     assignmentPosition);
             setViews();
