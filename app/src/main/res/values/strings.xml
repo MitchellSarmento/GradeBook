@@ -98,7 +98,6 @@
     </string-array>
     <string-array name="options_assignment_image">
         <item>Delete</item>
-        <item>Properties</item>
     </string-array>
     <string-array name="options_assignment_image_archived">
         <item>Properties</item>

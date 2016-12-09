@@ -54,7 +54,6 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
 
     private static class AssignmentImageOptions {
         private static final int DELETE     = 0;
-        private static final int PROPERTIES = 1;
     }
 
     private static class AssignmentImageArchiveOptions {
@@ -248,8 +247,6 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                                             .deleteView(assignmentImagePosition);
                                 }
                             };
-                            break;
-                        case AssignmentImageOptions.PROPERTIES:
                             break;
                     }
                 }
