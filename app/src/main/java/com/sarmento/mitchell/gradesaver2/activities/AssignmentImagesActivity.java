@@ -32,6 +32,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import uk.co.senab.photoview.PhotoView;
+
 public class AssignmentImagesActivity extends AppCompatActivity {
     public static final int IMAGE_CAPTURE = 0;
 
@@ -42,7 +44,7 @@ public class AssignmentImagesActivity extends AppCompatActivity {
     private ImageAdapter adapter;
     private Assignment assignment;
     private List<Bitmap> images;
-    private ImageView imageMain;
+    private PhotoView imageMain;
     private RecyclerView imageScroll;
 
     private int imageMainPosition = 0;
@@ -68,7 +70,7 @@ public class AssignmentImagesActivity extends AppCompatActivity {
         setTitle(assignment.getAssignmentName());
 
         images      = assignment.getImages();
-        imageMain   = (ImageView) findViewById(R.id.image_main);
+        imageMain   = (PhotoView) findViewById(R.id.image_main);
         imageScroll = (RecyclerView) findViewById(R.id.image_scroll);
         setViews();
     }
@@ -129,6 +131,7 @@ public class AssignmentImagesActivity extends AppCompatActivity {
         if (numImages > 0) {
             if (adapter == null) {
                 setImageMain(0);
+
                 imageScroll.setLayoutManager(new LinearLayoutManager(
                         this, LinearLayoutManager.HORIZONTAL, false));
                 adapter = new ImageAdapter(images, termPosition, sectionPosition,
