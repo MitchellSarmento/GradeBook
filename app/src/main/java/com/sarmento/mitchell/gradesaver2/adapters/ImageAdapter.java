@@ -1,6 +1,7 @@
 package com.sarmento.mitchell.gradesaver2.adapters;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +38,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     public void onBindViewHolder(ImageAdapter.ViewHolder holder, int imagePosition) {
         ScrollImageView view = holder.imageView;
         view.init(termPosition, sectionPosition, assignmentPosition, imagePosition);
-        view.setImageBitmap(images.get(imagePosition));
+        Bitmap image = images.get(imagePosition);
+        int scaledHeight = image.getHeight() / 2;
+        int scaledWidth = image.getWidth() / 2;
+        view.setImageBitmap(Bitmap.createScaledBitmap(image, scaledWidth, scaledHeight, false));
     }
 
     @Override

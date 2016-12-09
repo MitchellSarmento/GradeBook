@@ -3,9 +3,14 @@ package com.sarmento.mitchell.gradesaver2.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -13,13 +18,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.adapters.ImageAdapter;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.Assignment;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class AssignmentImagesActivity extends AppCompatActivity {
     public static final int IMAGE_CAPTURE = 0;
@@ -35,6 +46,7 @@ public class AssignmentImagesActivity extends AppCompatActivity {
     private RecyclerView imageScroll;
 
     private int imageMainPosition = 0;
+    private String currentPicturePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,18 +87,38 @@ public class AssignmentImagesActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_add_picture:
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, IMAGE_CAPTURE);
+                File photoFile = null;
+                try {
+                    photoFile = createImageFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (photoFile != null) {
+                    Uri photoUri = FileProvider.getUriForFile(this,
+                            "com.sarmento.mitchell.gradesaver2", photoFile);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                    startActivityForResult(intent, IMAGE_CAPTURE);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+                .format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getFilesDir();
+        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+        currentPicturePath = image.getAbsolutePath();
+        return image;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
-            assignment.addImage(imageBitmap);
+            assignment.addImage(BitmapFactory.decodeFile(currentPicturePath));
             setViews();
         }
     }
@@ -97,8 +129,8 @@ public class AssignmentImagesActivity extends AppCompatActivity {
         if (numImages > 0) {
             if (adapter == null) {
                 setImageMain(0);
-                imageScroll.setLayoutManager(new LinearLayoutManager(this,
-                        LinearLayoutManager.HORIZONTAL, false));
+                imageScroll.setLayoutManager(new LinearLayoutManager(
+                        this, LinearLayoutManager.HORIZONTAL, false));
                 adapter = new ImageAdapter(images, termPosition, sectionPosition,
                         assignmentPosition);
                 imageScroll.setAdapter(adapter);
