@@ -39,10 +39,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     public void onBindViewHolder(ImageAdapter.ViewHolder holder, int imagePosition) {
         ScrollImageView view = holder.imageView;
         view.init(termPosition, sectionPosition, assignmentPosition, imagePosition);
-        Bitmap image = BitmapFactory.decodeFile(imagePaths.get(imagePosition));
-        int scaledHeight = image.getHeight() / 2;
-        int scaledWidth = image.getWidth() / 2;
-        view.setImageBitmap(Bitmap.createScaledBitmap(image, scaledWidth, scaledHeight, false));
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 10;
+        Bitmap image = BitmapFactory.decodeFile(imagePaths.get(imagePosition), options);
+        view.setImageBitmap(image);
     }
 
     @Override

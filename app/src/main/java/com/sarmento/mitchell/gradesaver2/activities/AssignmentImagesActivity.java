@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -114,12 +115,12 @@ public class AssignmentImagesActivity extends AppCompatActivity {
                 return true;
             case R.id.action_rotate_left:
                 if (imageMainPosition != NO_IMAGE) {
-                    rotateImage(-90);
+                    imageMain.setRotationBy(-90);
                 }
                 return true;
             case R.id.action_rotate_right:
                 if (imageMainPosition != NO_IMAGE) {
-                    rotateImage(90);
+                    imageMain.setRotationBy(90);
                 }
                 return true;
             default:
@@ -127,31 +128,43 @@ public class AssignmentImagesActivity extends AppCompatActivity {
         }
     }
 
-    private void rotateImage(int rotation) {
-        imageMain.setRotationBy(rotation);
-
-        // save rotation change
-        Bitmap oldImage = BitmapFactory.decodeFile(currentPicturePath);
-        Matrix matrix = new Matrix();
-        matrix.postRotate(rotation);
-
-        Bitmap newImage = Bitmap.createBitmap(oldImage, 0, 0, oldImage.getWidth(),
-                oldImage.getHeight(), matrix, true);
-        File file = new File(currentPicturePath);
-        if (file.exists()) {
-            try {
-                if (file.delete()) {
-                    FileOutputStream out = new FileOutputStream(file);
-                    newImage.compress(Bitmap.CompressFormat.JPEG, 100, out);
-                    out.flush();
-                    out.close();
-                    assignment.getImagePaths().set(imageMainPosition, currentPicturePath);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+    private void correctRotation() {
+        try {
+            ExifInterface exif = new ExifInterface(currentPicturePath);
+            Bitmap originalImage = BitmapFactory.decodeFile(currentPicturePath);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_UNDEFINED);
+            int correctionValue = 0;
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    correctionValue = 90;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    correctionValue = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    correctionValue = 270;
+                    break;
+                default:
+                    break;
             }
-            setImageMain(imageMainPosition);
-            setViews();
+            if (correctionValue != 0) {
+                Matrix matrix = new Matrix();
+                matrix.postRotate(correctionValue);
+                Bitmap newImage = Bitmap.createBitmap(originalImage, 0, 0, originalImage.getWidth(),
+                        originalImage.getHeight(), matrix, true);
+                File file = new File(currentPicturePath);
+                if (file.exists()) {
+                    if (file.delete()) {
+                        FileOutputStream out = new FileOutputStream(file);
+                        newImage.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                        out.flush();
+                        out.close();
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -168,8 +181,9 @@ public class AssignmentImagesActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            assignment.addImagePath(this, currentPicturePath, termPosition, sectionPosition,
-                    assignmentPosition);
+            correctRotation();
+            assignment.addImagePath(this, currentPicturePath, termPosition,
+                    sectionPosition, assignmentPosition);
             setViews();
         }
     }
@@ -188,6 +202,9 @@ public class AssignmentImagesActivity extends AppCompatActivity {
                 imageScroll.setAdapter(adapter);
             } else {
                 adapter.notifyDataSetChanged();
+                if (imageMainPosition == NO_IMAGE) {
+                    setImageMain(0);
+                }
             }
         } else {
             imageMain.setZoomable(false);
