@@ -140,6 +140,8 @@ public class AssignmentImagesActivity extends AppCompatActivity {
             } else {
                 adapter.notifyDataSetChanged();
             }
+        } else {
+            imageMain.setZoomable(false);
         }
     }
 
@@ -154,11 +156,15 @@ public class AssignmentImagesActivity extends AppCompatActivity {
         } else {
             adapter.notifyDataSetChanged();
             imageMain.setImageResource(R.drawable.ic_photo_gray_24dp);
+            imageMain.setZoomable(false);
         }
     }
 
     public void setImageMain(int imagePosition) {
         imageMain.setImageBitmap(images.get(imagePosition));
         imageMainPosition = imagePosition;
+        if (!imageMain.canZoom()) {
+            imageMain.setZoomable(true);
+        }
     }
 }
