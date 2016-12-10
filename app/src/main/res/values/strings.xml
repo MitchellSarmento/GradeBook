@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GradeSaver</string>
+    <string name="app_name">GradeBook</string>
 
     <!-- Assignment Types -->
     <string name="homework">Homework</string>
