@@ -1,23 +1,18 @@
 package com.sarmento.mitchell.gradesaver2.activities;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.adapters.AssignmentAdapter;
 import com.sarmento.mitchell.gradesaver2.dialogs.AssignmentDialogFragment;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
-import com.sarmento.mitchell.gradesaver2.model.Assignment;
 import com.sarmento.mitchell.gradesaver2.model.Section;
 import com.sarmento.mitchell.gradesaver2.views.SectionHeader;
 
@@ -25,7 +20,6 @@ public class AssignmentsActivity extends AppCompatActivity {
     private Academics academics = Academics.getInstance();
     private int termPosition;
     private int sectionPosition;
-    private int assignmentPosition;
     private AssignmentAdapter adapter;
     private SectionHeader header;
     private Section section;
@@ -47,6 +41,7 @@ public class AssignmentsActivity extends AppCompatActivity {
         }
         setTitle(section.getSectionName());
 
+        // initialize the header to display Section details
         header = (SectionHeader) findViewById(R.id.header_section);
         header.init(section);
 
@@ -60,11 +55,6 @@ public class AssignmentsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         updateList();
-    }
-
-    public void updateList() {
-        adapter.notifyDataSetChanged();
-        header.update(section);
     }
 
     @Override
@@ -98,5 +88,13 @@ public class AssignmentsActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /*
+     * Notify the RecyclerView adapter and update the Section header
+     */
+    public void updateList() {
+        adapter.notifyDataSetChanged();
+        header.update(section);
     }
 }

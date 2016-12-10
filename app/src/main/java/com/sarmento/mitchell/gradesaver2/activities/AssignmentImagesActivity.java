@@ -5,29 +5,17 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
-import android.hardware.Camera;
-import android.hardware.camera2.CameraCharacteristics;
-import android.hardware.camera2.CameraConstrainedHighSpeedCaptureSession;
-import android.hardware.camera2.CaptureRequest;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Environment;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.adapters.ImageAdapter;
@@ -128,6 +116,19 @@ public class AssignmentImagesActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            correctRotation();
+            assignment.addImagePath(this, currentPicturePath, termPosition,
+                    sectionPosition, assignmentPosition);
+            setViews();
+        }
+    }
+
+    /*
+     * Correct the rotation of the image based on device orientation at the time of capture.
+     */
     private void correctRotation() {
         try {
             ExifInterface exif = new ExifInterface(currentPicturePath);
@@ -168,6 +169,9 @@ public class AssignmentImagesActivity extends AppCompatActivity {
         }
     }
 
+    /*
+     * Create an image file for use with Camera Intent.
+     */
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
                 .format(new Date());
@@ -178,20 +182,15 @@ public class AssignmentImagesActivity extends AppCompatActivity {
         return image;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            correctRotation();
-            assignment.addImagePath(this, currentPicturePath, termPosition,
-                    sectionPosition, assignmentPosition);
-            setViews();
-        }
-    }
-
+    /*
+     * Set the main image and assign thumbnails to RecyclerView adapter.
+     */
     private void setViews() {
         int numImages = imagePaths.size();
 
+        // set the views only if there are images to use
         if (numImages > 0) {
+            // perform initial adapter attachment and set the main image
             if (adapter == null) {
                 setImageMain(0);
 
@@ -200,25 +199,32 @@ public class AssignmentImagesActivity extends AppCompatActivity {
                 adapter = new ImageAdapter(imagePaths, termPosition, sectionPosition,
                         assignmentPosition);
                 imageScroll.setAdapter(adapter);
+            // notify the adapter of changes and set the main image if it's empty
             } else {
                 adapter.notifyDataSetChanged();
                 if (imageMainPosition == NO_IMAGE) {
                     setImageMain(0);
                 }
             }
+        // disable zoom functionality while the main image is empty
         } else {
             imageMain.setZoomable(false);
         }
     }
 
+    /*
+     * Delete the selected image.
+     */
     public void deleteView(int deletedPosition) {
         int numImages = imagePaths.size();
 
+        // reset the main image if the image deleted was being viewed and more images exist
         if (numImages > 0) {
             adapter.notifyDataSetChanged();
             if (deletedPosition == imageMainPosition) {
                 setImageMain(0);
             }
+        // set the main image placeholder and disable zoom functionality if there are no more images
         } else {
             adapter.notifyDataSetChanged();
             imageMainPosition = NO_IMAGE;
@@ -227,10 +233,14 @@ public class AssignmentImagesActivity extends AppCompatActivity {
         }
     }
 
+    /*
+     * Set the main image bitmap.
+     */
     public void setImageMain(int imagePosition) {
         currentPicturePath = imagePaths.get(imagePosition);
         imageMain.setImageBitmap(BitmapFactory.decodeFile(currentPicturePath));
         imageMainPosition = imagePosition;
+
         if (!imageMain.canZoom()) {
             imageMain.setZoomable(true);
         }
