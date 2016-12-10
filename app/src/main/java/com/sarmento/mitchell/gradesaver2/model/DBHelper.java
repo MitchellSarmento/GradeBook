@@ -383,6 +383,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 KEY_ASSIGNMENTS_TERM_ID + " - 1 WHERE " + KEY_ASSIGNMENTS_TERM_ID + " > " + termId);
         db.execSQL("UPDATE " + TABLE_DUE_DATES + " SET " + KEY_DUE_DATES_TERM_ID + " = " +
                 KEY_DUE_DATES_TERM_ID + " - 1 WHERE " + KEY_DUE_DATES_TERM_ID + " > " + termId);
+        db.execSQL("UPDATE " + TABLE_SCHEDULES + " SET " + KEY_SCHEDULES_TERM_ID + " = " +
+                KEY_SCHEDULES_TERM_ID + " - 1 WHERE " + KEY_SCHEDULES_TERM_ID + " > " + termId);
         db.close();
     }
 
@@ -415,6 +417,9 @@ public class DBHelper extends SQLiteOpenHelper {
                     " > " + sectionId);
             db.execSQL("UPDATE " + TABLE_DUE_DATES + " SET " + KEY_DUE_DATES_SECTION_ID + " = " +
                     KEY_DUE_DATES_SECTION_ID + " - 1 WHERE " + KEY_DUE_DATES_SECTION_ID +
+                    " > " + sectionId);
+            db.execSQL("UPDATE " + TABLE_SCHEDULES + " SET " + KEY_SCHEDULES_SECTION_ID + " = " +
+                    KEY_SCHEDULES_SECTION_ID + " - 1 WHERE " + KEY_SCHEDULES_SECTION_ID +
                     " > " + sectionId);
         }
         db.close();
