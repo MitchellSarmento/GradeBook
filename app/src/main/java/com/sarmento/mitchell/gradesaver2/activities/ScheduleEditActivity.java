@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.sarmento.mitchell.gradesaver2.R;
@@ -31,24 +32,13 @@ public class ScheduleEditActivity extends AppCompatActivity {
 
         RecyclerView schedules = (RecyclerView) findViewById(R.id.schedules);
         schedules.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ScheduleEditAdapter(this, term.getSections(), termPosition);
+        adapter = new ScheduleEditAdapter(this, schedules, term.getSections(), termPosition);
         schedules.setAdapter(adapter);
     }
 
     @Override
     public void onBackPressed() {
-        adapter.closeAll();
+        adapter.updateSchedule();
         super.onBackPressed();
-    }
-
-    public void pickTime(final View v) {
-        final boolean is24HourFormat = DateFormat.is24HourFormat(this);
-
-        new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                ((EditText) v).setText(Schedule.timeToString(hour, minute, is24HourFormat));
-            }
-        }, 0, 0, is24HourFormat).show();
     }
 }

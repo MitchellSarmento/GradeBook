@@ -31,11 +31,14 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     private void init(int day, List<Section> sections) {
         for (Section section : sections) {
             Schedule schedule = section.getSchedule();
-            if (schedule.getActive().get(day)) {
+
+            String startTime = schedule.getStartTimes().get(day);
+            String endTime   = schedule.getEndTimes().get(day);
+            if (!startTime.equals("") && !endTime.equals("")) {
                 sectionNames.add(section.getSectionName());
-                locations.add(schedule.getLocations().get(day));
-                startTimes.add(schedule.getStartTimes().get(day));
-                endTimes.add(schedule.getEndTimes().get(day));
+                locations.add(schedule.getLocation());
+                startTimes.add(startTime);
+                endTimes.add(endTime);
             }
         }
     }

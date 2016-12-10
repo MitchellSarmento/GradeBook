@@ -1,86 +1,60 @@
 package com.sarmento.mitchell.gradesaver2.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 
-import com.github.aakira.expandablelayout.ExpandableLayoutListenerAdapter;
-import com.github.aakira.expandablelayout.ExpandableLinearLayout;
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.model.Schedule;
 import com.sarmento.mitchell.gradesaver2.model.Section;
+import com.sarmento.mitchell.gradesaver2.views.ScheduleEditHeader;
 
-import java.util.ArrayList;
+import net.cachapa.expandablelayout.ExpandableLayout;
+
 import java.util.List;
 
 public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapter.ViewHolder> {
+    private static final int UNSELECTED = -1;
+
     private Activity activity;
+    private RecyclerView recyclerView;
     private List<Section> sections;
     private int termPosition;
+    public int sectionPosition = UNSELECTED;
 
-    private SparseBooleanArray expandState = new SparseBooleanArray();
-    private List<ViewHolder> holders       = new ArrayList<>();
+    private ScheduleEditHeader header;
+    private Section section;
+    private Schedule schedule;
 
-    public ScheduleEditAdapter(Activity activity, List<Section> sections, int termPosition) {
+    public ScheduleEditAdapter(Activity activity, RecyclerView recyclerView, List<Section> sections,
+                               int termPosition) {
         this.activity     = activity;
+        this.recyclerView = recyclerView;
         this.sections     = sections;
         this.termPosition = termPosition;
-
-        for (int i = 0; i < sections.size(); i++) {
-            expandState.put(i, false);
-        }
     }
 
     @Override
     public ScheduleEditAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View inflatedView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_schedule_edit, parent, false);
-        ViewHolder holder = new ViewHolder(inflatedView);
-        holders.add(holder);
-        return holder;
+        return new ViewHolder(inflatedView);
     }
 
     @Override
     public void onBindViewHolder(final ScheduleEditAdapter.ViewHolder holder, int sectionPosition) {
-        final Section section = sections.get(sectionPosition);
-
-        holder.sectionHeader.setText(section.getSectionName());
-        holder.sectionHeader.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                holder.expandableLayout.toggle();
-            }
-        });
-
-        holder.expandableLayout.setInRecyclerView(true);
-        holder.expandableLayout.setExpanded(expandState.get(sectionPosition));
-        holder.expandableLayout.setListener(new ExpandableLayoutListenerAdapter() {
-            @Override
-            public void onPreOpen() {
-                expandState.put(holder.getAdapterPosition(), true);
-            }
-
-            @Override
-            public void onPreClose() {
-                expandState.put(holder.getAdapterPosition(), false);
-
-                // update relevant schedule information
-                section.getSchedule().updateSchedule(activity, holder, termPosition,
-                        holder.getAdapterPosition());
-            }
-        });
-
-        // set fields
-        Schedule schedule = section.getSchedule();
+        holder.bind(sectionPosition);
+        section = sections.get(sectionPosition);
+        holder.scheduleEditHeader.init(holder, section, termPosition, sectionPosition);
         for (Schedule.Day day : Schedule.Day.values()) {
-            setFields(schedule, holder, day.getValue());
+            setFields(holder, day.getValue());
         }
     }
 
@@ -89,49 +63,73 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
         return sections.size();
     }
 
-    public void closeAll() {
-        for (ViewHolder holder : holders) {
-            holder.expandableLayout.collapse();
-        }
+    // used to save changes when user presses the back button without closing the ExpandableLayout
+    public void updateSchedule() {
+        header.updateSchedule();
     }
 
-    private void setFields(Schedule schedule, ViewHolder holder, int day) {
-        holder.switches.get(day).setChecked(schedule.getActive().get(day));
+    private void setFields(ViewHolder holder, int day) {
+        schedule = section.getSchedule();
+        holder.scheduleEditHeader.setText(section.getSectionName());
+        holder.location.setText(schedule.getLocation());
         holder.startTimes.get(day).setText(schedule.getStartTimes().get(day));
         holder.endTimes.get(day).setText(schedule.getEndTimes().get(day));
-        holder.locations.get(day).setText(schedule.getLocations().get(day));
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView sectionHeader;
-        private ExpandableLinearLayout expandableLayout;
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private ScheduleEditHeader scheduleEditHeader;
+        private ExpandableLayout expandableLayout;
+        private int position;
 
-        public SparseArray<Switch> switches     = new SparseArray<>();
-        public SparseArray<EditText> startTimes = new SparseArray<>();
-        public SparseArray<EditText> endTimes   = new SparseArray<>();
-        public SparseArray<EditText> locations  = new SparseArray<>();
+        public EditText location;
+        public SparseArray<TextView> startTimes = new SparseArray<>();
+        public SparseArray<TextView> endTimes   = new SparseArray<>();
 
         private ViewHolder(View v) {
             super(v);
-            sectionHeader    = (TextView) v.findViewById(R.id.header_schedule_edit);
-            expandableLayout = (ExpandableLinearLayout) v.findViewById(R.id.details_schedule_edit);
+            scheduleEditHeader = (ScheduleEditHeader) v.findViewById(R.id.header_schedule_edit);
+            expandableLayout   = (ExpandableLayout) v.findViewById(R.id.details_schedule_edit);
 
-            int[] switchIds    = {R.id.monday_switch, R.id.tuesday_switch, R.id.wednesday_switch,
-                    R.id.thursday_switch, R.id.friday_switch, R.id.saturday_switch, R.id.sunday_switch};
             int[] startTimeIds = {R.id.monday_start, R.id.tuesday_start, R.id.wednesday_start,
                     R.id.thursday_start, R.id.friday_start, R.id.saturday_start, R.id.sunday_start};
             int[] endTimeIds   = {R.id.monday_end, R.id.tuesday_end, R.id.wednesday_end,
                     R.id.thursday_end, R.id.friday_end, R.id.saturday_end, R.id.sunday_end};
-            int[] locationIds  = {R.id.monday_location, R.id.tuesday_location, R.id.wednesday_location,
-                    R.id.thursday_location, R.id.friday_location, R.id.saturday_location,
-                    R.id.sunday_location};
 
+            location = (EditText) v.findViewById(R.id.location);
             for (Schedule.Day day : Schedule.Day.values()) {
                 int dayValue = day.getValue();
-                switches.put(dayValue, (Switch) v.findViewById(switchIds[dayValue]));
-                startTimes.put(dayValue, (EditText) v.findViewById(startTimeIds[dayValue]));
-                endTimes.put(dayValue, (EditText) v.findViewById(endTimeIds[dayValue]));
-                locations.put(dayValue, (EditText) v.findViewById(locationIds[dayValue]));
+                startTimes.put(dayValue, (TextView) v.findViewById(startTimeIds[dayValue]));
+                endTimes.put(dayValue, (TextView) v.findViewById(endTimeIds[dayValue]));
+            }
+
+            scheduleEditHeader.setOnClickListener(this);
+        }
+
+        public void bind(int position) {
+            this.position = position;
+            expandableLayout.collapse(false);
+        }
+
+        @Override
+        public void onClick(View v) {
+            ViewHolder holder = (ViewHolder) recyclerView
+                    .findViewHolderForAdapterPosition(sectionPosition);
+            if (holder != null) {
+                holder.expandableLayout.collapse();
+
+                // hide the keyboard if it was open
+                InputMethodManager imm = (InputMethodManager)activity
+                        .getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
+
+            if (position == sectionPosition) {
+                scheduleEditHeader.updateSchedule();
+                sectionPosition = UNSELECTED;
+            } else {
+                expandableLayout.expand();
+                header = scheduleEditHeader;
+                sectionPosition = position;
             }
         }
     }

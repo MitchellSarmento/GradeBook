@@ -112,32 +112,19 @@ public class DBHelper extends SQLiteOpenHelper {
     // TABLE_SCHEDULES columns
     public static final String KEY_SCHEDULES_TERM_ID            = "termId";
     public static final String KEY_SCHEDULES_SECTION_ID         = "sectionId";
-    public static final String KEY_SCHEDULES_ON_MONDAY          = "onMo";
-    public static final String KEY_SCHEDULES_LOCATION_MONDAY    = "locationMo";
+    public static final String KEY_SCHEDULES_LOCATION           = "location";
     public static final String KEY_SCHEDULES_START_MONDAY       = "startMo";
     public static final String KEY_SCHEDULES_END_MONDAY         = "endMo";
-    public static final String KEY_SCHEDULES_ON_TUESDAY         = "onTu";
-    public static final String KEY_SCHEDULES_LOCATION_TUESDAY   = "locationTu";
     public static final String KEY_SCHEDULES_START_TUESDAY      = "startTu";
     public static final String KEY_SCHEDULES_END_TUESDAY        = "endTu";
-    public static final String KEY_SCHEDULES_ON_WEDNESDAY       = "onWe";
-    public static final String KEY_SCHEDULES_LOCATION_WEDNESDAY = "locationWe";
     public static final String KEY_SCHEDULES_START_WEDNESDAY    = "startWe";
     public static final String KEY_SCHEDULES_END_WEDNESDAY      = "endWe";
-    public static final String KEY_SCHEDULES_ON_THURSDAY        = "onTh";
-    public static final String KEY_SCHEDULES_LOCATION_THURSDAY  = "locationTh";
     public static final String KEY_SCHEDULES_START_THURSDAY     = "startTh";
     public static final String KEY_SCHEDULES_END_THURSDAY       = "endTh";
-    public static final String KEY_SCHEDULES_ON_FRIDAY          = "onFr";
-    public static final String KEY_SCHEDULES_LOCATION_FRIDAY    = "locationFr";
     public static final String KEY_SCHEDULES_START_FRIDAY       = "startFr";
     public static final String KEY_SCHEDULES_END_FRIDAY         = "endFr";
-    public static final String KEY_SCHEDULES_ON_SATURDAY        = "onSa";
-    public static final String KEY_SCHEDULES_LOCATION_SATURDAY  = "locationSa";
     public static final String KEY_SCHEDULES_START_SATURDAY     = "startSa";
     public static final String KEY_SCHEDULES_END_SATURDAY       = "endSa";
-    public static final String KEY_SCHEDULES_ON_SUNDAY          = "onSu";
-    public static final String KEY_SCHEDULES_LOCATION_SUNDAY    = "locationSu";
     public static final String KEY_SCHEDULES_START_SUNDAY       = "startSu";
     public static final String KEY_SCHEDULES_END_SUNDAY         = "endSu";
 
@@ -218,32 +205,19 @@ public class DBHelper extends SQLiteOpenHelper {
         final String CREATE_TABLE_SCHEDULES = "CREATE TABLE " + TABLE_SCHEDULES + "(" +
                 KEY_SCHEDULES_TERM_ID + " INTEGER," +
                 KEY_SCHEDULES_SECTION_ID + " INTEGER," +
-                KEY_SCHEDULES_ON_MONDAY + " INTEGER," +
-                KEY_SCHEDULES_LOCATION_MONDAY + " TEXT," +
+                KEY_SCHEDULES_LOCATION + " TEXT," +
                 KEY_SCHEDULES_START_MONDAY + " TEXT," +
                 KEY_SCHEDULES_END_MONDAY + " TEXT," +
-                KEY_SCHEDULES_ON_TUESDAY + " INTEGER," +
-                KEY_SCHEDULES_LOCATION_TUESDAY + " TEXT," +
                 KEY_SCHEDULES_START_TUESDAY + " TEXT," +
                 KEY_SCHEDULES_END_TUESDAY + " TEXT," +
-                KEY_SCHEDULES_ON_WEDNESDAY + " INTEGER," +
-                KEY_SCHEDULES_LOCATION_WEDNESDAY + " TEXT," +
                 KEY_SCHEDULES_START_WEDNESDAY + " TEXT," +
                 KEY_SCHEDULES_END_WEDNESDAY + " TEXT," +
-                KEY_SCHEDULES_ON_THURSDAY + " INTEGER," +
-                KEY_SCHEDULES_LOCATION_THURSDAY + " TEXT," +
                 KEY_SCHEDULES_START_THURSDAY + " TEXT," +
                 KEY_SCHEDULES_END_THURSDAY + " TEXT," +
-                KEY_SCHEDULES_ON_FRIDAY + " INTEGER," +
-                KEY_SCHEDULES_LOCATION_FRIDAY + " TEXT," +
                 KEY_SCHEDULES_START_FRIDAY + " TEXT," +
                 KEY_SCHEDULES_END_FRIDAY + " TEXT," +
-                KEY_SCHEDULES_ON_SATURDAY + " INTEGER," +
-                KEY_SCHEDULES_LOCATION_SATURDAY + " TEXT," +
                 KEY_SCHEDULES_START_SATURDAY + " TEXT," +
                 KEY_SCHEDULES_END_SATURDAY + " TEXT," +
-                KEY_SCHEDULES_ON_SUNDAY + " INTEGER," +
-                KEY_SCHEDULES_LOCATION_SUNDAY + " TEXT," +
                 KEY_SCHEDULES_START_SUNDAY + " TEXT," +
                 KEY_SCHEDULES_END_SUNDAY + " TEXT)";
 
@@ -352,15 +326,8 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_SCHEDULES_TERM_ID, termId);
         values.put(KEY_SCHEDULES_SECTION_ID, sectionId);
+        values.put(KEY_SCHEDULES_LOCATION, schedule.getLocation());
 
-        String[] onKeys = {KEY_SCHEDULES_ON_MONDAY, KEY_SCHEDULES_ON_TUESDAY,
-                KEY_SCHEDULES_ON_WEDNESDAY, KEY_SCHEDULES_ON_THURSDAY,
-                KEY_SCHEDULES_ON_FRIDAY, KEY_SCHEDULES_ON_SATURDAY,
-                KEY_SCHEDULES_ON_SUNDAY};
-        String[] locationKeys = {KEY_SCHEDULES_LOCATION_MONDAY,
-                KEY_SCHEDULES_LOCATION_TUESDAY, KEY_SCHEDULES_LOCATION_WEDNESDAY,
-                KEY_SCHEDULES_LOCATION_THURSDAY, KEY_SCHEDULES_LOCATION_FRIDAY,
-                KEY_SCHEDULES_LOCATION_SATURDAY, KEY_SCHEDULES_LOCATION_SUNDAY};
         String[] startKeys = {KEY_SCHEDULES_START_MONDAY,
                 KEY_SCHEDULES_START_TUESDAY, KEY_SCHEDULES_START_WEDNESDAY,
                 KEY_SCHEDULES_START_THURSDAY, KEY_SCHEDULES_START_FRIDAY,
@@ -370,14 +337,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 KEY_SCHEDULES_END_THURSDAY, KEY_SCHEDULES_END_FRIDAY,
                 KEY_SCHEDULES_END_SATURDAY, KEY_SCHEDULES_END_SUNDAY};
 
-        SparseBooleanArray active      = schedule.getActive();
-        SparseArray<String> locations  = schedule.getLocations();
         SparseArray<String> startTimes = schedule.getStartTimes();
         SparseArray<String> endTimes   = schedule.getEndTimes();
         for (Schedule.Day day : Schedule.Day.values()) {
             int dayValue = day.getValue();
-            values.put(onKeys[dayValue], active.get(dayValue));
-            values.put(locationKeys[dayValue], locations.get(dayValue));
             values.put(startKeys[dayValue], startTimes.get(dayValue));
             values.put(endKeys[dayValue], endTimes.get(dayValue));
         }
@@ -731,22 +694,20 @@ public class DBHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 // gather information from the database
-                SparseBooleanArray active      = new SparseBooleanArray();
-                SparseArray<String> locations  = new SparseArray<>();
+                String location = cursor.getString(2);
+
                 SparseArray<String> startTimes = new SparseArray<>();
                 SparseArray<String> endTimes   = new SparseArray<>();
 
                 int day = 0;
-                for (int i = 2; i < 30; i += 4) {
-                    active.put(day, cursor.getInt(i) == TRUE);
-                    locations.put(day, cursor.getString(i+1));
-                    startTimes.put(day, cursor.getString(i+2));
-                    endTimes.put(day, cursor.getString(i+3));
+                for (int i = 3; i < 16; i += 2) {
+                    startTimes.put(day, cursor.getString(i));
+                    endTimes.put(day, cursor.getString(i+1));
                     day++;
                 }
 
                 // create the Schedule
-                schedule = new Schedule(active, locations, startTimes, endTimes);
+                schedule = new Schedule(location, startTimes, endTimes);
             } while (cursor.moveToNext());
         }
         cursor.close();

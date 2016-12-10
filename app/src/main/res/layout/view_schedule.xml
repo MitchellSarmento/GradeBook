@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:background="@android:color/darker_gray"
+        android:textStyle="bold"
         android:text="@string/tuesday"
         android:id="@+id/header_tuesday"/>
 
@@ -35,6 +36,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:background="@android:color/darker_gray"
+        android:textStyle="bold"
         android:text="@string/wednesday"
         android:id="@+id/header_wednesday"/>
 
@@ -48,6 +50,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:background="@android:color/darker_gray"
+        android:textStyle="bold"
         android:text="@string/thursday"
         android:id="@+id/header_thursday"/>
 
@@ -61,6 +64,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:background="@android:color/darker_gray"
+        android:textStyle="bold"
         android:text="@string/friday"
         android:id="@+id/header_friday"/>
 
@@ -74,6 +78,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:background="@android:color/darker_gray"
+        android:textStyle="bold"
         android:text="@string/saturday"
         android:id="@+id/header_saturday"/>
 
@@ -87,6 +92,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:background="@android:color/darker_gray"
+        android:textStyle="bold"
         android:text="@string/sunday"
         android:id="@+id/header_sunday"/>
 

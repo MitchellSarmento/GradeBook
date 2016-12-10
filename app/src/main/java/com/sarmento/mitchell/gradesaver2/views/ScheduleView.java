@@ -61,10 +61,10 @@ public class ScheduleView extends LinearLayout {
         for (Schedule.Day day : Schedule.Day.values()) {
             int dayValue = day.getValue();
             TextView header = (TextView) findViewById(headerViewIds[dayValue]);
+            RecyclerView details = (RecyclerView) findViewById(detailsViewIds[dayValue]);
             if (locations.get(dayValue).size() > 0) {
                 ScheduleAdapter adapter = new ScheduleAdapter(dayValue, sections);
 
-                RecyclerView details = (RecyclerView) findViewById(detailsViewIds[dayValue]);
                 LinearLayoutManager layoutManager = new LinearLayoutManager(context);
                 details.setLayoutManager(layoutManager);
                 details.addItemDecoration(new DividerItemDecoration(context,
@@ -76,6 +76,7 @@ public class ScheduleView extends LinearLayout {
                 }
             } else {
                 header.setVisibility(View.GONE);
+                details.setAdapter(new ScheduleAdapter(dayValue, sections));
             }
         }
     }
@@ -83,13 +84,11 @@ public class ScheduleView extends LinearLayout {
     private void extractScheduleInfo(int day, Section section) {
         Schedule schedule = section.getSchedule();
 
-        boolean active   = schedule.getActive().get(day);
-        String location  = schedule.getLocations().get(day);
         String startTime = schedule.getStartTimes().get(day);
         String endTime   = schedule.getEndTimes().get(day);
 
-        if (active) {
-            locations.get(day).add(location);
+        if (!startTime.equals("") && !endTime.equals("")) {
+            locations.get(day).add(schedule.getLocation());
             startTimes.get(day).add(startTime);
             endTimes.get(day).add(endTime);
         }
