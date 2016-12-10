@@ -65,7 +65,7 @@ public class AssignmentButton extends Button implements View.OnClickListener, Vi
         Spannable assignmentTypeSpan = new SpannableString(assignmentType);
         assignmentTypeSpan.setSpan(new RelativeSizeSpan(0.8f), 0, assignmentType.length(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        assignmentTypeSpan.setSpan(new ForegroundColorSpan(Color.GRAY), 0, assignmentType.length(),
+        assignmentTypeSpan.setSpan(new ForegroundColorSpan(Color.DKGRAY), 0, assignmentType.length(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // second line

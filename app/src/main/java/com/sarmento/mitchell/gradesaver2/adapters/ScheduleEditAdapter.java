@@ -65,7 +65,9 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
 
     // used to save changes when user presses the back button without closing the ExpandableLayout
     public void updateSchedule() {
-        header.updateSchedule();
+        if (header != null) {
+            header.updateSchedule();
+        }
     }
 
     private void setFields(ViewHolder holder, int day) {
