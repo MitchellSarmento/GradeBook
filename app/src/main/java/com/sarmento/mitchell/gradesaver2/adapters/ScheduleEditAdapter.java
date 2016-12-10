@@ -129,6 +129,7 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
                 scheduleEditHeader.updateSchedule();
                 sectionPosition = UNSELECTED;
             } else {
+                scheduleEditHeader.updateSchedule();
                 expandableLayout.expand();
                 header = scheduleEditHeader;
                 sectionPosition = position;

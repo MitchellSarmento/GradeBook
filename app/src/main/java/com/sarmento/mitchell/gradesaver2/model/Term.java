@@ -3,6 +3,7 @@ package com.sarmento.mitchell.gradesaver2.model;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.util.Log;
 import android.util.SparseArray;
 
 import java.util.ArrayList;
@@ -85,10 +86,16 @@ public class Term {
         DBHelper db = new DBHelper(context);
         ContentValues updateValues = new ContentValues();
         updateValues.put(DBHelper.KEY_SECTIONS_NAME, sectionName);
+        SparseArray<Double> scores    = section.getScores();
+        SparseArray<Double> maxScores = section.getMaxScores();
         for (Section.AssignmentType type : Section.AssignmentType.values()) {
             int typeValue = type.getValue();
             updateValues.put(DBHelper.KEY_SECTIONS_WEIGHTS[typeValue],
                     assignmentWeights.get(typeValue));
+            updateValues.put(DBHelper.KEY_SECTIONS_SCORES[typeValue*2],
+                    scores.get(typeValue));
+            updateValues.put(DBHelper.KEY_SECTIONS_SCORES[typeValue*2+1],
+                    maxScores.get(typeValue));
         }
         for (Section.GradeThreshold threshold : Section.GradeThreshold.values()) {
             int thresholdValue = threshold.getValue();

@@ -179,6 +179,16 @@
             android:visibility="gone"
             android:id="@+id/error_section_assignment_weights"/>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textSize="12sp"
+            android:textColor="@android:color/holo_red_light"
+            android:text="@string/error_section_weight_conflict"
+            android:visibility="gone"
+            android:id="@+id/error_section_weight_conflict"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

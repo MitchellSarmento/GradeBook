@@ -586,15 +586,11 @@ public class DBHelper extends SQLiteOpenHelper {
                 SparseArray<Double> maxScores = new SparseArray<>();
                 int scoreIndex    = 0;
                 int maxScoreIndex = 0;
-                for (int i = 0; i < 12; i++) {
-                    if (i % 2 == 0) {
-                        scores.put(scoreIndex, cursor.getDouble(i+19));
-                        scoreIndex++;
-                    } else {
-                        maxScores.put(maxScoreIndex, cursor.getDouble(i+19));
-                        maxScoreIndex++;
-                    }
-
+                for (int i = 0; i < 12; i += 2) {
+                    scores.put(scoreIndex, cursor.getDouble(i+19));
+                    scoreIndex++;
+                    maxScores.put(maxScoreIndex, cursor.getDouble(i+20));
+                    maxScoreIndex++;
                 }
                 double totalScore = cursor.getDouble(31);
                 double maxScore   = cursor.getDouble(32);

@@ -16,8 +16,11 @@ import android.widget.TextView;
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.activities.SectionsActivity;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
+import com.sarmento.mitchell.gradesaver2.model.Assignment;
 import com.sarmento.mitchell.gradesaver2.model.Section;
 import com.sarmento.mitchell.gradesaver2.model.Term;
+
+import java.util.List;
 
 public class SectionDialogFragment extends DialogFragment {
     private int termPosition;
@@ -68,7 +71,8 @@ public class SectionDialogFragment extends DialogFragment {
         final TextView[] errorViews = {
                 (TextView) dialogView.findViewById(R.id.error_section_no_name),
                 (TextView) dialogView.findViewById(R.id.error_section_assignment_weights),
-                (TextView) dialogView.findViewById(R.id.error_section_grade_thresholds)
+                (TextView) dialogView.findViewById(R.id.error_section_grade_thresholds),
+                (TextView) dialogView.findViewById(R.id.error_section_weight_conflict)
         };
 
         // set fields if editing
@@ -130,7 +134,8 @@ public class SectionDialogFragment extends DialogFragment {
                                     Double.valueOf(thresholdEntries[thresholdValue].getText().toString()));
                         }
 
-                        InputCheck inputCheck = validateInput(sectionName, assignmentWeights, gradeThresholds);
+                        InputCheck inputCheck = validateInput(editing, sectionName,
+                                assignmentWeights, gradeThresholds);
                         if (inputCheck == InputCheck.VALID) {
                             // check if editing
                             if (editing) {
@@ -176,7 +181,8 @@ public class SectionDialogFragment extends DialogFragment {
     }
 
     private enum InputCheck {
-        VALID(-1), ERROR_NO_NAME(0), ERROR_ASSIGNMENT_WEIGHTS(1), ERROR_GRADE_THRESHOLDS(2);
+        VALID(-1), ERROR_NO_NAME(0), ERROR_ASSIGNMENT_WEIGHTS(1), ERROR_GRADE_THRESHOLDS(2),
+        ERROR_WEIGHT_CONFLICT(3);
 
         private int value;
 
@@ -189,7 +195,8 @@ public class SectionDialogFragment extends DialogFragment {
         }
     }
 
-    private InputCheck validateInput(String sectionName, SparseArray<Double> assignmentWeights,
+    private InputCheck validateInput(boolean editing, String sectionName,
+                                     SparseArray<Double> assignmentWeights,
                                      SparseArray<Double> gradeThresholds) {
         // check for missing Section name
         if (sectionName.trim().equals("")) {
@@ -220,6 +227,19 @@ public class SectionDialogFragment extends DialogFragment {
                     if (gradeThresholds.get(thresholdValue) <= gradeThresholds.get(thresholdValue + 1)) {
                         return InputCheck.ERROR_GRADE_THRESHOLDS;
                     }
+                }
+            }
+        }
+
+        // if editing, check that a weighting exists for all existing Assignments
+        if (editing) {
+            List<Assignment> assignments = Academics.getInstance().getCurrentTerms().get(termPosition)
+                    .getSections().get(sectionPosition).getAssignments();
+            for (Assignment assignment : assignments) {
+                int assignmentType = Section.convertAssignmentType(getActivity(),
+                        assignment.getAssignmentType());
+                if (assignmentWeights.get(assignmentType) == 0) {
+                    return InputCheck.ERROR_WEIGHT_CONFLICT;
                 }
             }
         }

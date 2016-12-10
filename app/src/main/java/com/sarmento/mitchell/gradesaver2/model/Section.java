@@ -3,6 +3,7 @@ package com.sarmento.mitchell.gradesaver2.model;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.util.Log;
 import android.util.SparseArray;
 
 import com.sarmento.mitchell.gradesaver2.R;
@@ -160,7 +161,7 @@ public class Section {
     }
 
     // convert the Assignment type from String to int
-    private int convertAssignmentType(Context context, String assignmentType) {
+    public static int convertAssignmentType(Context context, String assignmentType) {
         int type;
         if (assignmentType.equals(context.getString(R.string.homework))) {
             type = AssignmentType.HOMEWORK.getValue();
@@ -180,8 +181,8 @@ public class Section {
 
     // get the database keys associated with this Assignment type
     private String[] getColumnKeys(int type) {
-        return new String[]{DBHelper.KEY_SECTIONS_SCORES[type],
-                DBHelper.KEY_SECTIONS_SCORES[type+1]};
+        return new String[]{DBHelper.KEY_SECTIONS_SCORES[type*2],
+                DBHelper.KEY_SECTIONS_SCORES[type*2+1]};
     }
 
     public void addAssignment(Context context, Assignment assignment, int termPosition,
@@ -311,6 +312,27 @@ public class Section {
         updateValues.put(DBHelper.KEY_ASSIGNMENTS_MAX_SCORE, maxScore);
         updateValues.put(DBHelper.KEY_ASSIGNMENTS_TYPE, assignmentType);
         db.updateAssignment(updateValues, termPosition, sectionPosition, assignmentPosition);
+
+        // update this Section in the database
+        updateValues = new ContentValues();
+        for (AssignmentType type : AssignmentType.values()) {
+            int typeValue = type.getValue();
+            updateValues.put(DBHelper.KEY_SECTIONS_WEIGHTS[typeValue],
+                    assignmentWeights.get(typeValue));
+            updateValues.put(DBHelper.KEY_SECTIONS_SCORES[typeValue*2],
+                    scores.get(typeValue));
+            updateValues.put(DBHelper.KEY_SECTIONS_SCORES[typeValue*2+1],
+                    maxScores.get(typeValue));
+        }
+        for (GradeThreshold threshold : GradeThreshold.values()) {
+            int thresholdValue = threshold.getValue();
+            updateValues.put(DBHelper.KEY_SECTIONS_GRADE_THRESHOLDS[thresholdValue],
+                    gradeThresholds.get(thresholdValue));
+        }
+        updateValues.put(DBHelper.KEY_SECTIONS_SCORE_TOTAL, totalScore);
+        updateValues.put(DBHelper.KEY_SECTIONS_MAX_SCORE_TOTAL, this.maxScore);
+        updateValues.put(DBHelper.KEY_SECTIONS_GRADE, grade);
+        db.updateSection(updateValues, termPosition, sectionPosition);
     }
 
     public void addDueDate(Context context, DueDate dueDate, int termPosition,

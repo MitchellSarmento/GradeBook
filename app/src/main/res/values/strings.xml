@@ -112,6 +112,8 @@
     <string name="error_section_no_name">Please enter a name for the section</string>
     <string name="error_section_assignment_weights">Assignment weights do not total 100%</string>
     <string name="error_section_grade_thresholds">Invalid grade thresholds</string>
+    <string name="error_section_weight_conflict">Cannot change the weight for an existing assignment
+    to 0</string>
     <string name="error_assignment_no_name">Please enter a name for the assignment</string>
     <string name="error_assignment_no_my_score">Please enter a value for My Score</string>
     <string name="error_assignment_no_max_score">Please enter a value for Max Score</string>
