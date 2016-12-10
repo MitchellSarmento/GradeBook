@@ -135,8 +135,9 @@ public class SectionDialogFragment extends DialogFragment {
                             // check if editing
                             if (editing) {
                                 // edit existing Section
-                                section.updateSection(activity, sectionName, assignmentWeights, gradeThresholds,
-                                        termPosition, sectionPosition);
+                                Term term = academics.getCurrentTerms().get(termPosition);
+                                term.updateSection(activity, sectionName, assignmentWeights,
+                                        gradeThresholds, termPosition, sectionPosition);
                                 ((SectionsActivity) activity).updateList();
                             } else {
                                 // create new Section

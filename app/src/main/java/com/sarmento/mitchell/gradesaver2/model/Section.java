@@ -89,41 +89,28 @@ public class Section {
         this.schedule          = schedule;
     }
 
-    public void updateSection(Context context, String sectionName,
-                              SparseArray<Double> assignmentWeights,
-                              SparseArray<Double> gradeThresholds,
-                              int termPosition, int sectionPosition) {
-        this.sectionName       = sectionName;
-        this.assignmentWeights = assignmentWeights;
-        this.gradeThresholds   = gradeThresholds;
-
-        // update the Section in the database
-        DBHelper db = new DBHelper(context);
-        ContentValues updateValues = new ContentValues();
-        updateValues.put(DBHelper.KEY_SECTIONS_NAME, sectionName);
-        for (AssignmentType type : AssignmentType.values()) {
-            int typeValue = type.getValue();
-            updateValues.put(DBHelper.KEY_SECTIONS_WEIGHTS[typeValue],
-                    assignmentWeights.get(typeValue));
-        }
-        for (GradeThreshold threshold : GradeThreshold.values()) {
-            int thresholdValue = threshold.getValue();
-            updateValues.put(DBHelper.KEY_SECTIONS_GRADE_THRESHOLDS[thresholdValue],
-                    gradeThresholds.get(thresholdValue));
-        }
-        db.updateSection(updateValues, termPosition, sectionPosition);
-    }
-
     public String getSectionName() {
         return sectionName;
+    }
+
+    public void setSectionName(String sectionName) {
+        this.sectionName = sectionName;
     }
 
     public SparseArray<Double> getGradeThresholds() {
         return gradeThresholds;
     }
 
+    public void setGradeThresholds(SparseArray<Double> gradeThresholds) {
+        this.gradeThresholds = gradeThresholds;
+    }
+
     public SparseArray<Double> getAssignmentWeights() {
         return assignmentWeights;
+    }
+
+    public void setAssignmentWeights(SparseArray<Double> assignmentWeights) {
+        this.assignmentWeights = assignmentWeights;
     }
 
     public SparseArray<Double> getScores() {
@@ -224,7 +211,7 @@ public class Section {
         maxScores.put(type, currentMaxScore + assignmentMaxScore);
 
         // calculate the overall grade for this section
-        grade = calculateGrade();
+        calculateSectionGrade();
 
         // get the columns to update
         String[] columns = getColumnKeys(type);
@@ -262,7 +249,7 @@ public class Section {
         }
 
         // calculate the overall grade for this section
-        grade = calculateGrade();
+        calculateSectionGrade();
 
         assignments.remove(assignmentPosition);
 
@@ -292,13 +279,20 @@ public class Section {
         int oldAssignmentType = convertAssignmentType(context, assignment.getAssignmentType());
         double oldScore       = assignment.getScore();
         double oldMaxScore    = assignment.getMaxScore();
-        scores.put(oldAssignmentType, scores.get(oldAssignmentType) - oldScore);
-        maxScores.put(oldAssignmentType, maxScores.get(oldAssignmentType) - oldMaxScore);
+        if (scores.get(oldAssignmentType) != null && maxScores.get(oldAssignmentType) != null) {
+            scores.put(oldAssignmentType, scores.get(oldAssignmentType) - oldScore);
+            maxScores.put(oldAssignmentType, maxScores.get(oldAssignmentType) - oldMaxScore);
+        }
 
         // add the new values
         int newAssignmentType = convertAssignmentType(context, assignmentType);
-        scores.put(newAssignmentType, score);
-        maxScores.put(newAssignmentType, maxScore);
+        if (scores.get(newAssignmentType) != null && maxScores.get(newAssignmentType) != null) {
+            scores.put(newAssignmentType, scores.get(newAssignmentType) + score);
+            maxScores.put(newAssignmentType, maxScores.get(newAssignmentType) + maxScore);
+        } else {
+            scores.put(newAssignmentType, score);
+            maxScores.put(newAssignmentType, maxScore);
+        }
 
         // update the Assignment
         assignment.setAssignmentName(assignmentName);
@@ -307,7 +301,7 @@ public class Section {
         assignment.setAssignmentType(assignmentType);
 
         // recalculate the overall Section grade
-        grade = calculateGrade();
+        calculateSectionGrade();
 
         // update the Assignment in the database
         DBHelper db = new DBHelper(context);
@@ -344,7 +338,7 @@ public class Section {
         return assignmentTypes;
     }
 
-    private String calculateGrade() {
+    public void calculateSectionGrade() {
         // get the weighted scores for each assignment type
         totalScore = 0;
         maxScore   = 0;
@@ -363,15 +357,26 @@ public class Section {
 
         if (scorePercent >= gradeThresholds.get(GradeThreshold.LOW_A.getValue()) ||
                 Double.isNaN(scorePercent)) {
-            return "A";
+            grade = "A";
         } else if (scorePercent >= gradeThresholds.get(GradeThreshold.LOW_B.getValue())) {
-            return "B";
+            grade = "B";
         } else if (scorePercent >= gradeThresholds.get(GradeThreshold.LOW_C.getValue())) {
-            return "C";
+            grade = "C";
         } else if (scorePercent >= gradeThresholds.get(GradeThreshold.LOW_D.getValue())) {
-            return "D";
+            grade = "D";
         } else {
-            return "F";
+            grade = "F";
+        }
+
+        // delete the keys for any assignment type with no weight or a max score of 0
+        for (AssignmentType type : AssignmentType.values()) {
+            int typeValue = type.getValue();
+            if (assignmentWeights.get(typeValue) == null ||
+                    assignmentWeights.get(typeValue) == -0 || maxScores.get(typeValue) == null ||
+                    maxScores.get(typeValue) == 0) {
+                scores.delete(typeValue);
+                maxScores.delete(typeValue);
+            }
         }
     }
 

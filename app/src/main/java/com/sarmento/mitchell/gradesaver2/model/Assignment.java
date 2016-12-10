@@ -84,6 +84,10 @@ public class Assignment {
         return grade;
     }
 
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
     public List<String> getImagePaths() {
         return imagePaths;
     }

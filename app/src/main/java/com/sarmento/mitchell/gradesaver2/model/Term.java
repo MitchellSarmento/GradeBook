@@ -3,6 +3,7 @@ package com.sarmento.mitchell.gradesaver2.model;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.util.SparseArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,45 @@ public class Term {
 
         DBHelper db = new DBHelper(context);
         db.removeSection(termPosition, sectionPosition);
+    }
+
+    public void updateSection(Context context, String sectionName,
+                              SparseArray<Double> assignmentWeights,
+                              SparseArray<Double> gradeThresholds, int termPosition,
+                              int sectionPosition) {
+        // get the Section to be updated
+        Section section = sections.get(sectionPosition);
+
+        // update the Section information
+        section.setSectionName(sectionName);
+        section.setAssignmentWeights(assignmentWeights);
+        section.setGradeThresholds(gradeThresholds);
+
+        // recalculate the overall Section grade
+        section.calculateSectionGrade();
+
+        // recalculate the grades of Assignments belonging to this Section
+        List<Assignment> assignments = section.getAssignments();
+        for (Assignment assignment : assignments) {
+            assignment.setGrade(section.calculateAssignmentGrade(assignment.getScore(),
+                    assignment.getMaxScore()));
+        }
+
+        // update the Section in the database
+        DBHelper db = new DBHelper(context);
+        ContentValues updateValues = new ContentValues();
+        updateValues.put(DBHelper.KEY_SECTIONS_NAME, sectionName);
+        for (Section.AssignmentType type : Section.AssignmentType.values()) {
+            int typeValue = type.getValue();
+            updateValues.put(DBHelper.KEY_SECTIONS_WEIGHTS[typeValue],
+                    assignmentWeights.get(typeValue));
+        }
+        for (Section.GradeThreshold threshold : Section.GradeThreshold.values()) {
+            int thresholdValue = threshold.getValue();
+            updateValues.put(DBHelper.KEY_SECTIONS_GRADE_THRESHOLDS[thresholdValue],
+                    gradeThresholds.get(thresholdValue));
+        }
+        db.updateSection(updateValues, termPosition, sectionPosition);
     }
 
     public boolean isArchived() {
