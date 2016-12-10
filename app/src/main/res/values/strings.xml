@@ -121,9 +121,9 @@
     <!-- License Information -->
     <string name="in_app_icons_google">In-app Icons by Google</string>
     <string name="in_app_icons_google_license">https://creativecommons.org/licenses/by/4.0/</string>
-    <string name="expandable_layout_aakira">ExpandableLayout by Akira Aratani</string>
-    <string name="expandable_layout_aakira_license">http://www.apache.org/licenses/LICENSE-2.0</string>
-    <string name="expandable_layout_aakira_github">https://github.com/AAkira/ExpandableLayout</string>
+    <string name="expandable_layout_cachapa">ExpandableLayout by Daniel Cachapa</string>
+    <string name="expandable_layout_cachapa_license">http://www.apache.org/licenses/LICENSE-2.0</string>
+    <string name="expandable_layout_cachapa_github">https://github.com/cachapa/ExpandableLayout</string>
     <string name="photo_view_chrisbanes">PhotoView by Chris Banes</string>
     <string name="photo_view_chrisbanes_license">http://www.apache.org/licenses/LICENSE-2.0</string>
     <string name="photo_view_chrisbanes_github">https://github.com/chrisbanes/PhotoView</string>

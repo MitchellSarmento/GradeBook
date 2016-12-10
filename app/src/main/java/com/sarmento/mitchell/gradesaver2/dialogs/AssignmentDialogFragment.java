@@ -124,7 +124,7 @@ public class AssignmentDialogFragment extends DialogFragment {
                             // check if editing
                             if (editing) {
                                 // editing existing Assignment
-                                assignment.updateAssignment(activity, assignmentName, myScore, maxScore,
+                                section.updateAssignment(activity, assignmentName, myScore, maxScore,
                                         assignmentType, termPosition, sectionPosition, assignmentPosition);
                                 ((AssignmentsActivity) activity).updateList();
                             } else {
@@ -134,9 +134,9 @@ public class AssignmentDialogFragment extends DialogFragment {
 
                                 // add new assignment
                                 assignmentPosition = section.getAssignments().size();
-                                section.addAssignment(getActivity(), assignment, termPosition,
+                                section.addAssignment(activity, assignment, termPosition,
                                         sectionPosition, assignmentPosition);
-                                ((AssignmentsActivity) getActivity()).updateList();
+                                ((AssignmentsActivity) activity).updateList();
                             }
                             dialog.dismiss();
                         } else {

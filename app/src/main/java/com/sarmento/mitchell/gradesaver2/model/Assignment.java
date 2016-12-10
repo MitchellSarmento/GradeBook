@@ -48,38 +48,36 @@ public class Assignment {
         }
     }
 
-    public void updateAssignment(Context context, String assignmentName,
-                                 double score, double maxScore, String assignmentType,
-                                 int termPosition, int sectionPosition, int assignmentPosition) {
-        this.assignmentName = assignmentName;
-        this.score          = score;
-        this.maxScore       = maxScore;
-        this.assignmentType = assignmentType;
-
-        // update the Assignment in the database
-        DBHelper db = new DBHelper(context);
-        ContentValues updateValues = new ContentValues();
-        updateValues.put(DBHelper.KEY_ASSIGNMENTS_NAME, assignmentName);
-        updateValues.put(DBHelper.KEY_ASSIGNMENTS_SCORE, score);
-        updateValues.put(DBHelper.KEY_ASSIGNMENTS_MAX_SCORE, maxScore);
-        updateValues.put(DBHelper.KEY_ASSIGNMENTS_TYPE, assignmentType);
-        db.updateAssignment(updateValues, termPosition, sectionPosition, assignmentPosition);
-    }
-
     public String getAssignmentName() {
         return assignmentName;
+    }
+
+    public void setAssignmentName(String assignmentName) {
+        this.assignmentName = assignmentName;
     }
 
     public String getAssignmentType() {
         return assignmentType;
     }
 
+    public void setAssignmentType(String assignmentType) {
+        this.assignmentType = assignmentType;
+    }
+
     public double getScore() {
         return score;
     }
 
+    public void setScore(double score) {
+        this.score = score;
+    }
+
     public double getMaxScore() {
         return maxScore;
+    }
+
+    public void setMaxScore(double maxScore) {
+        this.maxScore = maxScore;
     }
 
     public String getGrade() {

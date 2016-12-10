@@ -193,8 +193,6 @@ public class Section {
 
     // get the database keys associated with this Assignment type
     private String[] getColumnKeys(int type) {
-        String keyScore = "";
-        String keyMaxScore = "";
         return new String[]{DBHelper.KEY_SECTIONS_SCORES[type],
                 DBHelper.KEY_SECTIONS_SCORES[type+1]};
     }
@@ -282,6 +280,43 @@ public class Section {
         updateValues.put(DBHelper.KEY_SECTIONS_MAX_SCORE_TOTAL, maxScore);
         updateValues.put(DBHelper.KEY_SECTIONS_GRADE, grade);
         db.updateSection(updateValues, termPosition, sectionPosition);
+    }
+
+    public void updateAssignment(Context context, String assignmentName,
+                                 double score, double maxScore, String assignmentType,
+                                 int termPosition, int sectionPosition, int assignmentPosition) {
+        // get the Assignment to be updated
+        Assignment assignment = assignments.get(assignmentPosition);
+
+        // remove the old values
+        int oldAssignmentType = convertAssignmentType(context, assignment.getAssignmentType());
+        double oldScore       = assignment.getScore();
+        double oldMaxScore    = assignment.getMaxScore();
+        scores.put(oldAssignmentType, scores.get(oldAssignmentType) - oldScore);
+        maxScores.put(oldAssignmentType, maxScores.get(oldAssignmentType) - oldMaxScore);
+
+        // add the new values
+        int newAssignmentType = convertAssignmentType(context, assignmentType);
+        scores.put(newAssignmentType, score);
+        maxScores.put(newAssignmentType, maxScore);
+
+        // update the Assignment
+        assignment.setAssignmentName(assignmentName);
+        assignment.setScore(score);
+        assignment.setMaxScore(maxScore);
+        assignment.setAssignmentType(assignmentType);
+
+        // recalculate the overall Section grade
+        grade = calculateGrade();
+
+        // update the Assignment in the database
+        DBHelper db = new DBHelper(context);
+        ContentValues updateValues = new ContentValues();
+        updateValues.put(DBHelper.KEY_ASSIGNMENTS_NAME, assignmentName);
+        updateValues.put(DBHelper.KEY_ASSIGNMENTS_SCORE, score);
+        updateValues.put(DBHelper.KEY_ASSIGNMENTS_MAX_SCORE, maxScore);
+        updateValues.put(DBHelper.KEY_ASSIGNMENTS_TYPE, assignmentType);
+        db.updateAssignment(updateValues, termPosition, sectionPosition, assignmentPosition);
     }
 
     public void addDueDate(Context context, DueDate dueDate, int termPosition,
