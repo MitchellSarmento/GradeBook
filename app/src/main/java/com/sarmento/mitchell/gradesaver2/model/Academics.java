@@ -3,6 +3,7 @@ package com.sarmento.mitchell.gradesaver2.model;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,10 @@ public class Academics {
         if (!loaded) {
             DBHelper db   = new DBHelper(context);
             currentTerms  = db.getTerms(false);
+            inArchive     = true;
+            db            = new DBHelper(context);
             archivedTerms = db.getTerms(true);
+            inArchive     = false;
             loaded        = true;
         }
     }
@@ -96,19 +100,16 @@ public class Academics {
         ContentValues updateValues;
         Term term;
         int newPosition;
-        int target;
 
         if (archiving) {
             term        = currentTerms.get(termPosition);
             newPosition = archivedTerms.size();
-            target      = currentTerms.size();
 
             currentTerms.remove(termPosition);
             archivedTerms.add(term);
         } else {
             term        = archivedTerms.get(termPosition);
             newPosition = currentTerms.size();
-            target      = archivedTerms.size();
 
             archivedTerms.remove(termPosition);
             currentTerms.add(term);
@@ -118,13 +119,6 @@ public class Academics {
         updateValues = new ContentValues();
         updateValues.put(DBHelper.KEY_TERMS_ARCHIVED, archiving);
         updateValues.put(DBHelper.KEY_TERMS_ID, newPosition);
-        db.updateTerm(updateValues, termPosition, !archiving);
-
-        // update Term ids in the database to compensate for this Term's removal
-        for (int i = termPosition; i < target; i++) {
-            updateValues = new ContentValues();
-            updateValues.put(DBHelper.KEY_TERMS_ID, i);
-            db.updateTerm(updateValues, i+1, !archiving);
-        }
+        db.updateTerm(updateValues, termPosition, archiving);
     }
 }
