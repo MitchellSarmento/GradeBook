@@ -19,6 +19,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:background="@color/color_primary"
+        android:textColor="@android:color/white"
         android:textSize="24sp"
         android:id="@+id/header_schedule_edit"/>
 
@@ -35,7 +36,6 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:orientation="vertical"
-        android:background="@color/color_b"
         app:el_expanded="false"
         app:el_duration="1000"
         android:id="@+id/details_schedule_edit"
