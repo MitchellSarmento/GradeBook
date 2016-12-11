@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AssignmentDialogFragment extends DialogFragment {
+    private Academics academics = Academics.getInstance();
     private int termPosition;
     private int sectionPosition;
     private int assignmentPosition;
@@ -32,19 +33,18 @@ public class AssignmentDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        final Academics academics = Academics.getInstance();
         final Activity activity   = getActivity();
         final Bundle arguments    = getArguments();
         final boolean editing     = arguments.containsKey(OptionsDialogFragment.EDITING);
 
-        termPosition    = getArguments().getInt(Academics.TERM_POSITION);
-        sectionPosition = getArguments().getInt(Academics.SECTION_POSITION);
+        termPosition    = arguments.getInt(Academics.TERM_POSITION);
+        sectionPosition = arguments.getInt(Academics.SECTION_POSITION);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
         // set layout
         LayoutInflater inflater = activity.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_assignment, null);
+        View dialogView         = inflater.inflate(R.layout.dialog_assignment, null);
         builder.setView(dialogView);
 
         // get relevant Views
@@ -68,6 +68,7 @@ public class AssignmentDialogFragment extends DialogFragment {
 
         int[] stringIds = {R.string.homework, R.string.quiz, R.string.midterm,
                 R.string.string_final, R.string.project, R.string.other};
+
         List<String> types = new ArrayList<>();
         for (int type : relevantTypes) {
             types.add(getString(stringIds[type]));
@@ -81,7 +82,7 @@ public class AssignmentDialogFragment extends DialogFragment {
         // set fields if editing
         if (editing) {
             assignmentPosition = arguments.getInt(Academics.ASSIGNMENT_POSITION);
-            assignment = section.getAssignments().get(assignmentPosition);
+            assignment         = section.getAssignments().get(assignmentPosition);
 
             assignmentNameEntry.setText(assignment.getAssignmentName());
             myScoreEntry.setText(String.valueOf(assignment.getScore()));

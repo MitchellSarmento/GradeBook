@@ -34,6 +34,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
 
             String startTime = schedule.getStartTimes().get(day);
             String endTime   = schedule.getEndTimes().get(day);
+
             if (!startTime.equals("") && !endTime.equals("")) {
                 sectionNames.add(section.getSectionName());
                 locations.add(schedule.getLocation());

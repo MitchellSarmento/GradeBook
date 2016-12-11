@@ -18,6 +18,7 @@ import com.sarmento.mitchell.gradesaver2.model.Term;
 public class SectionsActivity extends AppCompatActivity {
     private Academics academics = Academics.getInstance();
     private int termPosition;
+
     private SectionAdapter adapter;
 
     @Override
@@ -27,12 +28,9 @@ public class SectionsActivity extends AppCompatActivity {
 
         termPosition = getIntent().getIntExtra(Academics.TERM_POSITION, -1);
 
-        Term term;
-        if (academics.inArchive()) {
-            term = academics.getArchivedTerms().get(termPosition);
-        } else {
-            term = academics.getCurrentTerms().get(termPosition);
-        }
+        Term term = (academics.inArchive()) ?
+                academics.getArchivedTerms().get(termPosition) :
+                academics.getCurrentTerms().get(termPosition);
         setTitle(term.getTermName());
 
         RecyclerView sections = (RecyclerView) findViewById(R.id.sections);

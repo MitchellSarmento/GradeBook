@@ -3,7 +3,6 @@ package com.sarmento.mitchell.gradesaver2.model;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.util.Log;
 import android.util.SparseArray;
 
 import java.util.ArrayList;
@@ -49,6 +48,7 @@ public class Term {
     public void addSection(Context context, Section section, int termPosition, int sectionPosition) {
         sections.add(section);
 
+        // update the Term in the database
         DBHelper db = new DBHelper(context);
         db.addSection(section, termPosition, sectionPosition);
     }
@@ -56,6 +56,7 @@ public class Term {
     public void removeSection(Context context, int termPosition, int sectionPosition) {
         sections.remove(sectionPosition);
 
+        // update the Term in the database
         DBHelper db = new DBHelper(context);
         db.removeSection(termPosition, sectionPosition);
     }

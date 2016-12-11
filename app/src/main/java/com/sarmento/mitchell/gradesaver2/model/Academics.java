@@ -3,7 +3,6 @@ package com.sarmento.mitchell.gradesaver2.model;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,7 @@ public class Academics {
     public static final String DUE_DATE_POSITION         = "dueDatePosition";
 
     private static Academics instance = null;
-    private boolean loaded = false;
+    private boolean loaded    = false;
     private boolean inArchive = false;
     private List<Term> currentTerms;
     private List<Term> archivedTerms;
@@ -72,6 +71,7 @@ public class Academics {
     public void addTerm(Context context, Term term, int termPosition) {
         currentTerms.add(term);
 
+        // update the Terms in the database
         DBHelper db = new DBHelper(context);
         db.addTerm(term, termPosition);
     }
@@ -83,8 +83,9 @@ public class Academics {
             currentTerms.remove(termPosition);
         }
 
+        // update the Terms in the database
         DBHelper db = new DBHelper(context);
-        db.removeTerm(termPosition, archived);
+        db.removeTerm(termPosition);
     }
 
     public boolean inArchive() {
@@ -96,8 +97,6 @@ public class Academics {
     }
 
     public void setTermIsArchived(Context context, boolean archiving, int termPosition) {
-        DBHelper db = new DBHelper(context);
-        ContentValues updateValues;
         Term term;
         int newPosition;
 
@@ -114,8 +113,11 @@ public class Academics {
             archivedTerms.remove(termPosition);
             currentTerms.add(term);
         }
-
         term.setArchived(archiving);
+
+        // update the Term in the database
+        DBHelper db = new DBHelper(context);
+        ContentValues updateValues;
         updateValues = new ContentValues();
         updateValues.put(DBHelper.KEY_TERMS_ARCHIVED, archiving);
         updateValues.put(DBHelper.KEY_TERMS_ID, newPosition);

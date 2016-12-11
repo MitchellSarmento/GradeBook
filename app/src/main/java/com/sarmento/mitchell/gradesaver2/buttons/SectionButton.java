@@ -19,10 +19,12 @@ import com.sarmento.mitchell.gradesaver2.model.Section;
 import java.util.Locale;
 
 public class SectionButton extends Button implements View.OnClickListener, View.OnLongClickListener {
-    private Context context;
-    private Section section;
+    private Academics academics = Academics.getInstance();
     private int termPosition;
     private int sectionPosition;
+
+    private Context context;
+    private Section section;
 
     public SectionButton(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -37,12 +39,13 @@ public class SectionButton extends Button implements View.OnClickListener, View.
         double scorePercent = section.getTotalScore() / section.getMaxScore() * 100;
 
         setButtonText(scorePercent);
-        setOnClickListener(this);
-        if (!Academics.getInstance().inArchive()) {
-            setOnLongClickListener(this);
-        }
         setBackgroundColor(ResourcesCompat.getColor(getResources(),
                 getButtonColor(scorePercent), null));
+
+        setOnClickListener(this);
+        if (academics.inArchive()) {
+            setOnLongClickListener(this);
+        }
     }
 
     private void setButtonText(double scorePercent) {

@@ -3,7 +3,6 @@ package com.sarmento.mitchell.gradesaver2.model;
 import android.content.ContentValues;
 import android.content.Context;
 import android.util.SparseArray;
-import android.util.SparseBooleanArray;
 
 import com.sarmento.mitchell.gradesaver2.adapters.ScheduleEditAdapter;
 

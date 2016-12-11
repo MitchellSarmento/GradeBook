@@ -16,6 +16,7 @@ import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.Section;
 
 public class FinalGradeDialogFragment extends DialogFragment {
+    private Academics academics = Academics.getInstance();
     private int termPosition;
     private int sectionPosition;
 
@@ -23,7 +24,6 @@ public class FinalGradeDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        final Academics academics = Academics.getInstance();
         final Activity activity = getActivity();
         final Bundle arguments  = getArguments();
 
@@ -31,7 +31,7 @@ public class FinalGradeDialogFragment extends DialogFragment {
 
         // set layout
         LayoutInflater inflater = activity.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_final_grade, null);
+        View dialogView         = inflater.inflate(R.layout.dialog_final_grade, null);
         builder.setView(dialogView);
 
         // get relevant Views

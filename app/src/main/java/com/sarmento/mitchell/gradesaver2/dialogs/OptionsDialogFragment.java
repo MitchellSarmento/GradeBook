@@ -5,10 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.activities.AssignmentImagesActivity;
@@ -66,20 +63,22 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
     }
 
     private Academics academics = Academics.getInstance();
-    private Activity activity;
-    private Bundle arguments;
-    private int itemType;
     private int termPosition;
     private int sectionPosition;
     private int assignmentPosition;
     private int assignmentImagePosition;
     private int dueDatePosition;
 
+    private Activity activity;
+    private Bundle arguments;
+    private int itemType;
+
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         activity  = getActivity();
         arguments = getArguments();
         itemType  = arguments.getInt(ITEM_TYPE);
+
         getPositions();
         String[] options = getOptions();
 
@@ -122,17 +121,17 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
 
     @Override
     public void onClick(DialogInterface dialog, int option) {
-        DialogFragment editDialog = null;
-        Bundle bundle = new Bundle();
+        boolean editing                               = false;
+        DialogFragment editDialog                     = null;
+        boolean showConfirmationDialog                = false;
         DialogInterface.OnClickListener confirmAction = null;
-        boolean editing = false;
-        boolean showConfirmationDialog = false;
+        Bundle bundle                                 = new Bundle();
 
         switch (itemType) {
             case TERM:
                 switch (option) {
                     case TermOptions.EDIT:
-                        editing = true;
+                        editing    = true;
                         editDialog = new TermDialogFragment();
                         bundle.putInt(Academics.TERM_POSITION, termPosition);
                         break;
@@ -175,7 +174,7 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
             case SECTION:
                 switch (option) {
                     case SectionOptions.EDIT:
-                        editing = true;
+                        editing    = true;
                         editDialog = new SectionDialogFragment();
                         bundle.putInt(Academics.TERM_POSITION, termPosition);
                         bundle.putInt(Academics.SECTION_POSITION, sectionPosition);
@@ -203,7 +202,7 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
             case ASSIGNMENT:
                 switch (option) {
                     case AssignmentOptions.EDIT:
-                        editing = true;
+                        editing    = true;
                         editDialog = new AssignmentDialogFragment();
                         bundle.putInt(Academics.TERM_POSITION, termPosition);
                         bundle.putInt(Academics.SECTION_POSITION, sectionPosition);
@@ -254,7 +253,7 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
             case DUE_DATE:
                 switch (option) {
                     case DueDateOptions.EDIT:
-                        editing = true;
+                        editing    = true;
                         editDialog = new DueDateDialogFragment();
                         bundle.putInt(Academics.TERM_POSITION, termPosition);
                         bundle.putInt(Academics.SECTION_POSITION, sectionPosition);
@@ -279,7 +278,7 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
         }
 
         if (showConfirmationDialog) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
             builder.setTitle(R.string.prompt_delete);
             builder.setNegativeButton(getString(R.string.cancel), new Dialog.OnClickListener() {
                 @Override

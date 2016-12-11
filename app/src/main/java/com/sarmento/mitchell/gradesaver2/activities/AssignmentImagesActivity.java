@@ -33,21 +33,22 @@ import java.util.Locale;
 import uk.co.senab.photoview.PhotoView;
 
 public class AssignmentImagesActivity extends AppCompatActivity {
-    public static final int IMAGE_CAPTURE = 0;
-    private static final int NO_IMAGE     = -1;
+    public static final int IMAGE_CAPTURE               = 0;
+    private static final int NO_IMAGE                   = -1;
+    private static final String FILE_PROVIDER_AUTHORITY = "com.sarmento.mitchell.gradesaver2";
 
     private Academics academics = Academics.getInstance();
     private int termPosition;
     private int sectionPosition;
     private int assignmentPosition;
+
     private ImageAdapter adapter;
     private Assignment assignment;
     private List<String> imagePaths;
     private PhotoView imageMain;
     private RecyclerView imageScroll;
-
-    private int imageMainPosition = NO_IMAGE;
     private String currentPicturePath;
+    private int imageMainPosition = NO_IMAGE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,19 +59,17 @@ public class AssignmentImagesActivity extends AppCompatActivity {
         sectionPosition    = getIntent().getIntExtra(Academics.SECTION_POSITION, -1);
         assignmentPosition = getIntent().getIntExtra(Academics.ASSIGNMENT_POSITION, -1);
 
-
-        if (academics.inArchive()) {
-            assignment = academics.getArchivedTerms().get(termPosition)
-                    .getSections().get(sectionPosition).getAssignments().get(assignmentPosition);
-        } else {
-            assignment = academics.getCurrentTerms().get(termPosition)
-                    .getSections().get(sectionPosition).getAssignments().get(assignmentPosition);
-        }
+        assignment = (academics.inArchive()) ?
+                academics.getArchivedTerms().get(termPosition).getSections().get(sectionPosition)
+                    .getAssignments().get(assignmentPosition) :
+                academics.getCurrentTerms().get(termPosition).getSections().get(sectionPosition)
+                    .getAssignments().get(assignmentPosition);
         setTitle(assignment.getAssignmentName());
 
         imagePaths  = assignment.getImagePaths();
         imageMain   = (PhotoView) findViewById(R.id.image_main);
         imageScroll = (RecyclerView) findViewById(R.id.image_scroll);
+
         setViews();
     }
 
@@ -87,16 +86,18 @@ public class AssignmentImagesActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_add_picture:
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                Intent intent  = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 File photoFile = null;
+
                 try {
                     photoFile = createImageFile();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
                 if (photoFile != null) {
-                    Uri photoUri = FileProvider.getUriForFile(this,
-                            "com.sarmento.mitchell.gradesaver2", photoFile);
+                    Uri photoUri = FileProvider.getUriForFile(this, FILE_PROVIDER_AUTHORITY,
+                            photoFile);
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                     startActivityForResult(intent, IMAGE_CAPTURE);
                 }
@@ -131,10 +132,11 @@ public class AssignmentImagesActivity extends AppCompatActivity {
      */
     private void correctRotation() {
         try {
-            ExifInterface exif = new ExifInterface(currentPicturePath);
+            ExifInterface exif   = new ExifInterface(currentPicturePath);
             Bitmap originalImage = BitmapFactory.decodeFile(currentPicturePath);
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+            int orientation      = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                     ExifInterface.ORIENTATION_UNDEFINED);
+
             int correctionValue = 0;
             switch (orientation) {
                 case ExifInterface.ORIENTATION_ROTATE_90:
@@ -149,11 +151,16 @@ public class AssignmentImagesActivity extends AppCompatActivity {
                 default:
                     break;
             }
+
             if (correctionValue != 0) {
                 Matrix matrix = new Matrix();
                 matrix.postRotate(correctionValue);
+
+                // create the corrected image
                 Bitmap newImage = Bitmap.createBitmap(originalImage, 0, 0, originalImage.getWidth(),
                         originalImage.getHeight(), matrix, true);
+
+                // delete the existing image to replace it with the corrected version
                 File file = new File(currentPicturePath);
                 if (file.exists()) {
                     if (file.delete()) {

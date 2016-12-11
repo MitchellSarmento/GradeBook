@@ -1,6 +1,5 @@
 package com.sarmento.mitchell.gradesaver2.views;
 
-import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.text.format.DateFormat;
@@ -27,8 +26,9 @@ public class TimePickerView extends TextView implements View.OnClickListener,
     @Override
     public void onClick(final View v) {
         // hide the keyboard if it was open
-        InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        InputMethodManager inputManager = (InputMethodManager)context
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
         final boolean is24HourFormat = DateFormat.is24HourFormat(context);
 

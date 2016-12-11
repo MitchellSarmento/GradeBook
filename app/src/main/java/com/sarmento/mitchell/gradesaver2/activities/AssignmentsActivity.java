@@ -20,6 +20,7 @@ public class AssignmentsActivity extends AppCompatActivity {
     private Academics academics = Academics.getInstance();
     private int termPosition;
     private int sectionPosition;
+
     private AssignmentAdapter adapter;
     private SectionHeader header;
     private Section section;
@@ -32,13 +33,9 @@ public class AssignmentsActivity extends AppCompatActivity {
         termPosition    = getIntent().getIntExtra(Academics.TERM_POSITION, -1);
         sectionPosition = getIntent().getIntExtra(Academics.SECTION_POSITION, -1);
 
-        if (academics.inArchive()) {
-            section = academics.getArchivedTerms().get(termPosition)
-                    .getSections().get(sectionPosition);
-        } else {
-            section = academics.getCurrentTerms().get(termPosition)
-                    .getSections().get(sectionPosition);
-        }
+        section = (academics.inArchive()) ?
+                academics.getArchivedTerms().get(termPosition).getSections().get(sectionPosition) :
+                academics.getCurrentTerms().get(termPosition).getSections().get(sectionPosition);
         setTitle(section.getSectionName());
 
         // initialize the header to display Section details
@@ -47,7 +44,7 @@ public class AssignmentsActivity extends AppCompatActivity {
 
         RecyclerView assignments = (RecyclerView) findViewById(R.id.assignments);
         assignments.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new AssignmentAdapter(this, section.getAssignments(), termPosition, sectionPosition);
+        adapter = new AssignmentAdapter(section.getAssignments(), termPosition, sectionPosition);
         assignments.setAdapter(adapter);
     }
 
@@ -90,9 +87,6 @@ public class AssignmentsActivity extends AppCompatActivity {
         }
     }
 
-    /*
-     * Notify the RecyclerView adapter and update the Section header
-     */
     public void updateList() {
         adapter.notifyDataSetChanged();
         header.update(section);

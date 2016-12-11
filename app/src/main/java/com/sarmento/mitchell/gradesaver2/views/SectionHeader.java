@@ -22,6 +22,7 @@ public class SectionHeader extends LinearLayout {
         super(context, attrs);
         this.context = context;
         inflate(context, R.layout.header_section, this);
+
         gradeThresholdViews = new TextView[] {
                 (TextView) findViewById(R.id.grade_threshold_a),
                 (TextView) findViewById(R.id.grade_threshold_b),
@@ -74,12 +75,9 @@ public class SectionHeader extends LinearLayout {
 
         double scorePercent = section.getTotalScore() / section.getMaxScore() * 100;
 
-        if (Double.isNaN(scorePercent)) {
-            scoreString = "";
-        } else {
-            scoreString = String.format(Locale.getDefault(), "%.2f", scorePercent) + "% " +
-                    section.getGrade();
-        }
+        scoreString = (Double.isNaN(scorePercent)) ?
+                "" :
+                String.format(Locale.getDefault(), "%.2f", scorePercent) + "% " + section.getGrade();
         grade.setText(context.getText(R.string.total) + " " + scoreString);
     }
 

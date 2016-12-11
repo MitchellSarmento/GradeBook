@@ -22,6 +22,7 @@ import com.sarmento.mitchell.gradesaver2.model.Section;
 import java.util.Calendar;
 
 public class DueDateDialogFragment extends DialogFragment {
+    private Academics academics = Academics.getInstance();
     private int termPosition;
     private int sectionPosition;
     private int dueDatePosition;
@@ -30,19 +31,18 @@ public class DueDateDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        final Academics academics = Academics.getInstance();
         final Activity activity   = getActivity();
         final Bundle arguments    = getArguments();
         final boolean editing     = arguments.containsKey(OptionsDialogFragment.EDITING);
 
-        termPosition    = getArguments().getInt(Academics.TERM_POSITION);
-        sectionPosition = getArguments().getInt(Academics.SECTION_POSITION);
+        termPosition    = arguments.getInt(Academics.TERM_POSITION);
+        sectionPosition = arguments.getInt(Academics.SECTION_POSITION);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
         // set layout
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_due_date, null);
+        LayoutInflater inflater = activity.getLayoutInflater();
+        View dialogView         = inflater.inflate(R.layout.dialog_due_date, null);
         builder.setView(dialogView);
 
         // get relevant Views
@@ -89,9 +89,10 @@ public class DueDateDialogFragment extends DialogFragment {
                     public void onClick(View view) {
                         // get user input
                         String dueDateName = dueDateEntry.getText().toString();
-                        int month = datePicker.getMonth();
-                        int day   = datePicker.getDayOfMonth();
-                        int year  = datePicker.getYear();
+                        int month          = datePicker.getMonth();
+                        int day            = datePicker.getDayOfMonth();
+                        int year           = datePicker.getYear();
+
                         Calendar date = Calendar.getInstance();
                         date.set(year, month, day);
 
@@ -108,12 +109,12 @@ public class DueDateDialogFragment extends DialogFragment {
                                 DueDate dueDate = new DueDate(dueDateName, false, date);
 
                                 // add new due date
-                                Section section = Academics.getInstance().getCurrentTerms().get(termPosition)
+                                Section section = academics.getCurrentTerms().get(termPosition)
                                         .getSections().get(sectionPosition);
                                 int dueDatePosition = section.getDueDates().size();
-                                section.addDueDate(getActivity(), dueDate, termPosition, sectionPosition,
+                                section.addDueDate(activity, dueDate, termPosition, sectionPosition,
                                         dueDatePosition);
-                                ((DueDatesActivity) getActivity()).updateList();
+                                ((DueDatesActivity) activity).updateList();
                                 dialog.dismiss();
                             }
                         } else {

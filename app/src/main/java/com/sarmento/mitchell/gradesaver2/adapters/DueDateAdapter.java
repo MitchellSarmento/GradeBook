@@ -12,9 +12,10 @@ import com.sarmento.mitchell.gradesaver2.model.DueDate;
 import java.util.List;
 
 public class DueDateAdapter extends RecyclerView.Adapter<DueDateAdapter.ViewHolder> {
-    private List<DueDate> dueDates;
     private int termPosition;
     private int sectionPosition;
+
+    private List<DueDate> dueDates;
 
     public DueDateAdapter(List<DueDate> dueDates, int termPosition, int sectionPosition) {
         this.dueDates        = dueDates;

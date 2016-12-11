@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 import android.util.SparseArray;
 
 import java.util.ArrayList;
@@ -130,15 +129,14 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final int TRUE  = 1;
     private static final int FALSE = 0;
 
+    private static final int ALL_IDS = -1;
+
+    private Academics academics = Academics.getInstance();
     private int inArchive;
 
     public DBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
-        if (Academics.getInstance().inArchive()) {
-            inArchive = TRUE;
-        } else {
-            inArchive = FALSE;
-        }
+        inArchive = (academics.inArchive()) ? TRUE : FALSE;
     }
 
     @Override
@@ -360,7 +358,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.insert(TABLE_SCHEDULES, null, values);
     }
 
-    public void removeTerm(int termId, boolean archived) {
+    public void removeTerm(int termId) {
         SQLiteDatabase db = getWritableDatabase();
 
         // delete the Term
@@ -369,16 +367,16 @@ public class DBHelper extends SQLiteOpenHelper {
         db.delete(TABLE_TERMS, where, null);
 
         // delete related Sections
-        removeSection(termId, -1);
+        removeSection(termId, ALL_IDS);
 
         // delete related Assignments
-        removeAssignment(termId, -1, -1);
+        removeAssignment(termId, ALL_IDS, ALL_IDS);
 
         // delete related DueDates
-        removeDueDate(termId, -1, -1);
+        removeDueDate(termId, ALL_IDS, ALL_IDS);
 
         // delete related Schedules
-        removeSchedule(termId, -1);
+        removeSchedule(termId, ALL_IDS);
 
         // decrement all larger Term ids
         db = getWritableDatabase();
@@ -406,22 +404,22 @@ public class DBHelper extends SQLiteOpenHelper {
         // delete the Section
         String where = KEY_SECTIONS_TERM_ID + " = " + termId + " AND " + KEY_SECTIONS_ARCHIVED +
                 " = " + inArchive;
-        if (sectionId != -1) {
+        if (sectionId != ALL_IDS) {
             where += " AND " + KEY_SECTIONS_ID + " = " + sectionId;
         }
         db.delete(TABLE_SECTIONS, where, null);
 
         // delete related Assignments
-        removeAssignment(termId, sectionId, -1);
+        removeAssignment(termId, sectionId, ALL_IDS);
 
         // delete related DueDates
-        removeDueDate(termId, sectionId, -1);
+        removeDueDate(termId, sectionId, ALL_IDS);
 
         // delete related Schedule
         removeSchedule(termId, sectionId);
 
         // decrement all larger Section ids
-        if (sectionId != -1) {
+        if (sectionId != ALL_IDS) {
             db = getWritableDatabase();
             db.execSQL("UPDATE " + TABLE_SECTIONS + " SET " + KEY_SECTIONS_ID + " = " +
                     KEY_SECTIONS_ID + " - 1 WHERE " + KEY_SECTIONS_ID + " > " + sectionId +
@@ -445,16 +443,16 @@ public class DBHelper extends SQLiteOpenHelper {
         // delete the Assignment
         String where = KEY_ASSIGNMENTS_TERM_ID + " = " + termId + " AND " +
                 KEY_ASSIGNMENTS_ARCHIVED + " = " + inArchive;
-        if (sectionId != -1) {
+        if (sectionId != ALL_IDS) {
             where += " AND " + KEY_ASSIGNMENTS_SECTION_ID + " = " + sectionId;
         }
-        if (assignmentId != -1) {
+        if (assignmentId != ALL_IDS) {
             where += " AND " + KEY_ASSIGNMENTS_ID + " = " + assignmentId;
         }
         db.delete(TABLE_ASSIGNMENTS, where, null);
 
         // decrement all larger Assignment ids
-        if (assignmentId != -1) {
+        if (assignmentId != ALL_IDS) {
             db = getWritableDatabase();
             db.execSQL("UPDATE " + TABLE_ASSIGNMENTS + " SET " + KEY_ASSIGNMENTS_ID + " = " +
                     KEY_ASSIGNMENTS_ID + " - 1 WHERE " + KEY_ASSIGNMENTS_ID + " > " +
@@ -469,16 +467,16 @@ public class DBHelper extends SQLiteOpenHelper {
         // delete the DueDate
         String where = KEY_DUE_DATES_TERM_ID + " = " + termId + " AND " +
                 KEY_DUE_DATES_ARCHIVED + " = " + inArchive;
-        if (sectionId != -1) {
+        if (sectionId != ALL_IDS) {
             where += " AND " + KEY_DUE_DATES_SECTION_ID + " = " + sectionId;
         }
-        if (dueDateId != -1) {
+        if (dueDateId != ALL_IDS) {
             where += " AND " + KEY_DUE_DATES_ID + " = " + dueDateId;
         }
         db.delete(TABLE_DUE_DATES, where, null);
 
         // decrement all larger DueDate ids
-        if (dueDateId != -1) {
+        if (dueDateId != ALL_IDS) {
             db = getWritableDatabase();
             db.execSQL("UPDATE " + TABLE_DUE_DATES + " SET " + KEY_DUE_DATES_ID + " = " +
                     KEY_DUE_DATES_ID + " - 1 WHERE " + KEY_DUE_DATES_ID + " > " + dueDateId +
@@ -493,7 +491,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // delete the Schedule
         String where = KEY_SCHEDULES_TERM_ID + " = " + termId + " AND " +
                 KEY_SCHEDULES_ARCHIVED + " = " + inArchive;
-        if (sectionId != -1) {
+        if (sectionId != ALL_IDS) {
             where += " AND " + KEY_SCHEDULES_SECTION_ID + " = " + sectionId;
         }
         db.delete(TABLE_SCHEDULES, where, null);
@@ -517,7 +515,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 int newTermId           = values.getAsInteger(KEY_TERMS_ID);
                 boolean newArchiveState = values.getAsBoolean(KEY_TERMS_ARCHIVED);
 
-                Academics academics = Academics.getInstance();
                 List<Term> terms;
                 List<Term> termsToDecrement;
                 if (inArchive == TRUE) {
@@ -578,7 +575,6 @@ public class DBHelper extends SQLiteOpenHelper {
         } else if (values.getAsInteger(KEY_TERMS_ID) != null) {
             int newTermId = values.getAsInteger(KEY_TERMS_ID);
 
-            Academics academics = Academics.getInstance();
             Term term;
             if (inArchive == TRUE) {
                 term = academics.getArchivedTerms().get(newTermId);
@@ -664,11 +660,10 @@ public class DBHelper extends SQLiteOpenHelper {
     public List<Term> getTerms(boolean archived) {
 
         SQLiteDatabase db = getReadableDatabase();
-        List<Term> terms = new ArrayList<>();
+        List<Term> terms  = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_TERMS + " WHERE " + KEY_TERMS_ARCHIVED +
                 " = " + inArchive;
-        Log.e("GETTERMS", String.valueOf(inArchive));
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
@@ -694,12 +689,11 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private List<Section> getSections(int termId) {
-        SQLiteDatabase db = getReadableDatabase();
+        SQLiteDatabase db      = getReadableDatabase();
         List<Section> sections = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_SECTIONS + " WHERE " + KEY_SECTIONS_TERM_ID +
                 " = " + termId + " AND " + KEY_SECTIONS_ARCHIVED + " = " + inArchive;
-        Log.e("GETSECTIONS", String.valueOf(inArchive));
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
@@ -751,7 +745,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private List<Assignment> getAssignments(int termId, int sectionId) {
-        SQLiteDatabase db = getReadableDatabase();
+        SQLiteDatabase db            = getReadableDatabase();
         List<Assignment> assignments = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_ASSIGNMENTS + " WHERE " + KEY_ASSIGNMENTS_TERM_ID +
@@ -780,7 +774,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private List<DueDate> getDueDates(int termId, int sectionId) {
-        SQLiteDatabase db = getReadableDatabase();
+        SQLiteDatabase db      = getReadableDatabase();
         List<DueDate> dueDates = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_DUE_DATES + " WHERE " + KEY_DUE_DATES_TERM_ID +
@@ -792,7 +786,7 @@ public class DBHelper extends SQLiteOpenHelper {
             do {
                 // gather information from the database
                 String dueDateName = cursor.getString(3);
-                boolean complete = false;
+                boolean complete   = false;
                 if (cursor.getInt(4) == TRUE) {
                     complete = true;
                 }

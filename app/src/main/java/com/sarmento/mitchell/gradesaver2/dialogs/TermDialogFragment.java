@@ -18,13 +18,13 @@ import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.Term;
 
 public class TermDialogFragment extends DialogFragment {
+    private Academics academics = Academics.getInstance();
     private int termPosition;
 
     private Term term;
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        final Academics academics = Academics.getInstance();
         final Activity activity   = getActivity();
         final Bundle arguments    = getArguments();
         final boolean editing     = arguments != null && arguments.containsKey(OptionsDialogFragment.EDITING);
@@ -33,7 +33,7 @@ public class TermDialogFragment extends DialogFragment {
 
         // set layout
         LayoutInflater inflater = activity.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_term, null);
+        View dialogView         = inflater.inflate(R.layout.dialog_term, null);
         builder.setView(dialogView);
 
         // get relevant views
@@ -47,7 +47,7 @@ public class TermDialogFragment extends DialogFragment {
         // set fields if editing
         if (editing) {
             termPosition = arguments.getInt(Academics.TERM_POSITION);
-            term = academics.getCurrentTerms().get(termPosition);
+            term         = academics.getCurrentTerms().get(termPosition);
 
             termNameEntry.setText(term.getTermName());
         }

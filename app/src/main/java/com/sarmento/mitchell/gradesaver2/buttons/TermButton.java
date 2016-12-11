@@ -16,8 +16,10 @@ import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.Term;
 
 public class TermButton extends Button implements View.OnClickListener, View.OnLongClickListener {
-    private Context context;
+    private Academics academics = Academics.getInstance();
     private int termPosition;
+
+    private Context context;
 
     public TermButton(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -30,9 +32,10 @@ public class TermButton extends Button implements View.OnClickListener, View.OnL
         String termName = term.getTermName();
 
         setText(termName);
+        setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.color_a, null));
+
         setOnClickListener(this);
         setOnLongClickListener(this);
-        setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.color_a, null));
     }
 
     @Override
@@ -48,7 +51,7 @@ public class TermButton extends Button implements View.OnClickListener, View.OnL
         OptionsDialogFragment dialog = new OptionsDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(Academics.TERM_POSITION, termPosition);
-        if (Academics.getInstance().inArchive()) {
+        if (academics.inArchive()) {
             bundle.putInt(OptionsDialogFragment.ITEM_TYPE, OptionsDialogFragment.TERM_ARCHIVED);
         } else {
             bundle.putInt(OptionsDialogFragment.ITEM_TYPE, OptionsDialogFragment.TERM);

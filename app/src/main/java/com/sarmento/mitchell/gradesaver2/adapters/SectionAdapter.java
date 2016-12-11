@@ -12,8 +12,9 @@ import com.sarmento.mitchell.gradesaver2.model.Section;
 import java.util.List;
 
 public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.ViewHolder> {
-    private List<Section> sections;
     private int termPosition;
+
+    private List<Section> sections;
 
     public SectionAdapter(List<Section> sections, int termPosition) {
         this.sections     = sections;

@@ -17,7 +17,6 @@ import android.widget.Button;
 
 import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.activities.AssignmentImagesActivity;
-import com.sarmento.mitchell.gradesaver2.activities.AssignmentsActivity;
 import com.sarmento.mitchell.gradesaver2.dialogs.OptionsDialogFragment;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.Assignment;
@@ -26,11 +25,13 @@ import com.sarmento.mitchell.gradesaver2.model.Section;
 import java.util.Locale;
 
 public class AssignmentButton extends Button implements View.OnClickListener, View.OnLongClickListener {
-    private Context context;
-    private Assignment assignment;
+    private Academics academics = Academics.getInstance();
     private int termPosition;
     private int sectionPosition;
     private int assignmentPosition;
+
+    private Context context;
+    private Assignment assignment;
 
     public AssignmentButton(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -49,12 +50,13 @@ public class AssignmentButton extends Button implements View.OnClickListener, Vi
         double scorePercent = score / maxScore * 100;
 
         setButtonText(score, maxScore, scorePercent);
-        setOnClickListener(this);
-        if (!Academics.getInstance().inArchive()) {
-            setOnLongClickListener(this);
-        }
         setBackgroundColor(ResourcesCompat.getColor(getResources(),
                 getButtonColor(scorePercent), null));
+
+        setOnClickListener(this);
+        if (academics.inArchive()) {
+            setOnLongClickListener(this);
+        }
     }
 
     private void setButtonText(double score, double maxScore, double scorePercent) {
@@ -80,16 +82,9 @@ public class AssignmentButton extends Button implements View.OnClickListener, Vi
     }
 
     private int getButtonColor(double scorePercent) {
-        Academics academics = Academics.getInstance();
-        Section section;
-
-        if (academics.inArchive()) {
-            section = academics.getArchivedTerms().get(termPosition)
-                    .getSections().get(sectionPosition);
-        } else {
-            section = academics.getCurrentTerms().get(termPosition)
-                    .getSections().get(sectionPosition);
-        }
+        Section section = (academics.inArchive()) ?
+                academics.getArchivedTerms().get(termPosition).getSections().get(sectionPosition) :
+                academics.getCurrentTerms().get(termPosition).getSections().get(sectionPosition);
 
         SparseArray<Double> gradeThresholds = section.getGradeThresholds();
         if (scorePercent >= gradeThresholds.get(Section.GradeThreshold.LOW_A.getValue())) {
@@ -124,7 +119,7 @@ public class AssignmentButton extends Button implements View.OnClickListener, Vi
         bundle.putInt(Academics.ASSIGNMENT_POSITION, assignmentPosition);
         bundle.putInt(OptionsDialogFragment.ITEM_TYPE, OptionsDialogFragment.ASSIGNMENT);
         dialog.setArguments(bundle);
-        dialog.show(((Activity)context).getFragmentManager(), context.getString(R.string.options));
+        dialog.show(((Activity) context).getFragmentManager(), context.getString(R.string.options));
         return true;
     }
 }

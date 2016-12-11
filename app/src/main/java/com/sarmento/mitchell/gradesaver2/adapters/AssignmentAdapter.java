@@ -1,6 +1,5 @@
 package com.sarmento.mitchell.gradesaver2.adapters;
 
-import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,14 +12,13 @@ import com.sarmento.mitchell.gradesaver2.model.Assignment;
 import java.util.List;
 
 public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.ViewHolder> {
-    private Activity activity;
-    private List<Assignment> assignments;
     private int termPosition;
     private int sectionPosition;
 
-    public AssignmentAdapter(Activity activity, List<Assignment> assignments,
+    private List<Assignment> assignments;
+
+    public AssignmentAdapter(List<Assignment> assignments,
                              int termPosition, int sectionPosition) {
-        this.activity        = activity;
         this.assignments     = assignments;
         this.termPosition    = termPosition;
         this.sectionPosition = sectionPosition;

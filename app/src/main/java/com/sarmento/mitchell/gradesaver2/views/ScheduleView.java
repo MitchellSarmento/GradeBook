@@ -5,7 +5,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -21,11 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScheduleView extends LinearLayout {
-    Context context;
-    List<Schedule> schedules;
-    SparseArray<List<String>> locations;
-    SparseArray<List<String>> startTimes;
-    SparseArray<List<String>> endTimes;
+    private Context context;
+    private SparseArray<List<String>> locations;
+    private SparseArray<List<String>> startTimes;
+    private SparseArray<List<String>> endTimes;
 
     public ScheduleView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -34,7 +32,6 @@ public class ScheduleView extends LinearLayout {
     }
 
     public void init(Term term) {
-        schedules  = new ArrayList<>();
         locations  = new SparseArray<>();
         startTimes = new SparseArray<>();
         endTimes   = new SparseArray<>();
@@ -84,9 +81,8 @@ public class ScheduleView extends LinearLayout {
 
     private void extractScheduleInfo(int day, Section section) {
         Schedule schedule = section.getSchedule();
-
-        String startTime = schedule.getStartTimes().get(day);
-        String endTime   = schedule.getEndTimes().get(day);
+        String startTime  = schedule.getStartTimes().get(day);
+        String endTime    = schedule.getEndTimes().get(day);
 
         if (!startTime.equals("") && !endTime.equals("")) {
             locations.get(day).add(schedule.getLocation());

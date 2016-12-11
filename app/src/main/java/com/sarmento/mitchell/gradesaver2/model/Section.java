@@ -3,7 +3,6 @@ package com.sarmento.mitchell.gradesaver2.model;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.util.Log;
 import android.util.SparseArray;
 
 import com.sarmento.mitchell.gradesaver2.R;
@@ -154,6 +153,7 @@ public class Section {
                               int sectionPosition) {
         this.finalGrade = finalGrade;
 
+        // update the Section in the database
         DBHelper db = new DBHelper(context);
         ContentValues updateValues = new ContentValues();
         updateValues.put(DBHelper.KEY_SECTIONS_FINAL_GRADE, finalGrade);
@@ -188,8 +188,6 @@ public class Section {
     public void addAssignment(Context context, Assignment assignment, int termPosition,
                               int sectionPosition, int assignmentPosition) {
         assignments.add(assignment);
-        DBHelper db = new DBHelper(context);
-        db.addAssignment(assignment, termPosition, sectionPosition, assignmentPosition);
 
         // convert the assignment type from String to int
         int type = convertAssignmentType(context, assignment.getAssignmentType());
@@ -218,6 +216,8 @@ public class Section {
         String[] columns = getColumnKeys(type);
 
         // update the Section in the database
+        DBHelper db = new DBHelper(context);
+        db.addAssignment(assignment, termPosition, sectionPosition, assignmentPosition);
         ContentValues updateValues = new ContentValues();
         updateValues.put(columns[0], scores.get(type));
         updateValues.put(columns[1], maxScores.get(type));
@@ -234,13 +234,13 @@ public class Section {
         // convert the assignment type from String to int
         int type = convertAssignmentType(context, assignment.getAssignmentType());
 
-        Double currentScore    = scores.get(type);
-        Double currentMaxScore = maxScores.get(type);
+        Double currentScore       = scores.get(type);
+        Double currentMaxScore    = maxScores.get(type);
         double assignmentScore    = assignment.getScore();
         double assignmentMaxScore = assignment.getMaxScore();
-        double newScore = currentScore - assignmentScore;
-        double newMaxScore = currentMaxScore - assignmentMaxScore;
 
+        double newScore    = currentScore - assignmentScore;
+        double newMaxScore = currentMaxScore - assignmentMaxScore;
         if (newMaxScore == 0) {
             scores.delete(type);
             maxScores.delete(type);
@@ -254,13 +254,12 @@ public class Section {
 
         assignments.remove(assignmentPosition);
 
-        DBHelper db = new DBHelper(context);
-        db.removeAssignment(termPosition, sectionPosition, assignmentPosition);
-
         // get the columns to update
         String[] columns = getColumnKeys(type);
 
         // update the Section in the database
+        DBHelper db = new DBHelper(context);
+        db.removeAssignment(termPosition, sectionPosition, assignmentPosition);
         ContentValues updateValues = new ContentValues();
         updateValues.put(columns[0], scores.get(type));
         updateValues.put(columns[1], maxScores.get(type));
@@ -338,6 +337,8 @@ public class Section {
     public void addDueDate(Context context, DueDate dueDate, int termPosition,
                            int sectionPosition, int dueDatePosition) {
         dueDates.add(dueDate);
+
+        // update the Section in the database
         DBHelper db = new DBHelper(context);
         db.addDueDate(dueDate, termPosition, sectionPosition, dueDatePosition);
     }
@@ -345,6 +346,8 @@ public class Section {
     public void removeDueDate(Context context, int termPosition, int sectionPosition,
                               int dueDatePosition) {
         dueDates.remove(dueDatePosition);
+
+        // update the Section in the database
         DBHelper db = new DBHelper(context);
         db.removeDueDate(termPosition, sectionPosition, dueDatePosition);
     }

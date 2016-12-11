@@ -23,6 +23,7 @@ import com.sarmento.mitchell.gradesaver2.model.Term;
 import java.util.List;
 
 public class SectionDialogFragment extends DialogFragment {
+    private Academics academics = Academics.getInstance();
     private int termPosition;
     private int sectionPosition;
 
@@ -30,7 +31,6 @@ public class SectionDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        final Academics academics = Academics.getInstance();
         final Activity activity   = getActivity();
         final Bundle arguments    = getArguments();
         final boolean editing     = arguments.containsKey(OptionsDialogFragment.EDITING);
@@ -41,7 +41,7 @@ public class SectionDialogFragment extends DialogFragment {
 
         // set layout
         LayoutInflater inflater = activity.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.dialog_section, null);
+        final View dialogView   = inflater.inflate(R.layout.dialog_section, null);
         builder.setView(dialogView);
 
         // get relevant views
@@ -89,7 +89,7 @@ public class SectionDialogFragment extends DialogFragment {
                         String.valueOf(assignmentWeights.get(typeValue)));
             }
 
-            SparseArray<Double> gradeThresholds   = section.getGradeThresholds();
+            SparseArray<Double> gradeThresholds = section.getGradeThresholds();
             for (Section.GradeThreshold threshold : Section.GradeThreshold.values()) {
                 int thresholdValue = threshold.getValue();
                 thresholdEntries[thresholdValue].setText(
@@ -233,7 +233,7 @@ public class SectionDialogFragment extends DialogFragment {
 
         // if editing, check that a weighting exists for all existing Assignments
         if (editing) {
-            List<Assignment> assignments = Academics.getInstance().getCurrentTerms().get(termPosition)
+            List<Assignment> assignments = academics.getCurrentTerms().get(termPosition)
                     .getSections().get(sectionPosition).getAssignments();
             for (Assignment assignment : assignments) {
                 int assignmentType = Section.convertAssignmentType(getActivity(),

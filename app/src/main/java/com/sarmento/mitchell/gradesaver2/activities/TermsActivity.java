@@ -16,6 +16,7 @@ import com.sarmento.mitchell.gradesaver2.model.Academics;
 
 public class TermsActivity extends AppCompatActivity {
     private Academics academics;
+
     private RecyclerView terms;
     private TermAdapter currentAdapter;
     private TermAdapter archiveAdapter;

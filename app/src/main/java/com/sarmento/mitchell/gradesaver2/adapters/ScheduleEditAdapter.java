@@ -23,12 +23,12 @@ import java.util.List;
 public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapter.ViewHolder> {
     private static final int UNSELECTED = -1;
 
-    private Activity activity;
-    private RecyclerView recyclerView;
-    private List<Section> sections;
     private int termPosition;
     public int sectionPosition = UNSELECTED;
 
+    private Activity activity;
+    private RecyclerView recyclerView;
+    private List<Section> sections;
     private ScheduleEditHeader header;
     private Section section;
     private Schedule schedule;
@@ -53,6 +53,7 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
         holder.bind(sectionPosition);
         section = sections.get(sectionPosition);
         holder.scheduleEditHeader.init(holder, section, termPosition, sectionPosition);
+
         for (Schedule.Day day : Schedule.Day.values()) {
             setFields(holder, day.getValue());
         }
@@ -120,9 +121,9 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
                 holder.expandableLayout.collapse();
 
                 // hide the keyboard if it was open
-                InputMethodManager imm = (InputMethodManager)activity
+                InputMethodManager inputManager = (InputMethodManager) activity
                         .getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                inputManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
 
             if (position == sectionPosition) {

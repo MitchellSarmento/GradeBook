@@ -18,12 +18,13 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class DueDateButton extends Button implements View.OnClickListener, View.OnLongClickListener {
-    private Context context;
-    private DueDate dueDate;
+    private Academics academics = Academics.getInstance();
     private int termPosition;
     private int sectionPosition;
     private int dueDatePosition;
 
+    private Context context;
+    private DueDate dueDate;
     private boolean complete;
     private int daysRemaining;
 
@@ -42,11 +43,12 @@ public class DueDateButton extends Button implements View.OnClickListener, View.
         daysRemaining = getDaysRemaining(dueDate.getDate());
 
         setButtonText();
-        if (!Academics.getInstance().inArchive()) {
+        setButtonColor();
+
+        if (academics.inArchive()) {
             setOnClickListener(this);
             setOnLongClickListener(this);
         }
-        setButtonColor();
     }
 
     private void setButtonText() {
