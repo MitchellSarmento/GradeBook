@@ -52,11 +52,11 @@ public class Academics {
     private void loadData(Context context) {
         if (!loaded) {
             DBHelper db   = new DBHelper(context);
-            currentTerms  = db.getTerms(false);
-            inArchive     = true;
+            currentTerms  = db.getTerms(inArchive);
+            inArchive     = !inArchive;
             db            = new DBHelper(context);
-            archivedTerms = db.getTerms(true);
-            inArchive     = false;
+            archivedTerms = db.getTerms(inArchive);
+            inArchive     = !inArchive;
             loaded        = true;
         }
     }
@@ -119,6 +119,6 @@ public class Academics {
         updateValues = new ContentValues();
         updateValues.put(DBHelper.KEY_TERMS_ARCHIVED, archiving);
         updateValues.put(DBHelper.KEY_TERMS_ID, newPosition);
-        db.updateTerm(updateValues, termPosition, archiving);
+        db.updateTerm(updateValues, termPosition);
     }
 }

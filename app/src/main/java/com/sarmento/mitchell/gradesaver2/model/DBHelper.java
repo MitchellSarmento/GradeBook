@@ -7,20 +7,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.util.SparseArray;
-import android.util.SparseBooleanArray;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
     // Database Information
     private static final int DB_VERSION = 1;
-    private static final String DB_NAME = "GradeSaverDB";
+    private static final String DB_NAME = "GradeBookDB";
 
     // Tables
     private static final String TABLE_TERMS       = "Terms";
@@ -135,14 +130,14 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final int TRUE  = 1;
     private static final int FALSE = 0;
 
-    private int isArchived;
+    private int inArchive;
 
     public DBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
         if (Academics.getInstance().inArchive()) {
-            isArchived = TRUE;
+            inArchive = TRUE;
         } else {
-            isArchived = FALSE;
+            inArchive = FALSE;
         }
     }
 
@@ -151,7 +146,7 @@ public class DBHelper extends SQLiteOpenHelper {
         final String CREATE_TABLE_TERMS = "CREATE TABLE " + TABLE_TERMS + "(" +
                 KEY_TERMS_ID + " INTEGER," +
                 KEY_TERMS_NAME + " TEXT," +
-                KEY_TERMS_ARCHIVED + " TEXT)";
+                KEY_TERMS_ARCHIVED + " INTEGER)";
 
         final String CREATE_TABLE_SECTIONS = "CREATE TABLE " + TABLE_SECTIONS + "(" +
                 KEY_SECTIONS_ID + " INTEGER," +
@@ -189,7 +184,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 KEY_SECTIONS_MAX_SCORE_TOTAL + " REAL," +
                 KEY_SECTIONS_GRADE + " TEXT," +
                 KEY_SECTIONS_FINAL_GRADE + " TEXT," +
-                KEY_SECTIONS_ARCHIVED + " TEXT)";
+                KEY_SECTIONS_ARCHIVED + " INTEGER)";
 
         final String CREATE_TABLE_ASSIGNMENTS = "CREATE TABLE " + TABLE_ASSIGNMENTS + "(" +
                 KEY_ASSIGNMENTS_ID + " INTEGER," +
@@ -201,7 +196,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 KEY_ASSIGNMENTS_MAX_SCORE + " REAL," +
                 KEY_ASSIGNMENTS_GRADE + " TEXT," +
                 KEY_ASSIGNMENTS_IMAGE_PATHS + " TEXT," +
-                KEY_ASSIGNMENTS_ARCHIVED + " TEXT)";
+                KEY_ASSIGNMENTS_ARCHIVED + " INTEGER)";
 
         final String CREATE_TABLE_DUE_DATES = "CREATE TABLE " + TABLE_DUE_DATES + "(" +
                 KEY_DUE_DATES_ID + " INTEGER," +
@@ -212,7 +207,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 KEY_DUE_DATES_YEAR + " INTEGER," +
                 KEY_DUE_DATES_MONTH + " INTEGER," +
                 KEY_DUE_DATES_DAY + " INTEGER," +
-                KEY_DUE_DATES_ARCHIVED + " TEXT)";
+                KEY_DUE_DATES_ARCHIVED + " INTEGER)";
 
         final String CREATE_TABLE_SCHEDULES = "CREATE TABLE " + TABLE_SCHEDULES + "(" +
                 KEY_SCHEDULES_TERM_ID + " INTEGER," +
@@ -232,7 +227,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 KEY_SCHEDULES_END_SATURDAY + " TEXT," +
                 KEY_SCHEDULES_START_SUNDAY + " TEXT," +
                 KEY_SCHEDULES_END_SUNDAY + " TEXT," +
-                KEY_SCHEDULES_ARCHIVED + " TEXT)";
+                KEY_SCHEDULES_ARCHIVED + " INTEGER)";
 
         db.execSQL(CREATE_TABLE_TERMS);
         db.execSQL(CREATE_TABLE_SECTIONS);
@@ -370,7 +365,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         // delete the Term
         String where = KEY_TERMS_ID + " = " + termId + " AND " +
-                KEY_TERMS_ARCHIVED + " = " + isArchived;
+                KEY_TERMS_ARCHIVED + " = " + inArchive;
         db.delete(TABLE_TERMS, where, null);
 
         // delete related Sections
@@ -389,19 +384,19 @@ public class DBHelper extends SQLiteOpenHelper {
         db = getWritableDatabase();
         db.execSQL("UPDATE " + TABLE_TERMS + " SET " + KEY_TERMS_ID + " = " +
                 KEY_TERMS_ID + " - 1 WHERE " + KEY_TERMS_ID + " > " + termId + " AND " +
-                KEY_TERMS_ARCHIVED + " = " + isArchived);
+                KEY_TERMS_ARCHIVED + " = " + inArchive);
         db.execSQL("UPDATE " + TABLE_SECTIONS + " SET " + KEY_SECTIONS_TERM_ID + " = " +
                 KEY_SECTIONS_TERM_ID + " - 1 WHERE " + KEY_SECTIONS_TERM_ID + " > " + termId +
-                " AND " + KEY_SECTIONS_ARCHIVED + " = " + isArchived);
+                " AND " + KEY_SECTIONS_ARCHIVED + " = " + inArchive);
         db.execSQL("UPDATE " + TABLE_ASSIGNMENTS + " SET " + KEY_ASSIGNMENTS_TERM_ID + " = " +
                 KEY_ASSIGNMENTS_TERM_ID + " - 1 WHERE " + KEY_ASSIGNMENTS_TERM_ID + " > " +
-                termId + " AND " + KEY_ASSIGNMENTS_ARCHIVED + " = " + isArchived);
+                termId + " AND " + KEY_ASSIGNMENTS_ARCHIVED + " = " + inArchive);
         db.execSQL("UPDATE " + TABLE_DUE_DATES + " SET " + KEY_DUE_DATES_TERM_ID + " = " +
                 KEY_DUE_DATES_TERM_ID + " - 1 WHERE " + KEY_DUE_DATES_TERM_ID + " > " +
-                termId + " AND " + KEY_DUE_DATES_ARCHIVED + " = " + isArchived);
+                termId + " AND " + KEY_DUE_DATES_ARCHIVED + " = " + inArchive);
         db.execSQL("UPDATE " + TABLE_SCHEDULES + " SET " + KEY_SCHEDULES_TERM_ID + " = " +
                 KEY_SCHEDULES_TERM_ID + " - 1 WHERE " + KEY_SCHEDULES_TERM_ID + " > " + termId +
-                " AND " + KEY_SCHEDULES_ARCHIVED + " = " + isArchived);
+                " AND " + KEY_SCHEDULES_ARCHIVED + " = " + inArchive);
         db.close();
     }
 
@@ -410,7 +405,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         // delete the Section
         String where = KEY_SECTIONS_TERM_ID + " = " + termId + " AND " + KEY_SECTIONS_ARCHIVED +
-                " = " + isArchived;
+                " = " + inArchive;
         if (sectionId != -1) {
             where += " AND " + KEY_SECTIONS_ID + " = " + sectionId;
         }
@@ -430,16 +425,16 @@ public class DBHelper extends SQLiteOpenHelper {
             db = getWritableDatabase();
             db.execSQL("UPDATE " + TABLE_SECTIONS + " SET " + KEY_SECTIONS_ID + " = " +
                     KEY_SECTIONS_ID + " - 1 WHERE " + KEY_SECTIONS_ID + " > " + sectionId +
-                    " AND " + KEY_SECTIONS_ARCHIVED + " = " + isArchived);
+                    " AND " + KEY_SECTIONS_ARCHIVED + " = " + inArchive);
             db.execSQL("UPDATE " + TABLE_ASSIGNMENTS + " SET " + KEY_ASSIGNMENTS_SECTION_ID + " = " +
                     KEY_ASSIGNMENTS_SECTION_ID + " - 1 WHERE " + KEY_ASSIGNMENTS_SECTION_ID +
-                    " > " + sectionId + " AND " + KEY_ASSIGNMENTS_ARCHIVED + " = " + isArchived);
+                    " > " + sectionId + " AND " + KEY_ASSIGNMENTS_ARCHIVED + " = " + inArchive);
             db.execSQL("UPDATE " + TABLE_DUE_DATES + " SET " + KEY_DUE_DATES_SECTION_ID + " = " +
                     KEY_DUE_DATES_SECTION_ID + " - 1 WHERE " + KEY_DUE_DATES_SECTION_ID +
-                    " > " + sectionId + " AND " + KEY_DUE_DATES_ARCHIVED + " = " + isArchived);
+                    " > " + sectionId + " AND " + KEY_DUE_DATES_ARCHIVED + " = " + inArchive);
             db.execSQL("UPDATE " + TABLE_SCHEDULES + " SET " + KEY_SCHEDULES_SECTION_ID + " = " +
                     KEY_SCHEDULES_SECTION_ID + " - 1 WHERE " + KEY_SCHEDULES_SECTION_ID +
-                    " > " + sectionId + " AND " + KEY_SCHEDULES_ARCHIVED + " = " + isArchived);
+                    " > " + sectionId + " AND " + KEY_SCHEDULES_ARCHIVED + " = " + inArchive);
         }
         db.close();
     }
@@ -449,7 +444,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         // delete the Assignment
         String where = KEY_ASSIGNMENTS_TERM_ID + " = " + termId + " AND " +
-                KEY_ASSIGNMENTS_ARCHIVED + " = " + isArchived;
+                KEY_ASSIGNMENTS_ARCHIVED + " = " + inArchive;
         if (sectionId != -1) {
             where += " AND " + KEY_ASSIGNMENTS_SECTION_ID + " = " + sectionId;
         }
@@ -463,7 +458,7 @@ public class DBHelper extends SQLiteOpenHelper {
             db = getWritableDatabase();
             db.execSQL("UPDATE " + TABLE_ASSIGNMENTS + " SET " + KEY_ASSIGNMENTS_ID + " = " +
                     KEY_ASSIGNMENTS_ID + " - 1 WHERE " + KEY_ASSIGNMENTS_ID + " > " +
-                    assignmentId + " AND " + KEY_ASSIGNMENTS_ARCHIVED + " = " + isArchived);
+                    assignmentId + " AND " + KEY_ASSIGNMENTS_ARCHIVED + " = " + inArchive);
         }
         db.close();
     }
@@ -473,7 +468,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         // delete the DueDate
         String where = KEY_DUE_DATES_TERM_ID + " = " + termId + " AND " +
-                KEY_DUE_DATES_ARCHIVED + " = " + isArchived;
+                KEY_DUE_DATES_ARCHIVED + " = " + inArchive;
         if (sectionId != -1) {
             where += " AND " + KEY_DUE_DATES_SECTION_ID + " = " + sectionId;
         }
@@ -487,7 +482,7 @@ public class DBHelper extends SQLiteOpenHelper {
             db = getWritableDatabase();
             db.execSQL("UPDATE " + TABLE_DUE_DATES + " SET " + KEY_DUE_DATES_ID + " = " +
                     KEY_DUE_DATES_ID + " - 1 WHERE " + KEY_DUE_DATES_ID + " > " + dueDateId +
-                    " AND " + KEY_DUE_DATES_ARCHIVED + " = " + isArchived);
+                    " AND " + KEY_DUE_DATES_ARCHIVED + " = " + inArchive);
         }
         db.close();
     }
@@ -497,7 +492,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         // delete the Schedule
         String where = KEY_SCHEDULES_TERM_ID + " = " + termId + " AND " +
-                KEY_SCHEDULES_ARCHIVED + " = " + isArchived;
+                KEY_SCHEDULES_ARCHIVED + " = " + inArchive;
         if (sectionId != -1) {
             where += " AND " + KEY_SCHEDULES_SECTION_ID + " = " + sectionId;
         }
@@ -506,65 +501,119 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void updateTerm(ContentValues values, int termId, boolean archived) {
+    public void updateTerm(ContentValues values, int termId) {
         SQLiteDatabase db = getWritableDatabase();
 
         String where = KEY_TERMS_ID + " = " + termId + " AND " +
-                KEY_TERMS_ARCHIVED + " = " + isArchived;
+                KEY_TERMS_ARCHIVED + " = " + inArchive;
 
         db.update(TABLE_TERMS, values, where, null);
 
-        /* if the Term is going into or coming our of the archive then decrement all larger
-         * Term ids in the container that it's leaving and migrate all of the Term's objects
-        */
+        // if the Term is changing archived status then update its id and all relevant objects
         if (values.getAsBoolean(KEY_TERMS_ARCHIVED) != null) {
-            if (isArchived == FALSE && values.getAsBoolean(KEY_TERMS_ARCHIVED) ||
-                    isArchived == TRUE && !values.getAsBoolean(KEY_TERMS_ARCHIVED)) {
-                Log.e("SWITCHING", "SWITCHING");
-                // migrate all of this Term's objects to the new container
-                int newArchiveStatus = FALSE;
-                if (values.getAsBoolean(KEY_TERMS_ARCHIVED)) {
-                    newArchiveStatus = TRUE;
+            if (inArchive == FALSE && values.getAsBoolean(KEY_TERMS_ARCHIVED) ||
+                    inArchive == TRUE && !values.getAsBoolean(KEY_TERMS_ARCHIVED)) {
+
+                int newTermId           = values.getAsInteger(KEY_TERMS_ID);
+                boolean newArchiveState = values.getAsBoolean(KEY_TERMS_ARCHIVED);
+
+                Academics academics = Academics.getInstance();
+                List<Term> terms;
+                List<Term> termsToDecrement;
+                if (inArchive == TRUE) {
+                    // get the Terms in the destination container
+                    terms = academics.getCurrentTerms();
+
+                    // get the Terms in the source container
+                    termsToDecrement = academics.getArchivedTerms();
+                } else {
+                    terms = academics.getArchivedTerms();
+
+                    // get the Terms in the source container
+                    termsToDecrement = academics.getCurrentTerms();
                 }
-                db.execSQL("UPDATE " + TABLE_SECTIONS + " SET " + KEY_SECTIONS_ARCHIVED + " = " +
-                        newArchiveStatus + " WHERE " + KEY_SECTIONS_TERM_ID + " = " + termId);
-                db.execSQL("UPDATE " + TABLE_ASSIGNMENTS + " SET " + KEY_ASSIGNMENTS_ARCHIVED +
-                        " = " + newArchiveStatus + " WHERE " + KEY_ASSIGNMENTS_TERM_ID + " = " +
-                        termId);
-                db.execSQL("UPDATE " + TABLE_DUE_DATES + " SET " + KEY_DUE_DATES_ARCHIVED + " = " +
-                        newArchiveStatus + " WHERE " + KEY_DUE_DATES_TERM_ID + " = " + termId);
-                db.execSQL("UPDATE " + TABLE_SCHEDULES + " SET " + KEY_SCHEDULES_ARCHIVED + " = " +
-                        newArchiveStatus + " WHERE " + KEY_SCHEDULES_TERM_ID + " = " + termId);
 
-                // update the ids of all of this Term's objects to its new id
-                int newTermId = values.getAsInteger(KEY_TERMS_ID);
-                Log.e("NEWTERMID", String.valueOf(newTermId));
-                db.execSQL("UPDATE " + TABLE_SECTIONS + " SET " + KEY_SECTIONS_TERM_ID + " = " +
-                        newTermId + " WHERE " + KEY_SECTIONS_TERM_ID + " = " + termId);
-                db.execSQL("UPDATE " + TABLE_ASSIGNMENTS + " SET " + KEY_ASSIGNMENTS_TERM_ID +
-                        " = " + newTermId + " WHERE " + KEY_ASSIGNMENTS_TERM_ID + " = " +
-                        termId);
-                db.execSQL("UPDATE " + TABLE_DUE_DATES + " SET " + KEY_DUE_DATES_TERM_ID + " = " +
-                        newTermId + " WHERE " + KEY_DUE_DATES_TERM_ID + " = " + termId);
-                db.execSQL("UPDATE " + TABLE_SCHEDULES + " SET " + KEY_SCHEDULES_TERM_ID + " = " +
-                        newTermId + " WHERE " + KEY_SCHEDULES_TERM_ID + " = " + termId);
+                // update the Sections
+                List<Section> sections = terms.get(newTermId).getSections();
+                ContentValues sectionValues = new ContentValues();
+                sectionValues.put(KEY_SECTIONS_TERM_ID, newTermId);
+                sectionValues.put(KEY_SECTIONS_ARCHIVED, newArchiveState);
+                for (int sectionId = 0; sectionId < sections.size(); sectionId++) {
+                    updateSection(sectionValues, termId, sectionId);
+                    Section section = sections.get(sectionId);
 
-                // decrement all larger Term ids in the container that this Term is leaving
-                db.execSQL("UPDATE " + TABLE_TERMS + " SET " + KEY_TERMS_ID + " = " +
-                        KEY_TERMS_ID + " - 1 WHERE " + KEY_TERMS_ID + " > " + termId + " AND " +
-                        KEY_TERMS_ARCHIVED + " = " + isArchived);
-                db.execSQL("UPDATE " + TABLE_SECTIONS + " SET " + KEY_SECTIONS_TERM_ID + " = " +
-                        KEY_SECTIONS_TERM_ID + " - 1 WHERE " + KEY_SECTIONS_TERM_ID + " > " + termId +
-                        " AND " + KEY_TERMS_ARCHIVED + " = " + isArchived);
-                db.execSQL("UPDATE " + TABLE_ASSIGNMENTS + " SET " + KEY_ASSIGNMENTS_TERM_ID + " = " +
-                        KEY_ASSIGNMENTS_TERM_ID + " - 1 WHERE " + KEY_ASSIGNMENTS_TERM_ID + " > " +
-                        termId + " AND " + KEY_TERMS_ARCHIVED + " = " + isArchived);
-                db.execSQL("UPDATE " + TABLE_DUE_DATES + " SET " + KEY_DUE_DATES_TERM_ID + " = " +
-                        KEY_DUE_DATES_TERM_ID + " - 1 WHERE " + KEY_DUE_DATES_TERM_ID + " > " +
-                        termId + " AND " + KEY_TERMS_ARCHIVED + " = " + isArchived);
-                db.execSQL("UPDATE " + TABLE_SCHEDULES + " SET " + KEY_SCHEDULES_TERM_ID + " = " +
-                        KEY_SCHEDULES_TERM_ID + " - 1 WHERE " + KEY_SCHEDULES_TERM_ID + " > " +
-                        termId + " AND " + KEY_TERMS_ARCHIVED + " = " + isArchived);
+                    // update the Assignments
+                    List<Assignment> assignments = section.getAssignments();
+                    ContentValues assignmentValues = new ContentValues();
+                    assignmentValues.put(KEY_ASSIGNMENTS_TERM_ID, newTermId);
+                    assignmentValues.put(KEY_ASSIGNMENTS_ARCHIVED, newArchiveState);
+                    for (int assignmentId = 0; assignmentId < assignments.size(); assignmentId++) {
+                        updateAssignment(assignmentValues, termId, sectionId, assignmentId);
+                    }
+
+                    // update the Due Dates
+                    List<DueDate> dueDates = section.getDueDates();
+                    ContentValues dueDateValues = new ContentValues();
+                    dueDateValues.put(KEY_DUE_DATES_TERM_ID, newTermId);
+                    dueDateValues.put(KEY_DUE_DATES_ARCHIVED, newArchiveState);
+                    for (int dueDateId = 0; dueDateId < dueDates.size(); dueDateId++) {
+                        updateDueDate(dueDateValues, termId, sectionId, dueDateId);
+                    }
+
+                    // update the Schedule
+                    ContentValues scheduleValues = new ContentValues();
+                    scheduleValues.put(KEY_SCHEDULES_TERM_ID, newTermId);
+                    scheduleValues.put(KEY_SCHEDULES_ARCHIVED, newArchiveState);
+                    updateSchedule(scheduleValues, termId, sectionId);
+                }
+
+                // decrement the ids of Terms in the source container that had a larger id
+                ContentValues termValues = new ContentValues();
+                for (int decrementId = termId+1; decrementId < termsToDecrement.size()+1; decrementId++) {
+                    termValues.put(KEY_TERMS_ID, decrementId-1);
+                    updateTerm(termValues, decrementId);
+                }
+            }
+        // if the Term is only changing its id then update all relevant objects
+        } else if (values.getAsInteger(KEY_TERMS_ID) != null) {
+            int newTermId = values.getAsInteger(KEY_TERMS_ID);
+
+            Academics academics = Academics.getInstance();
+            Term term;
+            if (inArchive == TRUE) {
+                term = academics.getArchivedTerms().get(newTermId);
+            } else {
+                term = academics.getCurrentTerms().get(newTermId);
+            }
+
+            // update the Sections
+            List<Section> sections = term.getSections();
+            ContentValues sectionValues = new ContentValues();
+            sectionValues.put(KEY_SECTIONS_TERM_ID, newTermId);
+            for (int sectionId = 0; sectionId < sections.size(); sectionId++) {
+                updateSection(sectionValues, termId, sectionId);
+                Section section = sections.get(sectionId);
+
+                // update the Assignments
+                List<Assignment> assignments = section.getAssignments();
+                ContentValues assignmentValues = new ContentValues();
+                assignmentValues.put(KEY_ASSIGNMENTS_TERM_ID, newTermId);
+                for (int assignmentId = 0; assignmentId < assignments.size(); assignmentId++) {
+                    updateAssignment(assignmentValues, termId, sectionId, assignmentId);
+                }
+
+                // update the Due Dates
+                List<DueDate> dueDates = section.getDueDates();
+                ContentValues dueDateValues = new ContentValues();
+                dueDateValues.put(KEY_DUE_DATES_TERM_ID, newTermId);
+                for (int dueDateId = 0; dueDateId < dueDates.size(); dueDateId++) {
+                    updateDueDate(dueDateValues, termId, sectionId, dueDateId);
+                }
+
+                // update the Schedule
+                ContentValues scheduleValues = new ContentValues();
+                scheduleValues.put(KEY_SCHEDULES_TERM_ID, newTermId);
+                updateSchedule(scheduleValues, termId, sectionId);
             }
         }
         db.close();
@@ -574,7 +623,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         String where = KEY_SECTIONS_TERM_ID + " = " + termId + " AND " +
                 KEY_SECTIONS_ID + " = " + sectionId + " AND " + KEY_SECTIONS_ARCHIVED + " = " +
-                isArchived;
+                inArchive;
 
         db.update(TABLE_SECTIONS, values, where, null);
         db.close();
@@ -585,7 +634,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String where = KEY_ASSIGNMENTS_TERM_ID + " = " + termId + " AND " +
                 KEY_ASSIGNMENTS_SECTION_ID + " = " + sectionId + " AND " +
                 KEY_ASSIGNMENTS_ID + " = " + assignmentId + " AND " + KEY_ASSIGNMENTS_ARCHIVED +
-                " = " + isArchived;
+                " = " + inArchive;
 
         db.update(TABLE_ASSIGNMENTS, values, where, null);
         db.close();
@@ -596,7 +645,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String where = KEY_DUE_DATES_TERM_ID + " = " + termId + " AND " +
                 KEY_DUE_DATES_SECTION_ID + " = " + sectionId + " AND " +
                 KEY_DUE_DATES_ID + " = " + dueDateId + " AND " + KEY_DUE_DATES_ARCHIVED +
-                " = " + isArchived;
+                " = " + inArchive;
 
         db.update(TABLE_DUE_DATES, values, where, null);
         db.close();
@@ -606,19 +655,20 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         String where = KEY_SCHEDULES_TERM_ID + " = " + termId + " AND " +
                 KEY_SCHEDULES_SECTION_ID + " = " + sectionId + " AND " +
-                KEY_SCHEDULES_ARCHIVED + " = " + isArchived;
+                KEY_SCHEDULES_ARCHIVED + " = " + inArchive;
 
         db.update(TABLE_SCHEDULES, values, where, null);
         db.close();
     }
 
     public List<Term> getTerms(boolean archived) {
+
         SQLiteDatabase db = getReadableDatabase();
         List<Term> terms = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_TERMS + " WHERE " + KEY_TERMS_ARCHIVED +
-                " = " + isArchived;
-        Log.e("GETTERMS", String.valueOf(isArchived));
+                " = " + inArchive;
+        Log.e("GETTERMS", String.valueOf(inArchive));
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
@@ -632,7 +682,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
                 // create and add the term with ordering determined by KEY_TERMS_ID
                 Term term = new Term(termName, archived, sections);
-                if (termId > terms.size()) {
+                if (termId >= terms.size()) {
                     terms.add(term);
                 } else {
                     terms.add(termId, term);
@@ -648,8 +698,8 @@ public class DBHelper extends SQLiteOpenHelper {
         List<Section> sections = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_SECTIONS + " WHERE " + KEY_SECTIONS_TERM_ID +
-                " = " + termId + " AND " + KEY_SECTIONS_ARCHIVED + " = " + isArchived;
-        Log.e("GETSECTIONS", String.valueOf(isArchived));
+                " = " + termId + " AND " + KEY_SECTIONS_ARCHIVED + " = " + inArchive;
+        Log.e("GETSECTIONS", String.valueOf(inArchive));
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
@@ -706,7 +756,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         String query = "SELECT * FROM " + TABLE_ASSIGNMENTS + " WHERE " + KEY_ASSIGNMENTS_TERM_ID +
                 " = " + termId + " AND " + KEY_ASSIGNMENTS_SECTION_ID + " = " + sectionId +
-                " AND " + KEY_ASSIGNMENTS_ARCHIVED + " = " + isArchived;
+                " AND " + KEY_ASSIGNMENTS_ARCHIVED + " = " + inArchive;
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
@@ -735,7 +785,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         String query = "SELECT * FROM " + TABLE_DUE_DATES + " WHERE " + KEY_DUE_DATES_TERM_ID +
                 " = " + termId + " AND " + KEY_DUE_DATES_SECTION_ID + " = " + sectionId +
-                " AND " + KEY_DUE_DATES_ARCHIVED + " = " + isArchived;
+                " AND " + KEY_DUE_DATES_ARCHIVED + " = " + inArchive;
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
@@ -768,7 +818,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         String query = "SELECT * FROM " + TABLE_SCHEDULES + " WHERE " + KEY_SCHEDULES_TERM_ID +
                 " = " + termId + " AND " + KEY_SCHEDULES_SECTION_ID + " = " + sectionId +
-                " AND " + KEY_SCHEDULES_ARCHIVED + " = " + isArchived;
+                " AND " + KEY_SCHEDULES_ARCHIVED + " = " + inArchive;
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {

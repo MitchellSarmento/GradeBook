@@ -39,7 +39,7 @@ public class Term {
         DBHelper db = new DBHelper(context);
         ContentValues updateValues = new ContentValues();
         updateValues.put(DBHelper.KEY_TERMS_NAME, termName);
-        db.updateTerm(updateValues, termPosition, archived);
+        db.updateTerm(updateValues, termPosition);
     }
 
     public List<Section> getSections() {
