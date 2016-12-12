@@ -10,8 +10,12 @@ import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.model.Schedule;
 import com.sarmento.mitchell.gradesaver2.model.Section;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder>{
     private List<String> sectionNames;
@@ -42,6 +46,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
                 endTimes.add(endTime);
             }
         }
+
+        sort();
     }
 
     @Override
@@ -61,6 +67,28 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     @Override
     public int getItemCount() {
         return locations.size();
+    }
+
+    private void sort() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm aa", Locale.getDefault());
+        boolean sorted = false;
+        while (!sorted) {
+            sorted = true;
+            for (int i = 0; i < startTimes.size()-1; i++) {
+                try {
+                    if (dateFormat.parse(startTimes.get(i+1))
+                            .before(dateFormat.parse(startTimes.get(i)))) {
+                        sorted = false;
+                        Collections.swap(sectionNames, i, i+1);
+                        Collections.swap(locations, i, i+1);
+                        Collections.swap(startTimes, i, i+1);
+                        Collections.swap(endTimes, i, i+1);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

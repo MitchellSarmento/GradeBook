@@ -12,7 +12,11 @@ import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.adapters.DueDateAdapter;
 import com.sarmento.mitchell.gradesaver2.dialogs.DueDateDialogFragment;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
+import com.sarmento.mitchell.gradesaver2.model.DueDate;
 import com.sarmento.mitchell.gradesaver2.model.Section;
+
+import java.util.Collections;
+import java.util.List;
 
 public class DueDatesActivity extends AppCompatActivity {
     private Academics academics = Academics.getInstance();
@@ -20,6 +24,7 @@ public class DueDatesActivity extends AppCompatActivity {
     private int sectionPosition;
 
     private DueDateAdapter adapter;
+    private List<DueDate> dueDates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +39,13 @@ public class DueDatesActivity extends AppCompatActivity {
                 academics.getCurrentTerms().get(termPosition).getSections().get(sectionPosition);
         setTitle(section.getSectionName());
 
-        RecyclerView dueDates = (RecyclerView) findViewById(R.id.due_dates);
-        dueDates.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new DueDateAdapter(section.getDueDates(), termPosition, sectionPosition);
-        dueDates.setAdapter(adapter);
+        dueDates = section.getDueDates();
+        Collections.sort(dueDates);
+
+        RecyclerView dueDatesView = (RecyclerView) findViewById(R.id.due_dates);
+        dueDatesView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new DueDateAdapter(dueDates, termPosition, sectionPosition);
+        dueDatesView.setAdapter(adapter);
     }
 
     @Override
@@ -47,6 +55,7 @@ public class DueDatesActivity extends AppCompatActivity {
     }
 
     public void updateList() {
+        Collections.sort(dueDates);
         adapter.notifyDataSetChanged();
     }
 

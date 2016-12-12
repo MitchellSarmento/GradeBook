@@ -6,7 +6,7 @@ import android.content.Context;
 
 import java.util.Calendar;
 
-public class DueDate {
+public class DueDate implements Comparable<DueDate> {
     private String dueDateName;
     private boolean complete;
     private Calendar date;
@@ -53,5 +53,10 @@ public class DueDate {
 
     public Calendar getDate() {
         return date;
+    }
+
+    @Override
+    public int compareTo(DueDate dueDate) {
+        return this.date.before(dueDate.getDate()) ? -1 : 1;
     }
 }

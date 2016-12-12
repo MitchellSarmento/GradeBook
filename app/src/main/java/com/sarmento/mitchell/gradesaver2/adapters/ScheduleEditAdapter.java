@@ -18,6 +18,7 @@ import com.sarmento.mitchell.gradesaver2.views.ScheduleEditHeader;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapter.ViewHolder> {
@@ -29,9 +30,10 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
     private Activity activity;
     private RecyclerView recyclerView;
     private List<Section> sections;
-    private ScheduleEditHeader header;
     private Section section;
     private Schedule schedule;
+
+    private List<ScheduleEditHeader> headers = new ArrayList<>();
 
     public ScheduleEditAdapter(Activity activity, RecyclerView recyclerView, List<Section> sections,
                                int termPosition) {
@@ -66,7 +68,7 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
 
     // used to save changes when user presses the back button without closing the ExpandableLayout
     public void updateSchedule() {
-        if (header != null) {
+        for (ScheduleEditHeader header : headers) {
             header.updateSchedule();
         }
     }
@@ -105,6 +107,7 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
                 endTimes.put(dayValue, (TextView) v.findViewById(endTimeIds[dayValue]));
             }
 
+            headers.add(scheduleEditHeader);
             scheduleEditHeader.setOnClickListener(this);
         }
 
@@ -127,14 +130,13 @@ public class ScheduleEditAdapter extends RecyclerView.Adapter<ScheduleEditAdapte
             }
 
             if (position == sectionPosition) {
-                scheduleEditHeader.updateSchedule();
                 sectionPosition = UNSELECTED;
             } else {
-                scheduleEditHeader.updateSchedule();
                 expandableLayout.expand();
-                header = scheduleEditHeader;
                 sectionPosition = position;
             }
+
+            scheduleEditHeader.updateSchedule();
         }
     }
 }

@@ -22,8 +22,6 @@ import java.util.List;
 public class ScheduleView extends LinearLayout {
     private Context context;
     private SparseArray<List<String>> locations;
-    private SparseArray<List<String>> startTimes;
-    private SparseArray<List<String>> endTimes;
 
     public ScheduleView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -33,21 +31,18 @@ public class ScheduleView extends LinearLayout {
 
     public void init(Term term) {
         locations  = new SparseArray<>();
-        startTimes = new SparseArray<>();
-        endTimes   = new SparseArray<>();
 
         for (Schedule.Day day : Schedule.Day.values()) {
             int dayValue = day.getValue();
             locations.put(dayValue, new ArrayList<String>());
-            startTimes.put(dayValue, new ArrayList<String>());
-            endTimes.put(dayValue, new ArrayList<String>());
         }
 
         // get the Schedules for this Term
         List<Section> sections = term.getSections();
         for (Section section : sections) {
             for (Schedule.Day day : Schedule.Day.values()) {
-                extractScheduleInfo(day.getValue(), section);
+                int dayValue = day.getValue();
+                extractScheduleInfo(dayValue, section);
             }
         }
 
@@ -86,8 +81,6 @@ public class ScheduleView extends LinearLayout {
 
         if (!startTime.equals("") && !endTime.equals("")) {
             locations.get(day).add(schedule.getLocation());
-            startTimes.get(day).add(startTime);
-            endTimes.get(day).add(endTime);
         }
     }
 }

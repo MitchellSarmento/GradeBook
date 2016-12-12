@@ -88,9 +88,13 @@ public class Schedule {
     }
 
     private void updateDay(int day, ScheduleEditAdapter.ViewHolder holder) {
-        location = holder.location.getText().toString();
-        startTimes.put(day, holder.startTimes.get(day).getText().toString());
-        endTimes.put(day, holder.endTimes.get(day).getText().toString());
+        String location  = holder.location.getText().toString();
+        String startTime = holder.startTimes.get(day).getText().toString();
+        String endTime   = holder.endTimes.get(day).getText().toString();
+
+        this.location = location;
+        startTimes.put(day, startTime);
+        endTimes.put(day, endTime);
     }
 
     // used to convert TimePicker output to a String
