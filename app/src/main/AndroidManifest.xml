@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sarmento.mitchell.gradesaver">
+    package="com.sarmento.mitchell.gradesaver2">
 
     <application
         android:allowBackup="true"
@@ -8,13 +8,34 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.sarmento.mitchell.gradesaver2"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths">
+            </meta-data>
+        </provider>
+        <activity android:name=".activities.TermsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.SectionsActivity" />
+        <activity android:name=".activities.AssignmentsActivity" />
+        <activity android:name=".activities.DueDatesActivity" />
+        <activity android:name=".activities.ScheduleActivity" />
+        <activity
+            android:name=".activities.ScheduleEditActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="@string/action_settings" />
+        <activity android:name=".activities.AssignmentImagesActivity"></activity>
     </application>
 
 </manifest>

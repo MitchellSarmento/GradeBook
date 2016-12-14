@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_due_dates"
+        android:icon="@drawable/ic_dates_white_24dp"
+        android:title="@string/action_due_dates"
+        app:showAsAction="ifRoom"/>
+</menu>

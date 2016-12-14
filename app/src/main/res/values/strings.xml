@@ -1,3 +1,150 @@
 <resources>
-    <string name="app_name">GradeSaver</string>
+    <string name="app_name">GradeBook</string>
+
+    <!-- Assignment Types -->
+    <string name="homework">Homework</string>
+    <string name="quiz">Quiz</string>
+    <string name="midterm">Midterm</string>
+    <string name="string_final">Final</string>
+    <string name="project">Project</string>
+    <string name="other">Other</string>
+
+    <!-- Grades -->
+    <string name="a">A</string>
+    <string name="b">B</string>
+    <string name="c">C</string>
+    <string name="d">D</string>
+    <string name="f">F</string>
+    <string name="high_a_default">100.0</string>
+    <string name="low_a_default">90.0</string>
+    <string name="high_b_default">89.0</string>
+    <string name="low_b_default">80.0</string>
+    <string name="high_c_default">79.0</string>
+    <string name="low_c_default">70.0</string>
+    <string name="high_d_default">69.0</string>
+    <string name="low_d_default">60.0</string>
+    <string name="high_f_default">59.0</string>
+    <string name="low_f_default">0.0</string>
+    <string name="weight_homework_default">30.0</string>
+    <string name="weight_quizzes_default">15.0</string>
+    <string name="weight_midterm_default">20.0</string>
+    <string name="weight_final_default">25.0</string>
+    <string name="weight_project_default">10.0</string>
+    <string name="weight_other_default">0.0</string>
+
+    <!-- Days of the week -->
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+    <string name="mon">Mon</string>
+    <string name="tue">Tue</string>
+    <string name="wed">Wed</string>
+    <string name="thu">Thu</string>
+    <string name="fri">Fri</string>
+    <string name="sat">Sat</string>
+    <string name="sun">Sun</string>
+
+    <!-- TermsActivity Menu Actions -->
+    <string name="action_new_term">New Term</string>
+    <string name="action_view_archive">View Archive</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- SectionsActivity Menu Actions -->
+    <string name="action_new_section">New Section</string>
+    <string name="action_schedule">Schedule</string>
+
+    <!-- AssignmentsActivity Menu Actions -->
+    <string name="action_due_dates">Due Dates</string>
+    <string name="action_new_assignment">New Assignment</string>
+
+    <!-- DueDatesActivity Menu Actions -->
+    <string name="action_new_due_date">New Due Date</string>
+
+    <!-- ScheduleActivity Menu Actions -->
+    <string name="action_edit_schedule">Edit Schedule</string>
+
+    <!-- AssignmentImagesActivity Menu Actions -->
+    <string name="action_add_picture">Add Picture</string>
+    <string name="action_rotate_left">Rotate Left</string>
+    <string name="action_rotate_right">Rotate Right</string>
+
+    <!-- Settings -->
+    <string name="about">About</string>
+    <string name="version">Version</string>
+    <string name="license_information">License Information</string>
+
+    <!-- Options Arrays -->
+    <string-array name="options_term">
+        <item>Edit</item>
+        <item>Delete</item>
+        <item>Archive</item>
+    </string-array>
+    <string-array name="options_term_archived">
+        <item>Delete</item>
+        <item>Unarchive</item>
+    </string-array>
+    <string-array name="options_section">
+        <item>Edit</item>
+        <item>Delete</item>
+        <item>Set Final Grade</item>
+    </string-array>
+    <string-array name="options_assignment">
+        <item>Edit</item>
+        <item>Delete</item>
+    </string-array>
+    <string-array name="options_assignment_image">
+        <item>Delete</item>
+    </string-array>
+    <string-array name="options_assignment_image_archived">
+        <item>Properties</item>
+    </string-array>
+    <string-array name="options_due_date">
+        <item>Edit</item>
+        <item>Delete</item>
+    </string-array>
+
+    <!-- Error Messages -->
+    <string name="error_term_no_name">Please enter a name for the term</string>
+    <string name="error_section_no_name">Please enter a name for the section</string>
+    <string name="error_section_assignment_weights">Assignment weights do not total 100%</string>
+    <string name="error_section_grade_thresholds">Invalid grade thresholds</string>
+    <string name="error_section_weight_conflict">Cannot change the weight for an existing assignment
+    to 0</string>
+    <string name="error_assignment_no_name">Please enter a name for the assignment</string>
+    <string name="error_assignment_no_my_score">Please enter a value for My Score</string>
+    <string name="error_assignment_no_max_score">Please enter a value for Max Score</string>
+    <string name="error_assignment_zero_max_score">Max Score cannot be zero</string>
+    <string name="error_due_date_no_name">Please enter a name for the assignment</string>
+
+    <!-- License Information -->
+    <string name="in_app_icons_google">In-app Icons by Google</string>
+    <string name="in_app_icons_google_license">https://creativecommons.org/licenses/by/4.0/</string>
+    <string name="expandable_layout_cachapa">ExpandableLayout by Daniel Cachapa</string>
+    <string name="expandable_layout_cachapa_license">http://www.apache.org/licenses/LICENSE-2.0</string>
+    <string name="expandable_layout_cachapa_github">https://github.com/cachapa/ExpandableLayout</string>
+    <string name="photo_view_chrisbanes">PhotoView by Chris Banes</string>
+    <string name="photo_view_chrisbanes_license">http://www.apache.org/licenses/LICENSE-2.0</string>
+    <string name="photo_view_chrisbanes_github">https://github.com/chrisbanes/PhotoView</string>
+
+    <!-- Misc -->
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="term">Term</string>
+    <string name="section">Section</string>
+    <string name="assignment">Assignment</string>
+    <string name="my_score">My Score</string>
+    <string name="max_score">Max Score</string>
+    <string name="type">Type</string>
+    <string name="total">Total</string>
+    <string name="options">Options</string>
+    <string name="prompt_delete">Delete?</string>
+    <string name="start_time">Start Time</string>
+    <string name="end_time">End Time</string>
+    <string name="location">Location</string>
+    <string name="archive">Archive</string>
+    <string name="final_grade">Final Grade</string>
 </resources>

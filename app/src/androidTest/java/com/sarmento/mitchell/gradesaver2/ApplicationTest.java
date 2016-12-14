@@ -1,4 +1,4 @@
-package com.sarmento.mitchell.gradesaver;
+package com.sarmento.mitchell.gradesaver2;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
