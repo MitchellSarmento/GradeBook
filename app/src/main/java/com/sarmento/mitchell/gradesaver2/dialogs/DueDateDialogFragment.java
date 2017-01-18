@@ -115,8 +115,8 @@ public class DueDateDialogFragment extends DialogFragment {
                                 section.addDueDate(activity, dueDate, termPosition, sectionPosition,
                                         dueDatePosition);
                                 ((DueDatesActivity) activity).updateList();
-                                dialog.dismiss();
                             }
+                            dialog.dismiss();
                         } else {
                             int inputCheckValue = inputCheck.getValue();
 
