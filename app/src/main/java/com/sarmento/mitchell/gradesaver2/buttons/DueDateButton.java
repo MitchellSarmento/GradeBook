@@ -45,7 +45,7 @@ public class DueDateButton extends Button implements View.OnClickListener, View.
         setButtonText();
         setButtonColor();
 
-        if (academics.inArchive()) {
+        if (!academics.inArchive()) {
             setOnClickListener(this);
             setOnLongClickListener(this);
         }

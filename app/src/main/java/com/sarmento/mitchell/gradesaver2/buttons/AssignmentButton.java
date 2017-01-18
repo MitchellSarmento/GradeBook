@@ -54,7 +54,7 @@ public class AssignmentButton extends Button implements View.OnClickListener, Vi
                 getButtonColor(scorePercent), null));
 
         setOnClickListener(this);
-        if (academics.inArchive()) {
+        if (!academics.inArchive()) {
             setOnLongClickListener(this);
         }
     }

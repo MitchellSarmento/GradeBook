@@ -35,7 +35,9 @@ public class TermButton extends Button implements View.OnClickListener, View.OnL
         setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.color_a, null));
 
         setOnClickListener(this);
-        setOnLongClickListener(this);
+        if (!academics.inArchive()) {
+            setOnLongClickListener(this);
+        }
     }
 
     @Override
