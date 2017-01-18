@@ -94,6 +94,8 @@ public class DueDateButton extends Button implements View.OnClickListener, View.
             return "Past Due!";
         } else if (daysRemaining == 0) {
             return "Due Today!";
+        } else if (daysRemaining == 1) {
+            return "Due Tomorrow!";
         } else {
             return "Due in " + daysRemaining + " days.";
         }
