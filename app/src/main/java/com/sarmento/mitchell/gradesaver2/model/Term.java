@@ -54,6 +54,10 @@ public class Term {
     }
 
     public void removeSection(Context context, int termPosition, int sectionPosition) {
+        List<Assignment> assignments = sections.get(sectionPosition).getAssignments();
+        for (int i = 0; i < assignments.size(); i++) {
+            assignments.get(i).deleteAllImages();
+        }
         sections.remove(sectionPosition);
 
         // update the Term in the database

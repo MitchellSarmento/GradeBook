@@ -121,4 +121,13 @@ public class Assignment {
         updateValues.put(DBHelper.KEY_ASSIGNMENTS_IMAGE_PATHS, pathsString);
         db.updateAssignment(updateValues, termPosition, sectionPosition, assignmentPosition);
     }
+
+    public void deleteAllImages() {
+        // delete all pictures associated with this assignment
+        File imageToDelete;
+        for (int i = 0; i < imagePaths.size(); i++) {
+            imageToDelete = new File(imagePaths.get(i));
+            imageToDelete.delete();
+        }
+    }
 }

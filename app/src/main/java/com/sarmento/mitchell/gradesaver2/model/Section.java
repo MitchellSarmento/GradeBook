@@ -252,6 +252,7 @@ public class Section {
         // calculate the overall grade for this section
         calculateSectionGrade();
 
+        assignment.deleteAllImages();
         assignments.remove(assignmentPosition);
 
         // get the columns to update
