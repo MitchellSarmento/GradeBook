@@ -8,6 +8,7 @@ import java.util.Calendar;
 
 public class DueDate implements Comparable<DueDate> {
     private String dueDateName;
+    private String sectionName;
     private boolean complete;
     private Calendar date;
 
@@ -15,6 +16,16 @@ public class DueDate implements Comparable<DueDate> {
         this.dueDateName = dueDateName;
         this.complete    = complete;
         this.date        = date;
+    }
+
+    /*
+     * Constructor for DueDates created for DueDatesWidget
+     */
+    public DueDate(String dueDateName, boolean complete, Calendar date, String sectionName) {
+        this.dueDateName = dueDateName;
+        this.complete    = complete;
+        this.date        = date;
+        this.sectionName = sectionName;
     }
 
     public void updateDueDate(Context context, String dueDateName, Calendar date,
@@ -34,6 +45,10 @@ public class DueDate implements Comparable<DueDate> {
 
     public String getDueDateName() {
         return dueDateName;
+    }
+
+    public String getSectionName() {
+        return sectionName;
     }
 
     public boolean isComplete() {

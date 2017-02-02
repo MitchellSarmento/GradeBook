@@ -18,8 +18,10 @@ import com.sarmento.mitchell.gradesaver2.activities.DueDatesActivity;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.DueDate;
 import com.sarmento.mitchell.gradesaver2.model.Section;
+import com.sarmento.mitchell.gradesaver2.widgets.DueDatesWidgetProvider;
 
 import java.util.Calendar;
+import java.util.Collections;
 
 public class DueDateDialogFragment extends DialogFragment {
     private Academics academics = Academics.getInstance();
@@ -27,6 +29,7 @@ public class DueDateDialogFragment extends DialogFragment {
     private int sectionPosition;
     private int dueDatePosition;
 
+    private Section section;
     private DueDate dueDate;
 
     @Override
@@ -57,9 +60,9 @@ public class DueDateDialogFragment extends DialogFragment {
         // set fields if editing
         if (editing) {
             dueDatePosition = arguments.getInt(Academics.DUE_DATE_POSITION);
-            dueDate = academics.getCurrentTerms().get(termPosition)
-                    .getSections().get(sectionPosition)
-                    .getDueDates().get(dueDatePosition);
+            section = academics.getCurrentTerms().get(termPosition)
+                    .getSections().get(sectionPosition);
+            dueDate = section.getDueDates().get(dueDatePosition);
             Calendar due = dueDate.getDate();
 
             dueDateEntry.setText(dueDate.getDueDateName());
@@ -101,8 +104,13 @@ public class DueDateDialogFragment extends DialogFragment {
                             // check if editing
                             if (editing) {
                                 // edit existing DueDate
-                                dueDate.updateDueDate(activity, dueDateName, date, termPosition, sectionPosition,
-                                        dueDatePosition);
+                                dueDate.updateDueDate(activity, dueDateName, date,
+                                        termPosition, sectionPosition, dueDatePosition);
+
+                                // sort the Section's DueDates
+                                Collections.sort(section.getDueDates());
+                                section.sortDueDates(activity, termPosition, sectionPosition);
+
                                 ((DueDatesActivity) activity).updateList();
                             } else {
                                 // create new due date
@@ -117,6 +125,7 @@ public class DueDateDialogFragment extends DialogFragment {
                                 ((DueDatesActivity) activity).updateList();
                             }
                             dialog.dismiss();
+                            DueDatesWidgetProvider.updateWidget(activity, false);
                         } else {
                             int inputCheckValue = inputCheck.getValue();
 

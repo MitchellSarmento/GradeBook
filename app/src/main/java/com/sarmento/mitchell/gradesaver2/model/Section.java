@@ -8,6 +8,7 @@ import android.util.SparseArray;
 import com.sarmento.mitchell.gradesaver2.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Section {
@@ -337,20 +338,38 @@ public class Section {
 
     public void addDueDate(Context context, DueDate dueDate, int termPosition,
                            int sectionPosition, int dueDatePosition) {
-        dueDates.add(dueDate);
+        // find the ordered index to insert the DueDate
+        int insertIndex = Collections.binarySearch(dueDates, dueDate);
+        if (insertIndex < 0) {
+            insertIndex = (insertIndex * -1) - 1;
+        }
 
         // update the Section in the database
         DBHelper db = new DBHelper(context);
         db.addDueDate(dueDate, termPosition, sectionPosition, dueDatePosition);
+
+        // add the DueDate and sort if necessary
+        if (insertIndex == dueDates.size()) {
+            dueDates.add(dueDate);
+        } else {
+            dueDates.add(insertIndex, dueDate);
+            sortDueDates(context, termPosition, sectionPosition);
+        }
     }
 
     public void removeDueDate(Context context, int termPosition, int sectionPosition,
                               int dueDatePosition) {
+        // remove the DueDate
         dueDates.remove(dueDatePosition);
 
         // update the Section in the database
         DBHelper db = new DBHelper(context);
         db.removeDueDate(termPosition, sectionPosition, dueDatePosition);
+
+        // sort if the DueDate was not removed from the end of the list
+        if (dueDatePosition == dueDates.size()) {
+            sortDueDates(context, termPosition, sectionPosition);
+        }
     }
 
     public List<Integer> getRelevantAssignmentTypes() {
@@ -420,6 +439,14 @@ public class Section {
             return "D";
         } else {
             return "F";
+        }
+    }
+
+    public void sortDueDates(Context context, int termPosition, int sectionPosition) {
+        for (int i = 0; i < dueDates.size(); i++) {
+            DueDate due = dueDates.get(i);
+            dueDates.get(i).updateDueDate(context, due.getDueDateName(), due.getDate(),
+                    termPosition, sectionPosition, i);
         }
     }
 }

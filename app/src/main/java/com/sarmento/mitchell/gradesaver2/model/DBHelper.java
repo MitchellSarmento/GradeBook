@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Parcelable;
 import android.util.SparseArray;
 
 import java.util.ArrayList;
@@ -837,5 +838,49 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return schedule;
+    }
+
+    /*
+     * Gets all upcoming DueDates to display in DueDatesWidget
+     */
+    public List<DueDate> getUpcomingDueDates() {
+        SQLiteDatabase db      = getReadableDatabase();
+        List<DueDate> dueDates = new ArrayList<>();
+
+        String query = "SELECT * FROM " + TABLE_DUE_DATES + " WHERE " + KEY_DUE_DATES_ARCHIVED +
+                " = " + FALSE;
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                // check if the due date is upcoming
+                Calendar today = Calendar.getInstance();
+                Calendar due   = Calendar.getInstance();
+                int year       = cursor.getInt(5);
+                int month      = cursor.getInt(6);
+                int day        = cursor.getInt(7);
+                due.set(year, month, day);
+
+                if (!today.after(due)) {
+                    // gather information from the database
+                    int termId         = cursor.getInt(1);
+                    int sectionId      = cursor.getInt(2);
+                    String dueDateName = cursor.getString(3);
+                    boolean complete   = false;
+                    if (cursor.getInt(4) == TRUE) {
+                        complete = true;
+                    }
+
+                    // create and add the due date
+                    String sectionName = academics.getCurrentTerms().get(termId)
+                            .getSections().get(sectionId).getSectionName();
+                    DueDate dueDate = new DueDate(dueDateName, complete, due, sectionName);
+                    dueDates.add(dueDate);
+                }
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return dueDates;
     }
 }

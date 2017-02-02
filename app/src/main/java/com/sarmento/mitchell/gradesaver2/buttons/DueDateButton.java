@@ -13,6 +13,7 @@ import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.dialogs.OptionsDialogFragment;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.DueDate;
+import com.sarmento.mitchell.gradesaver2.widgets.DueDatesWidgetProvider;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -121,6 +122,7 @@ public class DueDateButton extends Button implements View.OnClickListener, View.
         setButtonText();
         setButtonColor();
         dueDate.setComplete(context, complete, termPosition, sectionPosition, dueDatePosition);
+        DueDatesWidgetProvider.updateWidget(context, false);
     }
 
     @Override

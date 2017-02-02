@@ -19,6 +19,7 @@ import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.Assignment;
 import com.sarmento.mitchell.gradesaver2.model.Section;
 import com.sarmento.mitchell.gradesaver2.model.Term;
+import com.sarmento.mitchell.gradesaver2.widgets.DueDatesWidgetProvider;
 
 import java.util.List;
 
@@ -144,6 +145,7 @@ public class SectionDialogFragment extends DialogFragment {
                                 term.updateSection(activity, sectionName, assignmentWeights,
                                         gradeThresholds, termPosition, sectionPosition);
                                 ((SectionsActivity) activity).updateList();
+                                DueDatesWidgetProvider.updateWidget(activity, false);
                             } else {
                                 // create new Section
                                 section = new Section(sectionName, assignmentWeights, gradeThresholds);
@@ -155,6 +157,7 @@ public class SectionDialogFragment extends DialogFragment {
                                 ((SectionsActivity) activity).updateList();
                             }
                             dialog.dismiss();
+                            DueDatesWidgetProvider.updateWidget(activity, false);
                         } else {
                             int inputCheckValue = inputCheck.getValue();
 
