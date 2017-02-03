@@ -25,12 +25,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/widget_section_name"
-            android:textSize="10sp"/>
+            android:textSize="10sp"
+            android:textColor="@android:color/white"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/widget_assignment_name"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"/>
     </LinearLayout>
 </LinearLayout>
