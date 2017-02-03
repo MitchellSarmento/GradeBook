@@ -17,13 +17,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/widget_week_day"
-            android:textSize="12sp"/>
+            android:textSize="12sp"
+            android:textColor="@android:color/white"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/widget_month_day"
-            android:textSize="24sp"/>
+            android:textSize="24sp"
+            android:textColor="@android:color/white"/>
     </LinearLayout>
 
     <ListView
