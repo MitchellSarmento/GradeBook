@@ -60,7 +60,23 @@ public class DueDatesWidgetViewsFactory implements RemoteViewsService.RemoteView
         views.setTextViewText(R.id.widget_section_name, dueDate.getSectionName());
         views.setTextViewText(R.id.widget_assignment_name, dueDate.getDueDateName());
 
-        if (i == 0 || dueDates.get(i-1).getDate().before(date)) {
+        // remove irrelevant time data from date for comparison
+        date.set(Calendar.HOUR_OF_DAY, 0);
+        date.set(Calendar.MINUTE, 0);
+        date.set(Calendar.SECOND, 0);
+        date.set(Calendar.MILLISECOND, 0);
+
+        // get date of previous DueDate and remove irrelevant time data
+        Calendar previousDate = null;
+        if (i != 0) {
+            previousDate = dueDates.get(i - 1).getDate();
+            previousDate.set(Calendar.HOUR_OF_DAY, 0);
+            previousDate.set(Calendar.MINUTE, 0);
+            previousDate.set(Calendar.SECOND, 0);
+            previousDate.set(Calendar.MILLISECOND, 0);
+        }
+
+        if (i == 0 || previousDate.before(date)) {
             String dayOfWeek = date.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, locale);
             String month     = date.getDisplayName(Calendar.MONTH, Calendar.SHORT, locale);
             int dayOfMonth   = date.get(Calendar.DAY_OF_MONTH);
@@ -88,7 +104,7 @@ public class DueDatesWidgetViewsFactory implements RemoteViewsService.RemoteView
 
     @Override
     public int getViewTypeCount() {
-        return 2;
+        return 1;
     }
 
     @Override
