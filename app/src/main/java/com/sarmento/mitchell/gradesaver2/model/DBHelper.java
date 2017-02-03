@@ -480,8 +480,10 @@ public class DBHelper extends SQLiteOpenHelper {
         if (dueDateId != ALL_IDS) {
             db = getWritableDatabase();
             db.execSQL("UPDATE " + TABLE_DUE_DATES + " SET " + KEY_DUE_DATES_ID + " = " +
-                    KEY_DUE_DATES_ID + " - 1 WHERE " + KEY_DUE_DATES_ID + " > " + dueDateId +
-                    " AND " + KEY_DUE_DATES_ARCHIVED + " = " + inArchive);
+                    KEY_DUE_DATES_ID + " - 1 WHERE " + KEY_DUE_DATES_TERM_ID + " = " +
+                    termId + " AND " + KEY_DUE_DATES_SECTION_ID + " = " + sectionId + " AND " +
+                    KEY_DUE_DATES_ID + " > " + dueDateId + " AND " + KEY_DUE_DATES_ARCHIVED +
+                    " = " + inArchive);
         }
         db.close();
     }

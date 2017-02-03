@@ -367,7 +367,7 @@ public class Section {
         db.removeDueDate(termPosition, sectionPosition, dueDatePosition);
 
         // sort if the DueDate was not removed from the end of the list
-        if (dueDatePosition == dueDates.size()) {
+        if (dueDatePosition != dueDates.size()) {
             sortDueDates(context, termPosition, sectionPosition);
         }
     }
