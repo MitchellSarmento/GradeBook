@@ -144,6 +144,7 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                                 academics.removeTerm(activity, termPosition, false);
                                 ((TermsActivity) activity).updateList();
                                 dialog.dismiss();
+                                DueDatesWidgetProvider.updateWidget(activity, false);
                             }
                         };
                         break;
