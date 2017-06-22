@@ -6,6 +6,7 @@
     android:updatePeriodMillis="0"
     android:initialLayout="@layout/widget_due_dates"
     android:resizeMode="horizontal|vertical"
-    android:widgetCategory="home_screen">
+    android:widgetCategory="home_screen"
+    android:previewImage="@drawable/widget_preview">
 
 </appwidget-provider>
