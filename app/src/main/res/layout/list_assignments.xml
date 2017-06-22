@@ -6,6 +6,7 @@
     <com.sarmento.mitchell.gradesaver2.buttons.AssignmentButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:drawablePadding="-24dp"
         android:textAllCaps="false"
         android:id="@+id/button_assignment"/>
 
