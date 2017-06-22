@@ -29,7 +29,7 @@ public class ScheduleActivity extends AppCompatActivity {
         term = (academics.inArchive()) ?
                 academics.getArchivedTerms().get(termPosition) :
                 academics.getCurrentTerms().get(termPosition);
-        setTitle(term.getTermName());
+        setTitle(getString(R.string.title_schedule) + term.getTermName());
 
         // initialize the ScheduleView
         scheduleView = (ScheduleView) findViewById(R.id.details_schedule);

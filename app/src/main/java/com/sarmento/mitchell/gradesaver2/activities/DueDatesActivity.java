@@ -36,7 +36,7 @@ public class DueDatesActivity extends AppCompatActivity {
         Section section = (academics.inArchive()) ?
                 academics.getArchivedTerms().get(termPosition).getSections().get(sectionPosition) :
                 academics.getCurrentTerms().get(termPosition).getSections().get(sectionPosition);
-        setTitle(section.getSectionName());
+        setTitle(getString(R.string.title_due_dates) + section.getSectionName());
 
         dueDates = section.getDueDates();
 
