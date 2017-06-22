@@ -33,6 +33,7 @@
         android:layout_height="match_parent"
         android:layout_margin="5dp"
         android:dividerHeight="5dp"
+        android:divider="@android:color/white"
         android:id="@+id/list_due_dates">
     </ListView>
 </LinearLayout>
