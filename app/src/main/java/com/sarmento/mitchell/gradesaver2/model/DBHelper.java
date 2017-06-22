@@ -875,7 +875,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
                     String innerQuery = "SELECT " + KEY_SECTIONS_NAME + " FROM " + TABLE_SECTIONS +
                             " WHERE " + KEY_SECTIONS_TERM_ID + " = " + termId + " AND " +
-                            KEY_SECTIONS_ID + " = " + sectionId;
+                            KEY_SECTIONS_ID + " = " + sectionId + " AND " + KEY_DUE_DATES_ARCHIVED +
+                            " = " + FALSE;
                     Cursor innerCursor = db.rawQuery(innerQuery, null);
 
                     String sectionName = "";
