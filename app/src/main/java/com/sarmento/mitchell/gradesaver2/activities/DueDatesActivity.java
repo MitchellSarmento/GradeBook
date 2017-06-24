@@ -15,7 +15,6 @@ import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.DueDate;
 import com.sarmento.mitchell.gradesaver2.model.Section;
 
-import java.util.Collections;
 import java.util.List;
 
 public class DueDatesActivity extends AppCompatActivity {
@@ -37,10 +36,9 @@ public class DueDatesActivity extends AppCompatActivity {
         Section section = (academics.inArchive()) ?
                 academics.getArchivedTerms().get(termPosition).getSections().get(sectionPosition) :
                 academics.getCurrentTerms().get(termPosition).getSections().get(sectionPosition);
-        setTitle(section.getSectionName());
+        setTitle(getString(R.string.title_due_dates) + section.getSectionName());
 
         dueDates = section.getDueDates();
-        Collections.sort(dueDates);
 
         RecyclerView dueDatesView = (RecyclerView) findViewById(R.id.due_dates);
         dueDatesView.setLayoutManager(new LinearLayoutManager(this));
@@ -55,7 +53,6 @@ public class DueDatesActivity extends AppCompatActivity {
     }
 
     public void updateList() {
-        Collections.sort(dueDates);
         adapter.notifyDataSetChanged();
     }
 

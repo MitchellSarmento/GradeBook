@@ -53,8 +53,14 @@ public class AssignmentButton extends Button implements View.OnClickListener, Vi
         setBackgroundColor(ResourcesCompat.getColor(getResources(),
                 getButtonColor(scorePercent), null));
 
+        if (assignment.getImagePaths().size() != 0) {
+            setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_photo_gray_24dp, 0, 0, 0);
+        } else {
+            setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
+
         setOnClickListener(this);
-        if (academics.inArchive()) {
+        if (!academics.inArchive()) {
             setOnLongClickListener(this);
         }
     }

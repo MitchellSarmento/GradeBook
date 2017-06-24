@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Parcelable;
 import android.util.SparseArray;
 
 import java.util.ArrayList;
@@ -479,8 +480,10 @@ public class DBHelper extends SQLiteOpenHelper {
         if (dueDateId != ALL_IDS) {
             db = getWritableDatabase();
             db.execSQL("UPDATE " + TABLE_DUE_DATES + " SET " + KEY_DUE_DATES_ID + " = " +
-                    KEY_DUE_DATES_ID + " - 1 WHERE " + KEY_DUE_DATES_ID + " > " + dueDateId +
-                    " AND " + KEY_DUE_DATES_ARCHIVED + " = " + inArchive);
+                    KEY_DUE_DATES_ID + " - 1 WHERE " + KEY_DUE_DATES_TERM_ID + " = " +
+                    termId + " AND " + KEY_DUE_DATES_SECTION_ID + " = " + sectionId + " AND " +
+                    KEY_DUE_DATES_ID + " > " + dueDateId + " AND " + KEY_DUE_DATES_ARCHIVED +
+                    " = " + inArchive);
         }
         db.close();
     }
@@ -669,8 +672,8 @@ public class DBHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 // gather information from the database
-                int termId = cursor.getInt(0);
-                String termName = cursor.getString(1);
+                int termId = cursor.getInt(cursor.getColumnIndex(KEY_TERMS_ID));
+                String termName = cursor.getString(cursor.getColumnIndex(KEY_TERMS_NAME));
 
                 // get the sections belonging to this term
                 List<Section> sections = getSections(termId);
@@ -699,8 +702,8 @@ public class DBHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 // gather information from the database
-                int sectionId = cursor.getInt(0);
-                String sectionName = cursor.getString(2);
+                int sectionId = cursor.getInt(cursor.getColumnIndex(KEY_SECTIONS_ID));
+                String sectionName = cursor.getString(cursor.getColumnIndex(KEY_SECTIONS_NAME));
                 SparseArray<Double> gradeThresholds = new SparseArray<>();
                 for (int i = 0; i < 10; i++) {
                     gradeThresholds.put(i, cursor.getDouble(i+3));
@@ -719,10 +722,10 @@ public class DBHelper extends SQLiteOpenHelper {
                     maxScores.put(maxScoreIndex, cursor.getDouble(i+20));
                     maxScoreIndex++;
                 }
-                double totalScore = cursor.getDouble(31);
-                double maxScore   = cursor.getDouble(32);
-                String grade      = cursor.getString(33);
-                String finalGrade = cursor.getString(34);
+                double totalScore = cursor.getDouble(cursor.getColumnIndex(KEY_SECTIONS_SCORE_TOTAL));
+                double maxScore   = cursor.getDouble(cursor.getColumnIndex(KEY_SECTIONS_MAX_SCORE_TOTAL));
+                String grade      = cursor.getString(cursor.getColumnIndex(KEY_SECTIONS_GRADE));
+                String finalGrade = cursor.getString(cursor.getColumnIndex(KEY_SECTIONS_FINAL_GRADE));
 
                 // get the assignments belonging to this section
                 List<Assignment> assignments = getAssignments(termId, sectionId);
@@ -756,12 +759,12 @@ public class DBHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 // gather information from the database
-                String assignmentName = cursor.getString(3);
-                String assignmentType = cursor.getString(4);
-                double score          = cursor.getDouble(5);
-                double maxScore       = cursor.getDouble(6);
-                String grade          = cursor.getString(7);
-                String imagePaths     = cursor.getString(8);
+                String assignmentName = cursor.getString(cursor.getColumnIndex(KEY_ASSIGNMENTS_NAME));
+                String assignmentType = cursor.getString(cursor.getColumnIndex(KEY_ASSIGNMENTS_TYPE));
+                double score          = cursor.getDouble(cursor.getColumnIndex(KEY_ASSIGNMENTS_SCORE));
+                double maxScore       = cursor.getDouble(cursor.getColumnIndex(KEY_ASSIGNMENTS_MAX_SCORE));
+                String grade          = cursor.getString(cursor.getColumnIndex(KEY_ASSIGNMENTS_GRADE));
+                String imagePaths     = cursor.getString(cursor.getColumnIndex(KEY_ASSIGNMENTS_IMAGE_PATHS));
 
                 // create and add the assignment
                 Assignment assignment = new Assignment(assignmentName, assignmentType, score,
@@ -785,15 +788,15 @@ public class DBHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 // gather information from the database
-                String dueDateName = cursor.getString(3);
+                String dueDateName = cursor.getString(cursor.getColumnIndex(KEY_DUE_DATES_NAME));
                 boolean complete   = false;
-                if (cursor.getInt(4) == TRUE) {
+                if (cursor.getInt(cursor.getColumnIndex(KEY_DUE_DATES_COMPLETE)) == TRUE) {
                     complete = true;
                 }
                 Calendar date = Calendar.getInstance();
-                int year      = cursor.getInt(5);
-                int month     = cursor.getInt(6);
-                int day       = cursor.getInt(7);
+                int year      = cursor.getInt(cursor.getColumnIndex(KEY_DUE_DATES_YEAR));
+                int month     = cursor.getInt(cursor.getColumnIndex(KEY_DUE_DATES_MONTH));
+                int day       = cursor.getInt(cursor.getColumnIndex(KEY_DUE_DATES_DAY));
                 date.set(year, month, day);
 
                 // create and add the due date
@@ -818,7 +821,7 @@ public class DBHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 // gather information from the database
-                String location = cursor.getString(2);
+                String location = cursor.getString(cursor.getColumnIndex(KEY_SCHEDULES_LOCATION));
 
                 SparseArray<String> startTimes = new SparseArray<>();
                 SparseArray<String> endTimes   = new SparseArray<>();
@@ -837,5 +840,60 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return schedule;
+    }
+
+    /*
+     * Gets all upcoming DueDates to display in DueDatesWidget
+     */
+    public List<DueDate> getUpcomingDueDates() {
+        SQLiteDatabase db      = getReadableDatabase();
+        List<DueDate> dueDates = new ArrayList<>();
+
+        String query = "SELECT * FROM " + TABLE_DUE_DATES + " WHERE " + KEY_DUE_DATES_ARCHIVED +
+                " = " + FALSE;
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                // check if the due date is upcoming
+                Calendar today = Calendar.getInstance();
+                Calendar due   = Calendar.getInstance();
+                int year       = cursor.getInt(cursor.getColumnIndex(KEY_DUE_DATES_YEAR));
+                int month      = cursor.getInt(cursor.getColumnIndex(KEY_DUE_DATES_MONTH));
+                int day        = cursor.getInt(cursor.getColumnIndex(KEY_DUE_DATES_DAY));
+                due.set(year, month, day);
+
+                if (!today.after(due)) {
+                    // gather information from the database
+                    int termId         = cursor.getInt(cursor.getColumnIndex(KEY_DUE_DATES_TERM_ID));
+                    int sectionId      = cursor.getInt(cursor.getColumnIndex(KEY_DUE_DATES_SECTION_ID));
+                    String dueDateName = cursor.getString(cursor.getColumnIndex(KEY_DUE_DATES_NAME));
+                    boolean complete   = false;
+                    if (cursor.getInt(cursor.getColumnIndex(KEY_DUE_DATES_COMPLETE)) == TRUE) {
+                        complete = true;
+                    }
+
+                    String innerQuery = "SELECT " + KEY_SECTIONS_NAME + " FROM " + TABLE_SECTIONS +
+                            " WHERE " + KEY_SECTIONS_TERM_ID + " = " + termId + " AND " +
+                            KEY_SECTIONS_ID + " = " + sectionId + " AND " + KEY_DUE_DATES_ARCHIVED +
+                            " = " + FALSE;
+                    Cursor innerCursor = db.rawQuery(innerQuery, null);
+
+                    String sectionName = "";
+                    if (innerCursor.moveToFirst()) {
+                        sectionName = innerCursor.getString(
+                                innerCursor.getColumnIndex(KEY_SECTIONS_NAME));
+                    }
+                    innerCursor.close();
+
+                    // create and add the due date
+                    DueDate dueDate = new DueDate(dueDateName, complete, due, sectionName);
+                    dueDates.add(dueDate);
+                }
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return dueDates;
     }
 }

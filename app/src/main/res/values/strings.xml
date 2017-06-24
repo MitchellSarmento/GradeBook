@@ -48,6 +48,11 @@
     <string name="sat">Sat</string>
     <string name="sun">Sun</string>
 
+    <!-- Activity Titles -->
+    <string name="title_schedule">Schedule -&#160;</string>
+    <string name="title_edit_schedule">Edit Schedule -&#160;</string>
+    <string name="title_due_dates">Due Dates -&#160;</string>
+
     <!-- TermsActivity Menu Actions -->
     <string name="action_new_term">New Term</string>
     <string name="action_view_archive">View Archive</string>

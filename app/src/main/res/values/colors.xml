@@ -5,9 +5,9 @@
     <color name="color_accent">#303F9F</color>
 
     <!-- Grade Colors -->
-    <color name="color_a">#57E03C</color>
-    <color name="color_b">#3CA1E0</color>
-    <color name="color_c">#E0E03C</color>
-    <color name="color_d">#E0A93C</color>
-    <color name="color_f">#E0603C</color>
+    <color name="color_a">#4CAF50</color>
+    <color name="color_b">#42A5F5</color>
+    <color name="color_c">#FFEB3B</color>
+    <color name="color_d">#FFC107</color>
+    <color name="color_f">#FF7043</color>
 </resources>

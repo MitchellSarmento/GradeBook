@@ -14,6 +14,7 @@ import com.sarmento.mitchell.gradesaver2.activities.DueDatesActivity;
 import com.sarmento.mitchell.gradesaver2.activities.SectionsActivity;
 import com.sarmento.mitchell.gradesaver2.activities.TermsActivity;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
+import com.sarmento.mitchell.gradesaver2.widgets.DueDatesWidgetProvider;
 
 public class OptionsDialogFragment extends DialogFragment implements Dialog.OnClickListener {
     public static final String ITEM_TYPE  = "itemType";
@@ -143,6 +144,7 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                                 academics.removeTerm(activity, termPosition, false);
                                 ((TermsActivity) activity).updateList();
                                 dialog.dismiss();
+                                DueDatesWidgetProvider.updateWidget(activity, false);
                             }
                         };
                         break;
@@ -188,6 +190,7 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                                         .removeSection(activity, termPosition, sectionPosition);
                                 ((SectionsActivity) activity).updateList();
                                 dialog.dismiss();
+                                DueDatesWidgetProvider.updateWidget(activity, false);
                             }
                         };
                         break;
@@ -270,6 +273,7 @@ public class OptionsDialogFragment extends DialogFragment implements Dialog.OnCl
                                                 sectionPosition, dueDatePosition);
                                 ((DueDatesActivity) activity).updateList();
                                 dialog.dismiss();
+                                DueDatesWidgetProvider.updateWidget(activity, false);
                             }
                         };
                         break;

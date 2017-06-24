@@ -35,7 +35,22 @@
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/action_settings" />
-        <activity android:name=".activities.AssignmentImagesActivity"></activity>
+        <activity android:name=".activities.AssignmentImagesActivity" />
+        <receiver
+            android:name=".widgets.DueDatesWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_due_dates">
+            </meta-data>
+        </receiver>
+        <receiver android:name=".widgets.DueDatesWidgetReceiver" />
+        <service
+            android:name=".widgets.DueDatesWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS">
+        </service>
     </application>
 
 </manifest>

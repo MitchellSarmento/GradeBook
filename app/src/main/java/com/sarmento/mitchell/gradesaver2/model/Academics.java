@@ -78,8 +78,22 @@ public class Academics {
 
     public void removeTerm(Context context, int termPosition, boolean archived) {
         if (archived) {
+            List<Section> sections = archivedTerms.get(termPosition).getSections();
+            for (int i = 0; i < sections.size(); i++) {
+                List<Assignment> assignments = sections.get(i).getAssignments();
+                for (int j = 0; j < assignments.size(); j++) {
+                    assignments.get(j).deleteAllImages();
+                }
+            }
             archivedTerms.remove(termPosition);
         } else {
+            List<Section> sections = currentTerms.get(termPosition).getSections();
+            for (int i = 0; i < sections.size(); i++) {
+                List<Assignment> assignments = sections.get(i).getAssignments();
+                for (int j = 0; j < assignments.size(); j++) {
+                    assignments.get(j).deleteAllImages();
+                }
+            }
             currentTerms.remove(termPosition);
         }
 

@@ -13,6 +13,7 @@ import com.sarmento.mitchell.gradesaver2.R;
 import com.sarmento.mitchell.gradesaver2.dialogs.OptionsDialogFragment;
 import com.sarmento.mitchell.gradesaver2.model.Academics;
 import com.sarmento.mitchell.gradesaver2.model.DueDate;
+import com.sarmento.mitchell.gradesaver2.widgets.DueDatesWidgetProvider;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -45,7 +46,7 @@ public class DueDateButton extends Button implements View.OnClickListener, View.
         setButtonText();
         setButtonColor();
 
-        if (academics.inArchive()) {
+        if (!academics.inArchive()) {
             setOnClickListener(this);
             setOnLongClickListener(this);
         }
@@ -94,6 +95,8 @@ public class DueDateButton extends Button implements View.OnClickListener, View.
             return "Past Due!";
         } else if (daysRemaining == 0) {
             return "Due Today!";
+        } else if (daysRemaining == 1) {
+            return "Due Tomorrow!";
         } else {
             return "Due in " + daysRemaining + " days.";
         }
@@ -119,6 +122,7 @@ public class DueDateButton extends Button implements View.OnClickListener, View.
         setButtonText();
         setButtonColor();
         dueDate.setComplete(context, complete, termPosition, sectionPosition, dueDatePosition);
+        DueDatesWidgetProvider.updateWidget(context, false);
     }
 
     @Override
