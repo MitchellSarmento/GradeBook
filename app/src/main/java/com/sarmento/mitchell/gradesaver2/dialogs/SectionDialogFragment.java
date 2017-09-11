@@ -124,15 +124,23 @@ public class SectionDialogFragment extends DialogFragment {
                         SparseArray<Double> assignmentWeights = new SparseArray<>();
                         for (Section.AssignmentType type : Section.AssignmentType.values()) {
                             int typeValue = type.getValue();
-                            assignmentWeights.put(typeValue,
-                                    Double.valueOf(weightEntries[typeValue].getText().toString()));
+                            try {
+                                assignmentWeights.put(typeValue,
+                                        Double.valueOf(weightEntries[typeValue].getText().toString()));
+                            } catch (NumberFormatException e) {
+                                assignmentWeights.put(typeValue, 0.0);
+                            }
                         }
 
                         SparseArray<Double> gradeThresholds = new SparseArray<>();
                         for (Section.GradeThreshold threshold : Section.GradeThreshold.values()) {
                             int thresholdValue = threshold.getValue();
-                            gradeThresholds.put(thresholdValue,
-                                    Double.valueOf(thresholdEntries[thresholdValue].getText().toString()));
+                            try {
+                                gradeThresholds.put(thresholdValue,
+                                        Double.valueOf(thresholdEntries[thresholdValue].getText().toString()));
+                            } catch (NumberFormatException e) {
+                                gradeThresholds.put(thresholdValue, 0.0);
+                            }
                         }
 
                         InputCheck inputCheck = validateInput(editing, sectionName,
